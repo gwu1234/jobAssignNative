@@ -1,47 +1,99 @@
 import React, { Component } from 'react';
 import { Text } from 'react-native';
-//import firebase from 'firebase';
+import firebase from 'firebase';
 import { connect } from 'react-redux';
+import _ from 'lodash';
 import { emailChanged, passwordChanged, loginUser, accessChanged } from '../actions';
 import { Card, CardSection, Input, Button, Spinner } from './common';
 
 class LoginForm extends Component {
 
-  /*componentWillMount() {
-    const config = {
-        apiKey: "AIzaSyAHKpkb44diLWWawGOpA7KoVdg-9-R-D0w",
-        authDomain: "fir-basic-1cc3f.firebaseapp.com",
-        databaseURL: "https://fir-basic-1cc3f.firebaseio.com",
-        projectId: "fir-basic-1cc3f",
-        storageBucket: "fir-basic-1cc3f.appspot.com",
-        messagingSenderId: "990731683588"
-    };
-    firebase.initializeApp(config);
-    console.log("firebase configuration");
-    console.log(config);
-  }*/
+  state = {
+    email: "",
+    password: "",
+    error: '',
+    loading: false,
+    access: "",
+    //usersRef: firebase.database().ref("users"),
+  };
 
   onEmailChange(text) {
-    this.props.emailChanged(text);
+    //this.props.emailChanged(text);
+    this.setState({email: text});
   }
 
   onPasswordChange(text) {
-    this.props.passwordChanged(text);
+    //this.props.passwordChanged(text);
+    this.setState({password: text});
   }
 
   onAccessChange(text) {
-    this.props.accessChanged(text);
+    //this.props.accessChanged(text);
+    this.setState({access: text});
   }
 
   onButtonPress() {
-    const { email, password } = this.props;
+    const { email, password, access} = this.state;
     console.log(email);
     console.log(password);
-    this.props.loginUser({ email, password });
+    console.log(access);
+    //this.props.loginUser({ email, password });
+    //return { ...state, loading: true, error: '' };
+    this.setState({error: "", loading: true, });
+
+    firebase.auth().signInWithEmailAndPassword(email, password)
+      .then((user) => {
+         console.log(user);
+
+         const emailString = user.user.email.replace(/[.,#$\[\]@ ]/g,'');
+         const nameString = user.user.displayName.replace(/[.,#$\[\]@ ]/g,'');
+         const tagName = (nameString + '+' + emailString).toLowerCase();
+         const accessName = (nameString + '+' + emailString +"/accesses").toLowerCase();
+         console.log(accessName);
+
+         const accessRef = firebase.database().ref("users").child(accessName);
+
+         accessRef.once('value')
+           .then((snapshot) => {
+             const accesses = snapshot.val();
+             console.log(accesses);
+             const accessArray = _.map(accesses, (val, uid) => {
+               return { ...val, uid };
+             });
+
+             console.log(accessArray);
+             const length = accessArray.length;
+             for (i = 0; i < length; i++) {
+                  console.log(accessArray[i].access);
+                  console.log(accessArray[i].employeeKey);
+             }
+          });
+
+          this.setState({
+             error: "",
+             email: "",
+             password: "",
+             access: "",
+             loading: false, });
+
+       })
+      .catch((error) => {
+          console.log("login failed");
+          console.log(firebase.app().options);
+          console.log(error);
+          //loginUserFail(dispatch);
+          this.setState({
+             error: "Wrong Email or Password",
+             email: "",
+             password: "",
+             access: "",
+             loading: false, });
+      });
   }
 
+
   renderButton() {
-    if (this.props.loading) {
+    if (this.state.loading) {
       return <Spinner size="large" />;
     }
 
@@ -53,6 +105,8 @@ class LoginForm extends Component {
   }
 
   render() {
+    //const {error} = this.state;
+
     return (
       <Card>
         <CardSection>
@@ -60,7 +114,7 @@ class LoginForm extends Component {
             label="Email"
             placeholder="email@gmail.com"
             onChangeText={this.onEmailChange.bind(this)}
-            value={this.props.email}
+            value={this.state.email}
           />
         </CardSection>
 
@@ -70,7 +124,7 @@ class LoginForm extends Component {
             label="Password"
             placeholder="password"
             onChangeText={this.onPasswordChange.bind(this)}
-            value={this.props.password}
+            value={this.state.password}
           />
         </CardSection>
 
@@ -80,12 +134,12 @@ class LoginForm extends Component {
             label="Access"
             placeholder="access"
             onChangeText={this.onAccessChange.bind(this)}
-            value={this.props.access}
+            value={this.state.access}
           />
         </CardSection>
 
         <Text style={styles.errorTextStyle}>
-          {this.props.error}
+          {this.state.error}
         </Text>
 
         <CardSection>

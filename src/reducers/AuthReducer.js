@@ -1,7 +1,10 @@
+import { Actions } from 'react-native-router-flux';
+
 import {
   EMAIL_CHANGED,
   PASSWORD_CHANGED,
   LOGIN_USER_SUCCESS,
+  LOGIN_USER_ACCESS,
   LOGIN_USER_FAIL,
   LOGIN_USER,
   ACCESS_CHANGED,
@@ -10,7 +13,8 @@ import {
 const INITIAL_STATE = {
   email: '',
   password: '',
-  access:'',
+  access: '',
+  accessArray: '',
   user: null,
   error: '',
   loading: false
@@ -27,7 +31,18 @@ export default (state = INITIAL_STATE, action) => {
     case LOGIN_USER:
       return { ...state, loading: true, error: '' };
     case LOGIN_USER_SUCCESS:
-      return { ...state, ...INITIAL_STATE, user: action.payload };
+       /*const accessArray = state.accessArray;
+       const length = accessArray.length;
+       for (i = 0; i < length; i++) {
+          console.log(accessArray[i].access);
+          console.log(accessArray[i].employeeKey);
+      }*/
+      Actions.main();
+      return { ...state, ...INITIAL_STATE, user: action.payload.user, accessArray: action.payload.accessArray};
+    case LOGIN_USER_ACCESS:
+      console.log("access code");
+      console.log(action.payload);
+      return { ...state, ...INITIAL_STATE, accessArray: action.payload };
     case LOGIN_USER_FAIL:
       return { ...state, error: 'Authentication Failed.', password: '', loading: false };
     default:
