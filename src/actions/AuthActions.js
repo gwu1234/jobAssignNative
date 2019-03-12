@@ -1,17 +1,17 @@
 import firebase from 'firebase';
 import { Actions } from 'react-native-router-flux';
-import _ from 'lodash';
+//import _ from 'lodash';
 import {
-  EMAIL_CHANGED,
-  PASSWORD_CHANGED,
-  ACCESS_CHANGED,
+  //EMAIL_CHANGED,
+  //PASSWORD_CHANGED,
+  //ACCESS_CHANGED,
   LOGIN_USER_SUCCESS,
-  LOGIN_USER_ACCESS,
-  LOGIN_USER_FAIL,
-  LOGIN_USER
+  //LOGIN_USER_ACCESS,
+  //LOGIN_USER_FAIL,
+  //LOGIN_USER
 } from './types';
 
-export const emailChanged = (text) => {
+/*export const emailChanged = (text) => {
   return {
     type: EMAIL_CHANGED,
     payload: text
@@ -49,13 +49,12 @@ const loginUserAccess = (dispatch, accessArray) => {
     type: LOGIN_USER_ACCESS,
     payload: accessArray
   });
-};
+};*/
 
-const loginUserSuccess = (dispatch, {user, accessArray}) => {
-  dispatch({
+export const loginUserSuccess = (user) => {
+  return {
     type: LOGIN_USER_SUCCESS,
-    payload: {user, accessArray},
-  });
-
-  //Actions.main();
+    payload: user,
+  };
+  Actions.main();
 };

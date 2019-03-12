@@ -3,7 +3,7 @@ import { Text } from 'react-native';
 import firebase from 'firebase';
 import { connect } from 'react-redux';
 import _ from 'lodash';
-import { emailChanged, passwordChanged, loginUser, accessChanged } from '../actions';
+import { loginUserSuccess } from '../actions';
 import { Card, CardSection, Input, Button, Spinner } from './common';
 
 class LoginForm extends Component {
@@ -49,37 +49,59 @@ class LoginForm extends Component {
          const nameString = user.user.displayName.replace(/[.,#$\[\]@ ]/g,'');
          const tagName = (nameString + '+' + emailString).toLowerCase();
          const accessName = (nameString + '+' + emailString +"/accesses").toLowerCase();
-         console.log(accessName);
+         //console.log(accessName);
+         let accessMatch = false;
 
          const accessRef = firebase.database().ref("users").child(accessName);
 
          accessRef.once('value')
            .then((snapshot) => {
              const accesses = snapshot.val();
-             console.log(accesses);
+             //console.log(accesses);
              const accessArray = _.map(accesses, (val, uid) => {
                return { ...val, uid };
              });
 
-             console.log(accessArray);
+             //console.log(accessArray);
              const length = accessArray.length;
              for (i = 0; i < length; i++) {
-                  console.log(accessArray[i].access);
-                  console.log(accessArray[i].employeeKey);
+                  //console.log(accessArray[i].access);
+                  //console.log(accessArray[i].employeeKey);
+                  if (accessArray[i].access === access) {
+                    console.log("access matched");
+                    //console.log(accessArray[i].access);
+                    //console.log(accessArray[i].employeeKey);
+                    accessMatch = true;
+                  }
+             }
+             if (accessMatch === true) {
+                 this.setState({
+                     error: "",
+                     email: "",
+                     password: "",
+                     access: "",
+                     loading: false,
+                 });
+
+                 this.props.loginUserSuccess (user);
+
+             } else {
+                 this.setState({
+                    error: "Invalid Access Code",
+                    email: "",
+                    password: "",
+                    access: "",
+                    loading: false,
+                 });
+
+                 firebase.auth().signOut()
+                   .then(() => console.log("logout"));
              }
           });
-
-          this.setState({
-             error: "",
-             email: "",
-             password: "",
-             access: "",
-             loading: false, });
-
        })
       .catch((error) => {
-          console.log("login failed");
-          console.log(firebase.app().options);
+          //console.log("login failed");
+          //console.log(firebase.app().options);
           console.log(error);
           //loginUserFail(dispatch);
           this.setState({
@@ -158,12 +180,12 @@ const styles = {
   }
 };
 
-const mapStateToProps = ({ auth }) => {
+/*const mapStateToProps = ({ auth }) => {
   const { email, password, access, error, loading } = auth;
 
   return { email, password, access, error, loading };
-};
+};*/
 
-export default connect(mapStateToProps, {
-  emailChanged, passwordChanged, accessChanged, loginUser
+export default connect(null, {
+  loginUserSuccess
 })(LoginForm);
