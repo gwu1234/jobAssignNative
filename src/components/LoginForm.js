@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { Text } from 'react-native';
 //import firebase from 'firebase';
 import { connect } from 'react-redux';
-import { emailChanged, passwordChanged, loginUser } from '../actions';
+import { emailChanged, passwordChanged, loginUser, accessChanged } from '../actions';
 import { Card, CardSection, Input, Button, Spinner } from './common';
 
 class LoginForm extends Component {
@@ -27,6 +27,10 @@ class LoginForm extends Component {
 
   onPasswordChange(text) {
     this.props.passwordChanged(text);
+  }
+
+  onAccessChange(text) {
+    this.props.accessChanged(text);
   }
 
   onButtonPress() {
@@ -70,6 +74,16 @@ class LoginForm extends Component {
           />
         </CardSection>
 
+        <CardSection>
+          <Input
+            secureTextEntry
+            label="Access"
+            placeholder="access"
+            onChangeText={this.onAccessChange.bind(this)}
+            value={this.props.access}
+          />
+        </CardSection>
+
         <Text style={styles.errorTextStyle}>
           {this.props.error}
         </Text>
@@ -91,11 +105,11 @@ const styles = {
 };
 
 const mapStateToProps = ({ auth }) => {
-  const { email, password, error, loading } = auth;
+  const { email, password, access, error, loading } = auth;
 
-  return { email, password, error, loading };
+  return { email, password, access, error, loading };
 };
 
 export default connect(mapStateToProps, {
-  emailChanged, passwordChanged, loginUser
+  emailChanged, passwordChanged, accessChanged, loginUser
 })(LoginForm);
