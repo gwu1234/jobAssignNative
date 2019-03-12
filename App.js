@@ -9,12 +9,12 @@ import Router from './src/Router';
 class App extends Component {
   componentWillMount() {
     const config = {
-        apiKey: "AIzaSyAHKpkb44diLWWawGOpA7KoVdg-9-R-D0w",
-        authDomain: "fir-basic-1cc3f.firebaseapp.com",
-        databaseURL: "https://fir-basic-1cc3f.firebaseio.com",
-        projectId: "fir-basic-1cc3f",
-        storageBucket: "fir-basic-1cc3f.appspot.com",
-        messagingSenderId: "990731683588"
+       apiKey: "AIzaSyAUdrYEIfQWtrvkFluxpX2dNWc79tnyes0",
+       authDomain: "jobassign2.firebaseapp.com",
+       databaseURL: "https://jobassign2.firebaseio.com",
+       projectId: "jobassign2",
+       storageBucket: "jobassign2.appspot.com",
+       messagingSenderId: "224391770489"
     };
     firebase.initializeApp(config);
     console.log("firebase configuration");
