@@ -7,8 +7,8 @@ import EmployeeEdit from './components/EmployeeEdit';
 
 const RouterComponent = () => {
   return (
-    <Router sceneStyle={{ paddingTop: 65 }}>
-     <Scene hideNavBar key="root">
+    <Router >
+     <Scene key="root" hideNavBar >
       <Scene key="auth">
         <Scene key="login" component={LoginForm} title="Please Login" />
       </Scene>
