@@ -5,6 +5,8 @@ import LoginForm from './components/LoginForm';
 import ClientList from './components/ClientList';
 import EmployeeCreate from './components/EmployeeCreate';
 import EmployeeEdit from './components/EmployeeEdit';
+import ClientDetail from './components/ClientDetail';
+import GpsMapView from './components/GpsMapView';
 
 const RouterComponent = () => {
 
@@ -17,8 +19,8 @@ const RouterComponent = () => {
 
       <Scene key="main">
         <Scene
-          onRight={() => Actions.employeeCreate()}
-          rightTitle="Add"
+          onRight={() => Actions.gpsMap()}
+          rightTitle="MapView"
           onLeft={() => {
                 firebase.auth().signOut()
                  .then(() => {
@@ -35,6 +37,8 @@ const RouterComponent = () => {
         />
         <Scene key="employeeCreate" component={EmployeeCreate} title="Create Employee" />
         <Scene key="employeeEdit" component={EmployeeEdit} title="Edit Employee" />
+        <Scene key="clientDetail" component={ClientDetail} title="Client Detail" />
+        <Scene key="gpsMap" component={GpsMapView} title="GPS Map" />
       </Scene>
       </Scene>
     </Router>

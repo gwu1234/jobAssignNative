@@ -23,7 +23,7 @@ class ClientList extends Component {
     //console.log(employeeKey);
 
     const employeeTag = "repos/" + usertag +"/employees/" + employeeKey;
-    console.log(employeeTag);
+    //console.log(employeeTag);
     var employeeRef = firebase.database().ref(employeeTag)
 
     employeeRef.on('value', snapshot => {
@@ -34,7 +34,7 @@ class ClientList extends Component {
             const clients = _.map(employees.assigned, (val, uid) => {
               return { ...val};
             });
-            console.log(clients);
+            //console.log(clients);
             this.setState({assignedClients: clients});
         }
         //else {
