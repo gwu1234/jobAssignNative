@@ -70,7 +70,7 @@ class ClientList extends Component {
     //Actions.employeeEdit({ employee: this.props.employee });
     console.log("this row is ");
     console.log(rowItem);
-    Actions.employeeEdit({ employee: rowItem });
+    Actions.clientDetail({ client: rowItem });
   }
 
   render() {
