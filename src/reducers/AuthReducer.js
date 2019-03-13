@@ -5,7 +5,7 @@ import {
   //PASSWORD_CHANGED,
   LOGIN_USER_SUCCESS,
   SET_USER_TAG,
-  //LOGIN_USER_FAIL,
+  SET_EMPLOYEE_KEY,
   //LOGIN_USER,
   //ACCESS_CHANGED,
 } from '../actions/types';
@@ -16,7 +16,7 @@ const INITIAL_STATE = {
   //access: '',
   user: null,
   userTag: '',
-  //error: '',
+  employeeKey: '',
   //loading: false
 };
 
@@ -39,8 +39,10 @@ export default (state = INITIAL_STATE, action) => {
       console.log("set_user_tag");
       console.log(action.payload.usertag);
       return { ...state, userTag: action.payload.usertag};
-    /*case LOGIN_USER_FAIL:
-      return { ...state, error: 'Authentication Failed.', password: '', loading: false };*/
+    case SET_EMPLOYEE_KEY:
+      console.log("set_employee_key");
+      console.log(action.payload.employeeKey);
+      return { ...state, employeeKey: action.payload.employeeKey };
     default:
       return state;
   }

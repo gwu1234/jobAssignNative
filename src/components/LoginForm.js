@@ -3,7 +3,7 @@ import { Text } from 'react-native';
 import firebase from 'firebase';
 import { connect } from 'react-redux';
 import _ from 'lodash';
-import { loginUserSuccess, setUserTag } from '../actions';
+import { loginUserSuccess, setUserTag, setEmployeeKey } from '../actions';
 import { Card, CardSection, Input, Button, Spinner } from './common';
 
 class LoginForm extends Component {
@@ -67,12 +67,13 @@ class LoginForm extends Component {
              console.log(accessArray);
              const length = accessArray.length;
              for (i = 0; i < length; i++) {
-                  console.log(accessArray[i].access);
-                  console.log(accessArray[i].employeeKey);
+                  //console.log(accessArray[i].access);
+                  //console.log(accessArray[i].employeeKey);
                   if (accessArray[i].access === access) {
                     console.log("access matched");
                     //console.log(accessArray[i].access);
                     //console.log(accessArray[i].employeeKey);
+                    this.props.setEmployeeKey(accessArray[i].employeeKey);
                     accessMatch = true;
                   }
              }
@@ -100,6 +101,19 @@ class LoginForm extends Component {
                    .then(() => console.log("logout"));
              }
           });
+
+          /*const employeeTag = "repos/" + tagName +"/employees";
+          console.log(employeeTag);
+          var employeeRef = firebase.database().ref(employeeTag)
+
+          employeeRef.on('value', snapshot => {
+              const employees = snapshot.val();
+              if (employees) {
+                  console.log(employees);
+              } else {
+                  //this.props.setEmployeeList(null);
+              }
+          });*/
        })
       .catch((error) => {
           //console.log("login failed");
@@ -189,5 +203,5 @@ const styles = {
 };*/
 
 export default connect(null, {
-  loginUserSuccess, setUserTag
+  loginUserSuccess, setUserTag, setEmployeeKey
 })(LoginForm);

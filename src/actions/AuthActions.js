@@ -1,4 +1,4 @@
-import firebase from 'firebase';
+//import firebase from 'firebase';
 import { Actions } from 'react-native-router-flux';
 //import _ from 'lodash';
 import {
@@ -7,7 +7,7 @@ import {
   //ACCESS_CHANGED,
   LOGIN_USER_SUCCESS,
   SET_USER_TAG,
-  //LOGIN_USER_FAIL,
+  SET_EMPLOYEE_KEY,
   //LOGIN_USER
 } from './types';
 
@@ -67,6 +67,16 @@ export const setUserTag = userTag => {
     type: SET_USER_TAG,
     payload: {
       usertag: userTag
+    }
+  };
+};
+
+export const setEmployeeKey = key => {
+  //console.log("action usertag = " + tag);
+  return {
+    type: SET_EMPLOYEE_KEY,
+    payload: {
+      employeeKey: key
     }
   };
 };
