@@ -1,6 +1,9 @@
 import React from 'react';
 import { MapView } from 'expo';
 import { connect } from 'react-redux';
+import {Image} from 'react-native';
+import greenDot from './images/greenDot.png';
+import redDot from './images/redDot.png';
 //import { Marker } from 'react-native-maps';
 
 export class GpsMapView extends React.Component {
@@ -44,13 +47,24 @@ export class GpsMapView extends React.Component {
                 coordinate={{latitude:client.clientLat, longitude:client.clientLng}}
                 title={client.clientName}
                 description={client.clientStreet}
-                key={client.clientKey}
-            />
+                key={client.clientKey} >
+                <Image
+                    source={redDot}
+                    style={styles.imageStyle}
+                />
+            </MapView.Marker>
         ))}
       </MapView>
     );
   }
 }
+
+const styles = {
+  imageStyle: {
+    width: 17,
+    height: 17,
+  },
+};
 
 const mapStateToProps = state => {
   return {
