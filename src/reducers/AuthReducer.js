@@ -4,7 +4,7 @@ import {
   //EMAIL_CHANGED,
   //PASSWORD_CHANGED,
   LOGIN_USER_SUCCESS,
-  //LOGIN_USER_ACCESS,
+  SET_USER_TAG,
   //LOGIN_USER_FAIL,
   //LOGIN_USER,
   //ACCESS_CHANGED,
@@ -15,6 +15,7 @@ const INITIAL_STATE = {
   //password: '',
   //access: '',
   user: null,
+  userTag: '',
   //error: '',
   //loading: false
 };
@@ -31,14 +32,14 @@ export default (state = INITIAL_STATE, action) => {
       return { ...state, loading: true, error: '' };*/
     case LOGIN_USER_SUCCESS:
       console.log("login_user_success");
-      console.log(action.payload);
+      console.log(action.payload.user);
       Actions.main();
-      return { ...state, ...INITIAL_STATE, user: action.payload.user};
-    /*case LOGIN_USER_ACCESS:
-      console.log("login_user_access");
-      console.log(action.payload);
-      //return { ...state, ...INITIAL_STATE, accessArray: action.payload };
-    case LOGIN_USER_FAIL:
+      return { ...state, user: action.payload.user};
+    case SET_USER_TAG:
+      console.log("set_user_tag");
+      console.log(action.payload.usertag);
+      return { ...state, userTag: action.payload.usertag};
+    /*case LOGIN_USER_FAIL:
       return { ...state, error: 'Authentication Failed.', password: '', loading: false };*/
     default:
       return state;

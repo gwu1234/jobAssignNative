@@ -3,7 +3,7 @@ import { Text } from 'react-native';
 import firebase from 'firebase';
 import { connect } from 'react-redux';
 import _ from 'lodash';
-import { loginUserSuccess } from '../actions';
+import { loginUserSuccess, setUserTag } from '../actions';
 import { Card, CardSection, Input, Button, Spinner } from './common';
 
 class LoginForm extends Component {
@@ -48,8 +48,10 @@ class LoginForm extends Component {
          const emailString = user.user.email.replace(/[.,#$\[\]@ ]/g,'');
          const nameString = user.user.displayName.replace(/[.,#$\[\]@ ]/g,'');
          const tagName = (nameString + '+' + emailString).toLowerCase();
+
+         this.props.setUserTag(tagName);
          const accessName = (nameString + '+' + emailString +"/accesses").toLowerCase();
-         //console.log(accessName);
+         console.log(accessName);
          let accessMatch = false;
 
          const accessRef = firebase.database().ref("users").child(accessName);
@@ -62,11 +64,11 @@ class LoginForm extends Component {
                return { ...val, uid };
              });
 
-             //console.log(accessArray);
+             console.log(accessArray);
              const length = accessArray.length;
              for (i = 0; i < length; i++) {
-                  //console.log(accessArray[i].access);
-                  //console.log(accessArray[i].employeeKey);
+                  console.log(accessArray[i].access);
+                  console.log(accessArray[i].employeeKey);
                   if (accessArray[i].access === access) {
                     console.log("access matched");
                     //console.log(accessArray[i].access);
@@ -187,5 +189,5 @@ const styles = {
 };*/
 
 export default connect(null, {
-  loginUserSuccess
+  loginUserSuccess, setUserTag
 })(LoginForm);

@@ -6,7 +6,7 @@ import {
   //PASSWORD_CHANGED,
   //ACCESS_CHANGED,
   LOGIN_USER_SUCCESS,
-  //LOGIN_USER_ACCESS,
+  SET_USER_TAG,
   //LOGIN_USER_FAIL,
   //LOGIN_USER
 } from './types';
@@ -54,7 +54,19 @@ const loginUserAccess = (dispatch, accessArray) => {
 export const loginUserSuccess = (user) => {
   return {
     type: LOGIN_USER_SUCCESS,
-    payload: user,
+    payload: {
+      user: user
+    }
   };
   Actions.main();
+};
+
+export const setUserTag = userTag => {
+  //console.log("action usertag = " + tag);
+  return {
+    type: SET_USER_TAG,
+    payload: {
+      usertag: userTag
+    }
+  };
 };
