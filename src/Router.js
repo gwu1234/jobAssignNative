@@ -1,7 +1,7 @@
 import React from 'react';
 import { Scene, Router, Actions } from 'react-native-router-flux';
 import LoginForm from './components/LoginForm';
-import EmployeeList from './components/EmployeeList';
+import ClientList from './components/ClientList';
 import EmployeeCreate from './components/EmployeeCreate';
 import EmployeeEdit from './components/EmployeeEdit';
 
@@ -17,8 +17,8 @@ const RouterComponent = () => {
         <Scene
           onRight={() => Actions.employeeCreate()}
           rightTitle="Add"
-          key="employeeList"
-          component={EmployeeList}
+          key="clientList"
+          component={ClientList}
           title="Assigned Tasks"
           initial
         />
