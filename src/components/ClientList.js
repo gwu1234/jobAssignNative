@@ -4,7 +4,7 @@ import firebase from 'firebase';
 import { connect } from 'react-redux';
 import { Actions } from 'react-native-router-flux';
 import { FlatList, StyleSheet, View, Text, TouchableWithoutFeedback} from 'react-native';
-//import { employeesFetch } from '../actions';
+import { setClients } from '../actions';
 import ListItem from './ListItem';
 
 class ClientList extends Component {
@@ -36,10 +36,10 @@ class ClientList extends Component {
             });
             //console.log(clients);
             this.setState({assignedClients: clients});
+            this.props.setClients(clients);
+        } else {
+            this.props.setClients(null);
         }
-        //else {
-            //this.props.setEmployeeList(null);
-        //}
     });
 
   }
@@ -68,8 +68,8 @@ class ClientList extends Component {
 
   onRowPress(rowItem) {
     //Actions.employeeEdit({ employee: this.props.employee });
-    console.log("this row is ");
-    console.log(rowItem);
+    //console.log("this row is ");
+    //console.log(rowItem);
     Actions.clientDetail({ client: rowItem });
   }
 
@@ -136,4 +136,4 @@ const mapStateToProps = state => {
   };
 };
 
-export default connect(mapStateToProps, {})(ClientList);
+export default connect(mapStateToProps, {setClients})(ClientList);

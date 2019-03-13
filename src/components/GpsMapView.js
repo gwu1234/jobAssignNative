@@ -1,8 +1,9 @@
 import React from 'react';
 import { MapView } from 'expo';
+import { connect } from 'react-redux';
 //import { Marker } from 'react-native-maps';
 
-export default class GpsMapView extends React.Component {
+export class GpsMapView extends React.Component {
   /*var markers = [
     {
       latitude: 45.65,
@@ -13,7 +14,7 @@ export default class GpsMapView extends React.Component {
   ];*/
 
   render() {
-    var markers = [
+    /*var markers = [
       {
         latlng: {
             latitude: 45.449485,
@@ -23,7 +24,11 @@ export default class GpsMapView extends React.Component {
         subtitle: '450 Bruce',
         description: '450 Bruce Street',
       }
-    ];
+    ];*/
+
+    const {clients} = this.props;
+    //console.log("at GpsMapView");
+    //console.log(clients);
     return (
       <MapView
          style={{ flex: 1 }}
@@ -34,11 +39,12 @@ export default class GpsMapView extends React.Component {
             longitudeDelta: 0.0421,
          }}
        >
-       {markers.map(marker => (
+       {clients.map(client => (
             <MapView.Marker
-                coordinate={marker.latlng}
-                title={marker.title}
-                description={marker.description}
+                coordinate={{latitude:client.clientLat, longitude:client.clientLng}}
+                title={client.clientName}
+                description={client.clientStreet}
+                key={client.clientKey}
             />
         ))}
       </MapView>
@@ -46,16 +52,10 @@ export default class GpsMapView extends React.Component {
   }
 }
 
-/*var markers = [
-  {
-    latitude: 45.65,
-    longitude: -78.90,
-    title: 'Foo Place',
-    subtitle: '1234 Foo Drive'
-  }
-];
+const mapStateToProps = state => {
+  return {
+     clients: state.clients.clients,
+  };
+};
 
-<MapView
-  region={...}
-  annotations={markers}
-/> */
+export default connect(mapStateToProps, {})(GpsMapView);
