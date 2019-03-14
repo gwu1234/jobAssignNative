@@ -31,17 +31,17 @@ export default (state = INITIAL_STATE, action) => {
     case LOGIN_USER:
       return { ...state, loading: true, error: '' };*/
     case LOGIN_USER_SUCCESS:
-      console.log("login_user_success");
-      console.log(action.payload.user);
+      //console.log("login_user_success");
+      //console.log(action.payload.user);
       Actions.main();
       return { ...state, user: action.payload.user};
     case SET_USER_TAG:
-      console.log("set_user_tag");
-      console.log(action.payload.usertag);
+      //console.log("set_user_tag");
+      //console.log(action.payload.usertag);
       return { ...state, userTag: action.payload.usertag};
     case SET_EMPLOYEE_KEY:
-      console.log("set_employee_key");
-      console.log(action.payload.employeeKey);
+      //console.log("set_employee_key");
+      //console.log(action.payload.employeeKey);
       return { ...state, employeeKey: action.payload.employeeKey };
     default:
       return state;

@@ -1,7 +1,7 @@
 import React from 'react';
 import { MapView } from 'expo';
 import { connect } from 'react-redux';
-import {Image} from 'react-native';
+import {Image, View, Text} from 'react-native';
 import greenDot from './images/greenDot.png';
 import redDot from './images/redDot.png';
 //import { Marker } from 'react-native-maps';
@@ -32,6 +32,8 @@ export class GpsMapView extends React.Component {
     const {clients} = this.props;
     //console.log("at GpsMapView");
     //console.log(clients);
+    const red = false;
+    const blue = true;
     return (
       <MapView
          style={{ flex: 1 }}
@@ -48,10 +50,12 @@ export class GpsMapView extends React.Component {
                 title={client.clientName}
                 description={client.clientStreet}
                 key={client.clientKey} >
-                <Image
-                    source={redDot}
-                    style={styles.imageStyle}
-                />
+                {client.clientCity === "Kirkland" && <View style={styles.circle}>
+                     <Text style={styles.pinText}>{1}</Text>
+                </View>}
+                {client.clientCity !== "Kirkland" && <View style={styles.bluecircle}>
+                     <Text style={styles.pinText}>{2}</Text>
+                </View>}
             </MapView.Marker>
         ))}
       </MapView>
@@ -64,6 +68,25 @@ const styles = {
     width: 17,
     height: 17,
   },
+  circle: {
+    width: 20,
+    height: 20,
+    borderRadius: 20 / 2,
+    backgroundColor: 'red',
+  },
+  bluecircle: {
+    width: 20,
+    height: 20,
+    borderRadius: 30 / 2,
+    backgroundColor: 'blue',
+  },
+  pinText: {
+    color: 'white',
+    fontWeight: 'bold',
+    textAlign: 'center',
+    fontSize: 12,
+    marginBottom: 0,
+  },
 };
 
 const mapStateToProps = state => {
@@ -73,3 +96,16 @@ const mapStateToProps = state => {
 };
 
 export default connect(mapStateToProps, {})(GpsMapView);
+
+/*
+<MapView.Marker
+    coordinate={{latitude:client.clientLat, longitude:client.clientLng}}
+    title={client.clientName}
+    description={client.clientStreet}
+    key={client.clientKey} >
+    <Image
+        source={redDot}
+        style={styles.imageStyle}
+    />
+</MapView.Marker>
+*/
