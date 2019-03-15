@@ -1,35 +1,64 @@
 import React from 'react';
-import { MapView } from 'expo';
+import { MapView , PROVIDER_GOOGLE, Constants, Location, Permissions} from 'expo';
 import { connect } from 'react-redux';
-import {Image, View, Text} from 'react-native';
-import greenDot from './images/greenDot.png';
-import redDot from './images/redDot.png';
+import {Image, View, Text, Platform, StyleSheet } from 'react-native';
+import pinkSnowplow from './images/pinkSnowplow.png';
+//import redDot from './images/redDot.png';
 import GpsCalloutView from './GpsCalloutView';
 //import { Marker } from 'react-native-maps';
+
+//import React, { Component } from 'react';
+//import { Platform, Text, View, StyleSheet } from 'react-native';
+//import { Constants, Location, Permissions } from 'expo';
+
 
 export class GpsMapView extends React.Component {
    state = {
       //markerColor: 'red',
       selectedMarkerIndex: '',
       //calloutVisible: false,
-      cancelPressed: false,
+      //cancelPressed: false,
       clients: this.props.clients,
+      location: null,
+      errorMessage: null,
+  };
+
+  componentWillMount() {
+    if (Platform.OS === 'android' && !Constants.isDevice) {
+      this.setState({
+        errorMessage: 'Oops, this will not work on Sketch in an Android emulator. Try it on your device!',
+      });
+    } else {
+      this._getLocationAsync();
+    }
+  }
+
+  _getLocationAsync = async () => {
+    let { status } = await Permissions.askAsync(Permissions.LOCATION);
+    if (status !== 'granted') {
+      this.setState({
+        errorMessage: 'Permission to access location was denied',
+      });
+    }
+
+    let location = await Location.getCurrentPositionAsync({});
+    this.setState({ location });
   };
 
   onPressMarker(e, index) {
-      console.log("GpsMapView onPressMarker");
-      console.log(index);
+      //console.log("GpsMapView onPressMarker");
+      //console.log(index);
       this.setState({
          selectedMarkerIndex: index,
-         cancelPressed: false,
+         //cancelPressed: false,
       });
   }
 
   onRepeatPress (index) {
       let {clients} = this.state;
       //this.setState({selectedMarkerIndex: index});
-      console.log("GpsMapView onRepeatPress");
-      console.log(index);
+      //console.log("GpsMapView onRepeatPress");
+      //console.log(index);
       let client = clients[index];
       client = {...client, status:"repeat"}
       clients[index] = client;
@@ -43,8 +72,8 @@ export class GpsMapView extends React.Component {
   onDonePress (index) {
       let {clients} = this.state;
       //this.setState({selectedMarkerIndex: index});
-      console.log("GpsMapView onDonePress");
-      console.log(index);
+      //console.log("GpsMapView onDonePress");
+      //console.log(index);
       let client = clients[index];
       client = {...client, status:"done"}
       clients[index] = client;
@@ -68,18 +97,55 @@ export class GpsMapView extends React.Component {
       }
     ];*/
 
+    /*let text = 'Waiting..';
+    if (this.state.errorMessage) {
+          text = this.state.errorMessage;
+        } else if (this.state.location) {
+          text = JSON.stringify(this.state.location);
+    }*/
+
+    let lat = null;
+    let lng = null;
+    if (this.state.location) {
+        //console.log(text);
+        console.log(this.state.location.coords.latitude);
+        console.log(this.state.location.coords.longitude);
+
+        console.log(this.state.location.timestamp);
+        //console.log(this.state.location);
+        lat = this.state.location.coords.latitude;
+        lng = this.state.location.coords.longitude;
+    }
+    /*coords": Object {
+    "accuracy": 65,
+    "altitude": 52.230979919433594,
+    "altitudeAccuracy": 10,
+    "heading": -1,
+    "latitude": 45.44958298968795,
+    "longitude": -73.8410947429255,
+    "speed": -1,
+    },
+    "timestamp": 1552656499270.3618,*/
+
+
     const {clients} = this.state;
     //const {markerColor} = this.state;
     //console.log("at GpsMapView");
     //console.log(clients);
     //const red = false;
     //const blue = true;
+    //fairview
+    //45.465318, -73.833466
+    const clat = lat === null ? 45.465318 : lat  ;
+    const clng = lng === null ? -73.833466 : lng  ;
+
     return (
       <MapView
+         provider={PROVIDER_GOOGLE}
          style={{ flex: 1 }}
          initialRegion={{
-            latitude: 45.449485,
-            longitude: -73.841047,
+            latitude: clat ,
+            longitude: clng,
             latitudeDelta: 0.0922,
             longitudeDelta: 0.0421,
          }}
@@ -135,6 +201,25 @@ export class GpsMapView extends React.Component {
                 </MapView.Callout>
             </MapView.Marker>
         ))}
+
+
+        {lat && lng && <MapView.Marker
+            coordinate={{latitude:lat, longitude:lng}}
+            title={"current location"}
+            description={"current location"}
+            key={"current location"}
+            ref={_marker => {
+                     this.marker = _marker;
+                 }}
+            id = {1234}
+            onCalloutPress={() => {}}
+            onPress={()=>{}}
+        >
+            <Image
+               source={pinkSnowplow}
+               style={styles.imageStyle}
+            />
+        </MapView.Marker>}
       </MapView>
     );
   }
@@ -142,8 +227,8 @@ export class GpsMapView extends React.Component {
 
 const styles = {
   imageStyle: {
-    width: 17,
-    height: 17,
+    width: 30,
+    height: 30,
   },
   redcircle: {
     width: 20,
@@ -154,14 +239,20 @@ const styles = {
   bluecircle: {
     width: 20,
     height: 20,
-    borderRadius: 30 / 2,
+    borderRadius: 20 / 2,
     backgroundColor: 'blue',
   },
   greencircle: {
     width: 20,
     height: 20,
-    borderRadius: 30 / 2,
+    borderRadius: 20 / 2,
     backgroundColor: 'green',
+  },
+  blackcircle: {
+    width: 20,
+    height: 20,
+    borderRadius: 20 / 2,
+    backgroundColor: 'black',
   },
   pinText: {
     color: 'white',
@@ -273,3 +364,21 @@ export default connect(mapStateToProps, {})(GpsMapView);
     </View>}
 
 </MapView.Marker>*/
+
+
+/*{lat && lng && <MapView.Marker
+    coordinate={{latitude:lat, longitude:lng}}
+    title={"current location"}
+    description={"current location"}
+    key={"current location"}
+    ref={_marker => {
+             this.marker = _marker;
+         }}
+    id = {1234}
+    onCalloutPress={() => {}}
+    onPress={()=>{}}
+>
+    <View style={styles.blackcircle} key="blackcircle">
+         <Text style={styles.pinText}>{0}</Text>
+    </View>
+</MapView.Marker>}*/
