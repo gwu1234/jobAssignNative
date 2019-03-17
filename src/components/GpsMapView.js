@@ -255,11 +255,12 @@ export class GpsMapView extends React.Component {
                 //onPress={() => {}}
                 onCalloutPress={(index) => {}}
 
-                image ={(!client.status || client.status === "undefined") ? redDot: (client.status ==="repeat"? blueDot : greenDot )}
+
             >
 
 
-
+            <View style = {(!client.status) ? styles.redcircle :
+                (client.status ==="repeat"? styles.bluecircle : styles.greencircle ) } />
 
 
 
@@ -288,7 +289,7 @@ export class GpsMapView extends React.Component {
                      this.marker = _marker;
                  }}
             id = {1234}
-            onPress={(e) => {this.onPressMarker(e, -1)}}
+            //onPress={(e) => {this.onPressMarker(e, -1)}}
             //onPress={() => {}}
             onCalloutPress={() => {
                    //this.marker.hideCallout();
@@ -297,14 +298,7 @@ export class GpsMapView extends React.Component {
             <View style={styles.blackcircle} key="blackcircle">
             </View>
 
-            <MapView.Callout
-                  tooltip={false}>
-                  <View style={styles.calloutContainer}>
-                      <Text style={styles.calloutText}>
-                            {employeeName}
-                      </Text>
-                  </View>
-           </MapView.Callout>
+
 
         </MapView.Marker>}
       </MapView>
@@ -339,7 +333,9 @@ const styles = {
     width: 17,
     height: 17,
     borderRadius: 17 / 2,
-    backgroundColor: 'black',
+    backgroundColor: 'white',
+    borderWidth: 4,
+    borderColor: 'black',
   },
   pinText: {
     color: 'white',
@@ -373,143 +369,33 @@ const mapStateToProps = state => {
 
 export default connect(mapStateToProps, {})(GpsMapView);
 
-/*<MapView.Callout tooltip={false}>
-      <GpsCalloutView
-          title={client.clientName}
-          description={client.clientStreet}
-          id={index}
-          onRepeatPress ={(index)=> this.onRepeatPress(index)}
-          onDonePress ={(index)=> this.onDonePress(index)}
-      />
-</MapView.Callout>*/
+
 
 /*<Image
    source={pinkSnowplow}
    style={styles.imageStyle}
 />*/
 /*
-<MapView.Marker
-    coordinate={{latitude:client.clientLat, longitude:client.clientLng}}
-    title={client.clientName}
-    description={client.clientStreet}
-    key={client.clientKey} >
-    <Image
-        source={redDot}
-        style={styles.imageStyle}
-    />
-</MapView.Marker>
-*/
 
-/*<MapView
-   style={{ flex: 1 }}
-   initialRegion={{
-      latitude: 45.449485,
-      longitude: -73.841047,
-      latitudeDelta: 0.0922,
-      longitudeDelta: 0.0421,
-   }}
- >
- {clients.map(client => (
-      <MapView.Marker
-          coordinate={{latitude:client.clientLat, longitude:client.clientLng}}
-          title={client.clientName}
-          description={client.clientStreet}
-          key={client.clientKey}
-          ref={_marker => {
-                   this.marker = _marker;
-               }}
-         onPress={() => {}}
-         onCalloutPress={() => {
-                this.marker.hideCallout();
-         }}
-      >
-          {client.clientCity === "Kirkland" && <View style={styles.circle}>
-               <Text style={styles.pinText}>{1}</Text>
-          </View>}
-          {client.clientCity !== "Kirkland" && <View style={styles.bluecircle}>
-               <Text style={styles.pinText}>{2}</Text>
-          </View>}
-
-          <MapView.Callout
-                tooltip={false}>
-                <View>
-                    <Text style={styles.calloutText}>
-                          callout text
-                    </Text>
-                </View>
-         </MapView.Callout>
-
-      </MapView.Marker>
-  ))}
-</MapView>*/
-
-/*<MapView.Marker
-    coordinate={{latitude:client.clientLat, longitude:client.clientLng}}
-    title={client.clientName}
-    description={`marker-${index}`}
-    key={client.clientKey}
-    ref={_marker => {
-             this.marker = _marker;
-         }}
-    onCalloutPress={() => {
-          this.setState({markerColor:'blue'});
-          //console.log(this.marker.props.description);
-          //console.log(this.marker.props.title);
-          //console.log(this.marker.props.children.toArray());
-          //console.log(this.marker.props.children.redcircle);
-    }}
-    onPress={(e) => this.onPressMarker(e, index)}
->
-    {this.state.selectedMarkerIndex === index  && <View style={styles.circle} key="redcircle">
-         <Text style={styles.pinText}>{1}</Text>
-    </View>}
-    {this.state.selectedMarkerIndex !== index  && <View style={styles.bluecircle} key="bluecircle">
-         <Text style={styles.pinText}>{2}</Text>
-    </View>}
-
-</MapView.Marker>*/
-
-
-/*{lat && lng && <MapView.Marker
-    coordinate={{latitude:lat, longitude:lng}}
-    title={"current location"}
-    description={"current location"}
-    key={"current location"}
-    ref={_marker
-    => {
-             this.marker = _marker;
-         }}
-    id = {1234}
-    onCalloutPress={() => {}}
-    onPress={()=>{}}
->
-    <View style={styles.blackcircle} key="blackcircle">
-         <Text style={styles.pinText}>{0}</Text>
-    </View>
-</MapView.Marker>}*/
-
-/*
-{client.status==="done"  && <View style={styles.greencircle} key="greencircle">
-</View>}
-{client.status === "repeat"  && <View style={styles.bluecircle} key="bluecircle">
-</View>}
-{(!client.status || client.status==="undefined")  && <View style={styles.redcircle} key="redcircle">
-</View>}*/
-
-/*
-not working for android 4-6
-<View style = {client.status === "done" ? styles.greencircle :
-    (client.status ==="repeat"? styles.bluecircle : styles.redcircle ) }
-/>*/
 /* best for android-6
 <View style = {client.status === "done" ? styles.greencircle :
     (client.status ==="repeat"? styles.bluecircle : styles.redcircle ) }
 />*/
 
-/*
-{false && <Image
-    source={client.status === "done" ? greenDot:
-        (client.status ==="repeat"? blueDot : redDot )}
-    style={styles.imageStyle}
-/>}
+/* very good for android 6
+image ={(!client.status )
+         ? redDot: (client.status ==="repeat"? blueDot : greenDot )}
 */
+
+/* good for both android 6 and apple 6
+<View style = {(!client.status) ? styles.redcircle :
+    (client.status ==="repeat"? styles.bluecircle : styles.greencircle ) } />*/
+
+    /*<MapView.Callout
+          tooltip={false}>
+          <View style={styles.calloutContainer}>
+              <Text style={styles.calloutText}>
+                    {employeeName}
+              </Text>
+          </View>
+   </MapView.Callout>*/
