@@ -3,8 +3,10 @@ import { MapView , PROVIDER_GOOGLE, Constants, Location, Permissions} from 'expo
 import { connect } from 'react-redux';
 import {Image, View, Text, Platform, StyleSheet } from 'react-native';
 import pinkSnowplow from './images/pinkSnowplow.png';
-//import redDot from './images/redDot.png';
-import GpsCalloutView from './GpsCalloutView';
+import redDot from './images/mRed.png';
+import greenDot from './images/mGreen.png';
+import blueDot from './images/mBlue.png';
+import GpsModalView from './GpsModalView';
 //import { Marker } from 'react-native-maps';
 
 //import React, { Component } from 'react';
@@ -13,7 +15,30 @@ import GpsCalloutView from './GpsCalloutView';
 
 
 export class GpsMapView extends React.Component {
-   state = {
+  constructor() {
+     super();
+     this.state = {
+         selectedIndex: null,
+
+         // data from employee/assigned of firebase
+         clients: [],
+
+         // initial location
+         //location.coords.latitude;
+         //location.coords.longitude;
+         //location.timestamp;
+         location: null,
+         error: null,
+
+         // moving position
+         latitude: null,
+         longitude: null,
+         timestamp: null,
+         modalOpen: false,
+     };
+  }
+
+   /*state = {
       //markerColor: 'red',
       selectedMarkerIndex: '',
       //calloutVisible: false,
@@ -21,23 +46,63 @@ export class GpsMapView extends React.Component {
       clients: this.props.clients,
       location: null,
       errorMessage: null,
-  };
+  };*/
 
   componentWillMount() {
     if (Platform.OS === 'android' && !Constants.isDevice) {
       this.setState({
-        errorMessage: 'Oops, this will not work on Sketch in an Android emulator. Try it on your device!',
+        error: 'Oops, this will not work on Sketch in an Android emulator. Try it on your device!',
       });
     } else {
       this._getLocationAsync();
     }
   }
 
+  componentDidMount() {
+    this.setState({
+       clients: this.props.clients,
+    });
+
+    navigator.geolocation.getCurrentPosition(
+      position => {
+         this.setState({
+             latitude: position.coords.latitude,
+             longitude: position.coords.longitude,
+             //latitudeDelta: LATITUDE_DELTA,
+             //longitudeDelta: LONGITUDE_DELTA,
+             timestamp: position.timestamp,
+             error: null,
+         });
+         //console.log(position.coords.latitude);
+      },
+      (error) => this.setState({ error: error.message }),
+      { enableHighAccuracy: true, timeout: 20000, maximumAge: 2000, distanceFilter: 5 },
+    );
+
+    this.watchID = navigator.geolocation.watchPosition(
+      position => {
+        this.setState({
+            latitude: position.coords.latitude,
+            longitude: position.coords.longitude,
+            timestamp: position.timestamp,
+            //latitudeDelta: LATITUDE_DELTA,
+            //longitudeDelta: LONGITUDE_DELTA,
+        });
+        //console.log(position.coords.latitude);
+        //console.log(position);
+      }
+    );
+  }
+
+  componentWillUnmount() {
+    navigator.geolocation.clearWatch(this.watchID);
+  }
+
   _getLocationAsync = async () => {
     let { status } = await Permissions.askAsync(Permissions.LOCATION);
     if (status !== 'granted') {
       this.setState({
-        errorMessage: 'Permission to access location was denied',
+        error: 'Permission to access location was denied',
       });
     }
 
@@ -46,19 +111,24 @@ export class GpsMapView extends React.Component {
   };
 
   onPressMarker(e, index) {
-      //console.log("GpsMapView onPressMarker");
-      //console.log(index);
-      this.setState({
-         selectedMarkerIndex: index,
-         //cancelPressed: false,
-      });
+      if (index < -1) {
+        "GpsMapView onPressMarker -1"
+        //return;
+      } else {
+         console.log("GpsMapView onPressMarker");
+         console.log(index);
+         this.setState({
+            selectedIndex: index,
+            modalOpen: true,
+         });
+      }
   }
 
   onRepeatPress (index) {
       let {clients} = this.state;
       //this.setState({selectedMarkerIndex: index});
-      //console.log("GpsMapView onRepeatPress");
-      //console.log(index);
+      console.log("GpsMapView onRepeatPress");
+      console.log(index);
       let client = clients[index];
       client = {...client, status:"repeat"}
       clients[index] = client;
@@ -66,14 +136,16 @@ export class GpsMapView extends React.Component {
       //console.log(index);
       this.setState({
          clients: clients,
+         modalOpen: false,
+         selectedIndex: null,
       });
   }
 
   onDonePress (index) {
       let {clients} = this.state;
       //this.setState({selectedMarkerIndex: index});
-      //console.log("GpsMapView onDonePress");
-      //console.log(index);
+      console.log("GpsMapView onDonePress");
+      console.log(index);
       let client = clients[index];
       client = {...client, status:"done"}
       clients[index] = client;
@@ -81,6 +153,17 @@ export class GpsMapView extends React.Component {
       //console.log(index);
       this.setState({
          clients: clients,
+         modalOpen: false,
+         selectedIndex: null,
+      });
+  }
+
+  onCancelPress (index) {
+     console.log("GpsMapView onCancelPress");
+     console.log(index);
+      this.setState({
+         modalOpen: false,
+         selectedIndex: null,
       });
   }
 
@@ -108,10 +191,10 @@ export class GpsMapView extends React.Component {
     let lng = null;
     if (this.state.location) {
         //console.log(text);
-        console.log(this.state.location.coords.latitude);
-        console.log(this.state.location.coords.longitude);
+        //console.log(this.state.location.coords.latitude);
+        //console.log(this.state.location.coords.longitude);
 
-        console.log(this.state.location.timestamp);
+        //console.log(this.state.location.timestamp);
         //console.log(this.state.location);
         lat = this.state.location.coords.latitude;
         lng = this.state.location.coords.longitude;
@@ -127,8 +210,13 @@ export class GpsMapView extends React.Component {
     },
     "timestamp": 1552656499270.3618,*/
 
+    /*if (this.state.latitude && this.state.longitude) {
+        lat = this.state.latitude;
+        lng = this.state.longitude;
+    }*/
 
-    const {clients} = this.state;
+    const {clients, selectedIndex, modalOpen} = this.state;
+    const {employeeName} = this.props;
     //const {markerColor} = this.state;
     //console.log("at GpsMapView");
     //console.log(clients);
@@ -136,6 +224,9 @@ export class GpsMapView extends React.Component {
     //const blue = true;
     //fairview
     //45.465318, -73.833466
+    //if (clients) {
+    //   console.log(clients[selectedIndex].status);
+    //}
     const clat = lat === null ? 45.465318 : lat  ;
     const clng = lng === null ? -73.833466 : lng  ;
 
@@ -149,76 +240,72 @@ export class GpsMapView extends React.Component {
             latitudeDelta: 0.0922,
             longitudeDelta: 0.0421,
          }}
+         //showsUserLocation
        >
        {clients.map((client, index) => (
             <MapView.Marker
                 coordinate={{latitude:client.clientLat, longitude:client.clientLng}}
-                title={client.clientName}
-                description={`marker-${index}`}
                 key={client.clientKey}
                 ref={_marker => {
                          this.marker = _marker;
                      }}
                 id = {index}
-                onCalloutPress={() => {
-                      //this.setState({markerColor:'blue'});
-                      //console.log("GpsMapView callout pressed");
-                      //console.log(this.marker.props.title);
-                      //console.log(this.marker.props.description);
-                      //console.log(this.marker.props.id);
-                      //console.log(index);
-                      //console.log(this.state.selectedMarkerIndex);
-                      //console.log(this.marker.props.children.toArray());
-                      //console.log(this.marker.props.children.redcircle);
-                      //if (this.state.selectedMarkerIndex === index
-                        //   && this.state.cancelPressed === true) {
-                          //this.marker.hideCallout();
-                        //  this.setState({
-                        //     cancelPressed: false,
-                        //  });
-                      //}
-                }}
-                onPress={(e) => this.onPressMarker(e, index)}
-            >
-                {client.status==="done"  && <View style={styles.greencircle} key="greencircle">
-                     <Text style={styles.pinText}>{1}</Text>
-                </View>}
-                {client.status === "repeat"  && <View style={styles.bluecircle} key="bluecircle">
-                     <Text style={styles.pinText}>{2}</Text>
-                </View>}
-                {(!client.status || client.status==="undefined")  && <View style={styles.redcircle} key="redcircle">
-                     <Text style={styles.pinText}>{3}</Text>
-                </View>}
 
-                <MapView.Callout tooltip={false}>
-                      <GpsCalloutView
+                onPress={(e) => this.onPressMarker(e, index)}
+                //onPress={() => {}}
+                onCalloutPress={(index) => {}}
+
+                image ={(!client.status || client.status === "undefined") ? redDot: (client.status ==="repeat"? blueDot : greenDot )}
+            >
+
+
+
+
+
+
+
+                { modalOpen === true && selectedIndex !==null &&selectedIndex === index &&
+                    <GpsModalView
                           title={client.clientName}
                           description={client.clientStreet}
                           id={index}
                           onRepeatPress ={(index)=> this.onRepeatPress(index)}
                           onDonePress ={(index)=> this.onDonePress(index)}
-                      />
-                </MapView.Callout>
+                          onCancelPress ={(index)=> this.onCancelPress(index)}
+                          modalOpen = {this.state.modalOpen}
+                          selectedIndex = {this.state.selectedIndex}
+                          status={client.status}
+                      />}
+
             </MapView.Marker>
         ))}
 
 
-        {lat && lng && <MapView.Marker
-            coordinate={{latitude:lat, longitude:lng}}
-            title={"current location"}
-            description={"current location"}
-            key={"current location"}
+        {clat && clng && <MapView.Marker
+            coordinate={{latitude:clat, longitude:clng}}
+            key={"employee_m"}
             ref={_marker => {
                      this.marker = _marker;
                  }}
             id = {1234}
-            onCalloutPress={() => {}}
-            onPress={()=>{}}
+            onPress={(e) => {this.onPressMarker(e, -1)}}
+            //onPress={() => {}}
+            onCalloutPress={() => {
+                   //this.marker.hideCallout();
+            }}
         >
-            <Image
-               source={pinkSnowplow}
-               style={styles.imageStyle}
-            />
+            <View style={styles.blackcircle} key="blackcircle">
+            </View>
+
+            <MapView.Callout
+                  tooltip={false}>
+                  <View style={styles.calloutContainer}>
+                      <Text style={styles.calloutText}>
+                            {employeeName}
+                      </Text>
+                  </View>
+           </MapView.Callout>
+
         </MapView.Marker>}
       </MapView>
     );
@@ -227,31 +314,31 @@ export class GpsMapView extends React.Component {
 
 const styles = {
   imageStyle: {
-    width: 30,
-    height: 30,
+    width: 17,
+    height: 17,
   },
   redcircle: {
-    width: 20,
-    height: 20,
-    borderRadius: 20 / 2,
+    width: 17,
+    height: 17,
+    borderRadius: 17 / 2,
     backgroundColor: 'red',
   },
   bluecircle: {
-    width: 20,
-    height: 20,
-    borderRadius: 20 / 2,
+    width: 17,
+    height: 17,
+    borderRadius: 17 / 2,
     backgroundColor: 'blue',
   },
   greencircle: {
-    width: 20,
-    height: 20,
-    borderRadius: 20 / 2,
+    width: 17,
+    height: 17,
+    borderRadius: 17 / 2,
     backgroundColor: 'green',
   },
   blackcircle: {
-    width: 20,
-    height: 20,
-    borderRadius: 20 / 2,
+    width: 17,
+    height: 17,
+    borderRadius: 17 / 2,
     backgroundColor: 'black',
   },
   pinText: {
@@ -262,27 +349,44 @@ const styles = {
     marginBottom: 0,
   },
   calloutText: {
-    color: 'white',
     fontWeight: 'bold',
     textAlign: 'center',
-    fontSize: 20,
-    color:'red',
+    fontSize: 16,
+    color:'black',
     marginBottom: 0,
   },
   calloutContainer: {
-      width: 140,
-      height: 50,
+      flex: 1,
+      alignItems: 'center',
+      justifyContent:'center',
+      width: 100,
+      height: 30,
     },
 };
 
 const mapStateToProps = state => {
   return {
      clients: state.clients.clients,
+     employeeName: state.employees.employeeName
   };
 };
 
 export default connect(mapStateToProps, {})(GpsMapView);
 
+/*<MapView.Callout tooltip={false}>
+      <GpsCalloutView
+          title={client.clientName}
+          description={client.clientStreet}
+          id={index}
+          onRepeatPress ={(index)=> this.onRepeatPress(index)}
+          onDonePress ={(index)=> this.onDonePress(index)}
+      />
+</MapView.Callout>*/
+
+/*<Image
+   source={pinkSnowplow}
+   style={styles.imageStyle}
+/>*/
 /*
 <MapView.Marker
     coordinate={{latitude:client.clientLat, longitude:client.clientLng}}
@@ -371,7 +475,8 @@ export default connect(mapStateToProps, {})(GpsMapView);
     title={"current location"}
     description={"current location"}
     key={"current location"}
-    ref={_marker => {
+    ref={_marker
+    => {
              this.marker = _marker;
          }}
     id = {1234}
@@ -382,3 +487,29 @@ export default connect(mapStateToProps, {})(GpsMapView);
          <Text style={styles.pinText}>{0}</Text>
     </View>
 </MapView.Marker>}*/
+
+/*
+{client.status==="done"  && <View style={styles.greencircle} key="greencircle">
+</View>}
+{client.status === "repeat"  && <View style={styles.bluecircle} key="bluecircle">
+</View>}
+{(!client.status || client.status==="undefined")  && <View style={styles.redcircle} key="redcircle">
+</View>}*/
+
+/*
+not working for android 4-6
+<View style = {client.status === "done" ? styles.greencircle :
+    (client.status ==="repeat"? styles.bluecircle : styles.redcircle ) }
+/>*/
+/* best for android-6
+<View style = {client.status === "done" ? styles.greencircle :
+    (client.status ==="repeat"? styles.bluecircle : styles.redcircle ) }
+/>*/
+
+/*
+{false && <Image
+    source={client.status === "done" ? greenDot:
+        (client.status ==="repeat"? blueDot : redDot )}
+    style={styles.imageStyle}
+/>}
+*/

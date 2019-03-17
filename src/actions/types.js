@@ -9,6 +9,7 @@ export const SET_USER_TAG = 'set_user_tag';
 export const SET_EMPLOYEE_KEY = 'set_employee_key';
 export const SET_CLIENTS = 'set_clients';
 
+export const SET_EMPLOYEE_NAME = 'set_employee_name';
 export const EMPLOYEE_UPDATE = 'employee_update';
 export const EMPLOYEE_CREATE = 'employee_create';
 export const EMPLOYEES_FETCH_SUCCESS = 'employees_fetch_success';

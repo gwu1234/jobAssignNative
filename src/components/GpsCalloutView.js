@@ -12,10 +12,12 @@ class GpsCalloutView extends React.Component {
     }
 
     onRepeatPress(index) {
+      console.log("GpsCalloutView onRepeatPress");
       this.props.onRepeatPress(index);
     }
 
     onDonePress(index) {
+      console.log("GpsCalloutView onDonePress");
       this.props.onDonePress(index);
     }
 

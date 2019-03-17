@@ -4,7 +4,7 @@ import firebase from 'firebase';
 import { connect } from 'react-redux';
 import { Actions } from 'react-native-router-flux';
 import { FlatList, StyleSheet, View, Text, TouchableWithoutFeedback} from 'react-native';
-import { setClients } from '../actions';
+import { setClients, setEmployeeName } from '../actions';
 import ListItem from './ListItem';
 
 class ClientList extends Component {
@@ -27,16 +27,17 @@ class ClientList extends Component {
     var employeeRef = firebase.database().ref(employeeTag)
 
     employeeRef.on('value', snapshot => {
-        const employees = snapshot.val();
-        if (employees) {
+        const employee = snapshot.val();
+        if (employee) {
             //console.log(employees.assigned);
 
-            const clients = _.map(employees.assigned, (val, uid) => {
+            const clients = _.map(employee.assigned, (val, uid) => {
               return { ...val};
             });
             //console.log(clients);
             this.setState({assignedClients: clients});
             this.props.setClients(clients);
+            this.props.setEmployeeName(employee.name);
         } else {
             this.props.setClients(null);
         }
@@ -136,4 +137,4 @@ const mapStateToProps = state => {
   };
 };
 
-export default connect(mapStateToProps, {setClients})(ClientList);
+export default connect(mapStateToProps, {setClients, setEmployeeName})(ClientList);

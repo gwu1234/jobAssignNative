@@ -43,7 +43,7 @@ class LoginForm extends Component {
 
     firebase.auth().signInWithEmailAndPassword(email, password)
       .then((user) => {
-         console.log(user);
+         //console.log(user);
 
          const emailString = user.user.email.replace(/[.,#$\[\]@ ]/g,'');
          const nameString = user.user.displayName.replace(/[.,#$\[\]@ ]/g,'');
@@ -51,7 +51,7 @@ class LoginForm extends Component {
 
          this.props.setUserTag(tagName);
          const accessName = (nameString + '+' + emailString +"/accesses").toLowerCase();
-         console.log(accessName);
+         //console.log(accessName);
          let accessMatch = false;
 
          const accessRef = firebase.database().ref("users").child(accessName);
@@ -64,7 +64,7 @@ class LoginForm extends Component {
                return { ...val, uid };
              });
 
-             console.log(accessArray);
+             //console.log(accessArray);
              const length = accessArray.length;
              for (i = 0; i < length; i++) {
                   //console.log(accessArray[i].access);

@@ -4,8 +4,21 @@ import {
   EMPLOYEE_UPDATE,
   EMPLOYEE_CREATE,
   EMPLOYEES_FETCH_SUCCESS,
-  EMPLOYEE_SAVE_SUCCESS
+  EMPLOYEE_SAVE_SUCCESS,
+  SET_EMPLOYEE_NAME,
 } from './types';
+
+export const setEmployeeName = name => {
+  //console.log("client action clients = ");
+  //console.log(clients);
+  return {
+    type: SET_EMPLOYEE_NAME,
+    payload: {
+      name: name
+    }
+  };
+};
+
 
 export const employeeUpdate = ({ prop, value }) => {
   return {
