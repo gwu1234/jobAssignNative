@@ -27,7 +27,7 @@ export class GpsMapView extends React.Component {
          //location.coords.latitude;
          //location.coords.longitude;
          //location.timestamp;
-         location: null,
+         //location: null,
          error: null,
 
          // moving position
@@ -48,22 +48,24 @@ export class GpsMapView extends React.Component {
       errorMessage: null,
   };*/
 
-  componentWillMount() {
+  /*componentWillMount() {
     if (Platform.OS === 'android' && !Constants.isDevice) {
+      console.log("not on android devices");
       this.setState({
         error: 'Oops, this will not work on Sketch in an Android emulator. Try it on your device!',
       });
     } else {
       this._getLocationAsync();
+      console.log("getting gps location");
     }
-  }
+  }*/
 
   componentDidMount() {
     this.setState({
        clients: this.props.clients,
     });
 
-    navigator.geolocation.getCurrentPosition(
+    /*navigator.geolocation.getCurrentPosition(
       position => {
          this.setState({
              latitude: position.coords.latitude,
@@ -73,11 +75,13 @@ export class GpsMapView extends React.Component {
              timestamp: position.timestamp,
              error: null,
          });
-         //console.log(position.coords.latitude);
+         console.log(position.coords.latitude);
       },
-      (error) => this.setState({ error: error.message }),
+      error => this.setState({ error: error.message }),
       { enableHighAccuracy: true, timeout: 20000, maximumAge: 2000, distanceFilter: 5 },
-    );
+      //error => console.log(error),
+     //{ enableHighAccuracy: true, timeout: 20000, maximumAge: 1000 }
+   );*/
 
     this.watchID = navigator.geolocation.watchPosition(
       position => {
@@ -89,8 +93,10 @@ export class GpsMapView extends React.Component {
             //longitudeDelta: LONGITUDE_DELTA,
         });
         //console.log(position.coords.latitude);
-        //console.log(position);
-      }
+        console.log(position);
+      },
+      error => {console.log(error);this.setState({ error: error.message })},
+     { enableHighAccuracy: true, timeout: 20000, maximumAge: 1000, distanceFilter: 5}
     );
   }
 
@@ -98,17 +104,20 @@ export class GpsMapView extends React.Component {
     navigator.geolocation.clearWatch(this.watchID);
   }
 
-  _getLocationAsync = async () => {
+  /*_getLocationAsync = async () => {
     let { status } = await Permissions.askAsync(Permissions.LOCATION);
+    console.log(status);
     if (status !== 'granted') {
       this.setState({
         error: 'Permission to access location was denied',
       });
+      console.log("GPS permission not granted");
     }
 
     let location = await Location.getCurrentPositionAsync({});
+    console.log(location);
     this.setState({ location });
-  };
+  };*/
 
   onPressMarker(e, index) {
       if (index < -1) {
@@ -189,7 +198,7 @@ export class GpsMapView extends React.Component {
 
     let lat = null;
     let lng = null;
-    if (this.state.location) {
+    /*if (this.state.location) {
         //console.log(text);
         //console.log(this.state.location.coords.latitude);
         //console.log(this.state.location.coords.longitude);
@@ -198,7 +207,7 @@ export class GpsMapView extends React.Component {
         //console.log(this.state.location);
         lat = this.state.location.coords.latitude;
         lng = this.state.location.coords.longitude;
-    }
+    }*/
     /*coords": Object {
     "accuracy": 65,
     "altitude": 52.230979919433594,
@@ -210,10 +219,10 @@ export class GpsMapView extends React.Component {
     },
     "timestamp": 1552656499270.3618,*/
 
-    /*if (this.state.latitude && this.state.longitude) {
+    if (this.state.latitude && this.state.longitude) {
         lat = this.state.latitude;
         lng = this.state.longitude;
-    }*/
+    }
 
     const {clients, selectedIndex, modalOpen} = this.state;
     const {employeeName} = this.props;
@@ -333,7 +342,7 @@ const styles = {
     width: 16,
     height: 16,
     borderRadius: 16 / 2,
-    backgroundColor: 'white',
+    backgroundColor: 'green',
     borderWidth: 4,
     borderColor: 'black',
   },

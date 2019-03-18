@@ -29,7 +29,7 @@
     "android": {
         "package": "net.shop1234.jobassign",
         "config": {
-             "googleMaps": { "apiKey": "AIzaSyCo3dLTdNpPB22I91PgmYVEVf3WXy92A2g"}
+             "googleMaps": { "apiKey": "AIzaSyBieaKdJKdipZ6bsaiOUhqUCdCc9JU4OlE"}
          }
     }
   }
