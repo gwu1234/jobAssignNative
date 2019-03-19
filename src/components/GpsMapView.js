@@ -83,6 +83,8 @@ export class GpsMapView extends React.Component {
      //{ enableHighAccuracy: true, timeout: 20000, maximumAge: 1000 }
    );*/
 
+    this._getLocationPermisions();
+
     this.watchID = navigator.geolocation.watchPosition(
       position => {
         this.setState({
@@ -118,6 +120,21 @@ export class GpsMapView extends React.Component {
     console.log(location);
     this.setState({ location });
   };*/
+
+  _getLocationPermisions = async () => {
+    let { status } = await Permissions.askAsync(Permissions.LOCATION);
+    console.log(status);
+    if (status !== 'granted') {
+      this.setState({
+        error: 'Permission to access location was denied',
+      });
+      console.log("GPS permission not granted");
+    }
+
+    //let location = await Location.getCurrentPositionAsync({});
+    //console.log(location);
+    //this.setState({ location });
+  };
 
   onPressMarker(e, index) {
       if (index < -1) {
