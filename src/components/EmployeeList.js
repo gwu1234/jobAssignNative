@@ -29,12 +29,25 @@ class EmployeeList extends Component {
     employeeRef.on('value', snapshot => {
         const employees = snapshot.val();
         if (employees) {
-            //console.log(employees.assigned);
+            console.log("truck assigned =" + employees.truckAssigned);
+            let truck = null;
+            if (employees.truckAssigned) {
+               truck = {
+                   model: employees.truckModel,
+                   color: employees.truckColor,
+                   year: employees.truckYear,
+                   key: employees.truckKey,
+                   id: employees.truckId,
+               }
+               console.log(truck);
+            }
+
+
 
             const clients = _.map(employees.assigned, (val, uid) => {
               return { ...val};
             });
-            console.log(clients);
+            //console.log(clients);
             this.setState({assignedClients: clients});
         }
         //else {

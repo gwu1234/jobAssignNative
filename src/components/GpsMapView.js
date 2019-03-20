@@ -1,4 +1,5 @@
 import React from 'react';
+import firebase from 'firebase';
 import { MapView , PROVIDER_GOOGLE, Constants, Location, Permissions} from 'expo';
 import { connect } from 'react-redux';
 import {Image, View, Text, Platform, StyleSheet } from 'react-native';
@@ -35,6 +36,8 @@ export class GpsMapView extends React.Component {
          longitude: null,
          timestamp: null,
          modalOpen: false,
+         truckKey: null,
+         truckPath: null,
      };
   }
 
@@ -61,10 +64,17 @@ export class GpsMapView extends React.Component {
   }*/
 
   componentDidMount() {
+    const {usertag, truck} = this.props;
+    const truckPath = "repos/" + usertag +"/trucks/" + truck.key;
+    //console.log(truckPath);
+
     this.setState({
        clients: this.props.clients,
+       truckKey: this.props.truck.key,
+       truckPath: truckPath,
     });
-
+    //console.log ("truckKey = " + this.props.truck.key);
+    //console.log ("truckKey = " + this.state.truckKey);
     /*navigator.geolocation.getCurrentPosition(
       position => {
          this.setState({
@@ -95,11 +105,24 @@ export class GpsMapView extends React.Component {
             //longitudeDelta: LONGITUDE_DELTA,
         });
         //console.log(position.coords.latitude);
-        console.log(position);
+        //console.log(position);
+        this.updateLocation(position);
       },
       error => {console.log(error);this.setState({ error: error.message })},
      { enableHighAccuracy: true, timeout: 20000, maximumAge: 1000, distanceFilter: 5}
     );
+  }
+
+  updateLocation (position){
+       const {truckPath} = this.state;
+       const pos = {
+           latitude: position.coords.latitude,
+           longitude: position.coords.longitude,
+           timestamp: position.timestamp,
+       }
+
+       const truckRef = firebase.database().ref(truckPath)
+       truckRef.update (pos) ;
   }
 
   componentWillUnmount() {
@@ -387,9 +410,13 @@ const styles = {
 };
 
 const mapStateToProps = state => {
+  //console.log("GpsMapView");
+  //console.log (state.employees.truck);
   return {
      clients: state.clients.clients,
-     employeeName: state.employees.employeeName
+     employeeName: state.employees.employeeName,
+     truck: state.employees.truck,
+     usertag: state.auth.userTag,
   };
 };
 

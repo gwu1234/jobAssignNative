@@ -6,6 +6,7 @@ import {
   EMPLOYEES_FETCH_SUCCESS,
   EMPLOYEE_SAVE_SUCCESS,
   SET_EMPLOYEE_NAME,
+  SET_TRUCK,
 } from './types';
 
 export const setEmployeeName = name => {
@@ -15,6 +16,17 @@ export const setEmployeeName = name => {
     type: SET_EMPLOYEE_NAME,
     payload: {
       name: name
+    }
+  };
+};
+
+export const setTruck = truck => {
+  //console.log("employee action setTruck truck = ");
+  //console.log(truck);
+  return {
+    type: SET_TRUCK,
+    payload: {
+      truck: truck
     }
   };
 };
