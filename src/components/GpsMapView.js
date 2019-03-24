@@ -63,13 +63,58 @@ export class GpsMapView extends React.Component {
     }
   }*/
 
+  componentWillMount() {
+     this._updateClient();
+  }
+
+  _updateClient =  () => {
+     const {usertag, clients} = this.props;
+
+     clients.map((client, index) => {
+        const orderPath = `/repos/${usertag}/clients/data/${client.clientTag}/workorders`;
+        //console.log(orderPath);
+        firebase.database().ref(orderPath).once('value')
+          .then((snapshot) => {
+              const orders = snapshot.val();
+              if (orders) {
+                  let date = new Date("January 1, 1900");
+                  let orderId ="";
+                  let orkerKey ="";
+                  let orderWork="";
+                  for (var key in orders) {
+                     //console.log(orders[key].orderId);
+                     //console.log(key);
+                     const thisdate = new Date (orders[key].date)
+                     if (thisdate > date) {
+                         date = thisdate;
+                         orderId = orders[key].orderId;
+                         orderKey = orders[key].orderKey;
+                         orderWork = orders[key].work;
+                     }
+                 }
+                 //console.log(orderKey);
+                 //console.log(orderId);
+                 client = {...client, orderId: orderId, orderKey: orderKey, orderWork: orderWork}
+                 //console.log(client);
+                 stateclients = this.state.clients;
+                 stateclients.push(client);
+                 this.setState({
+                    clients: stateclients,
+                 });
+              }
+         })
+     });
+     //console.log(newclients);
+  };
+
   componentDidMount() {
     const {usertag, truck} = this.props;
+    const {clients} = this.state;
     const truckPath = "repos/" + usertag +"/trucks/" + truck.key;
-    //console.log(truckPath);
+    //console.log(clients);
 
     this.setState({
-       clients: this.props.clients,
+       //clients: this.props.clients,
        truckKey: this.props.truck.key,
        truckPath: truckPath,
     });
@@ -192,10 +237,12 @@ export class GpsMapView extends React.Component {
 
   onDonePress (index) {
       let {clients} = this.state;
+      const {usertag, employeeName} = this.props;
       //this.setState({selectedMarkerIndex: index});
-      console.log("GpsMapView onDonePress");
-      console.log(index);
+      //console.log("GpsMapView onDonePress");
+      //console.log(index);
       let client = clients[index];
+      //console.log(client);
       client = {...client, status:"done"}
       clients[index] = client;
 
@@ -205,6 +252,30 @@ export class GpsMapView extends React.Component {
          modalOpen: false,
          selectedIndex: null,
       });
+
+      const deliveryPath = `/repos/${usertag}/clients/data/${clients[index].clientTag}/deliverys`;
+      console.log(deliveryPath);
+      var options = { year: 'numeric', month: 'long', day: 'numeric' };
+      const day = new Date();
+      const date = day.toLocaleDateString("en-US", options);
+
+      const deliveryRef = firebase.database().ref(deliveryPath);
+      const deliveryKey = deliveryRef.push().getKey();
+      //const date = (new Date()).
+      const delivery = {
+         work: clients[index].orderWork,
+         clientKey: clients[index].clientKey,
+         clientTag: clients[index].clientTag,
+         employee: employeeName,
+         orderId: clients[index].orderId,
+         orderKey:clients[index].orderKey,
+         date: date,
+         deliveryKey: deliveryKey,
+         status: "Done",
+         deliveryId: deliveryKey,
+      }
+      //console.log(delivery);
+      deliveryRef.child(deliveryKey).set(delivery);
   }
 
   onCancelPress (index) {
@@ -265,6 +336,7 @@ export class GpsMapView extends React.Component {
     }
 
     const {clients, selectedIndex, modalOpen} = this.state;
+    //console.log(clients);
     const {employeeName} = this.props;
     //const {markerColor} = this.state;
     //console.log("at GpsMapView");
@@ -318,6 +390,9 @@ export class GpsMapView extends React.Component {
                     <GpsModalView
                           title={client.clientName}
                           description={client.clientStreet}
+                          orderId = {client.orderId}
+                          orderKey = {client.orderKey}
+                          orderWork = {client.orderWork}
                           id={index}
                           onRepeatPress ={(index)=> this.onRepeatPress(index)}
                           onDonePress ={(index)=> this.onDonePress(index)}

@@ -33,7 +33,7 @@ class GpsModalView extends React.Component {
     render() {
         //console.log("atGpsCalloutView");
         //console.log(this.props.id);
-        const {id, modalOpen, title, description, selectedIndex, status} = this.props;
+        const {id, modalOpen, title, description, selectedIndex, status, orderWork, orderId} = this.props;
         console.log("id = " + id);
         console.log("title =" + title);
         console.log("status =" + status);
@@ -59,6 +59,8 @@ class GpsModalView extends React.Component {
 
                     <Text style={styles.titleText}>{title}</Text>
                     <Text style={styles.modalText}>{description}</Text>
+                    <Text style={styles.modalText}>{orderWork}</Text>
+                    <Text style={styles.modalText}>{orderId}</Text>
 
                     <View style={styles.buttonContainer}>
                     <TouchableHighlight
@@ -102,8 +104,8 @@ const styles = {
     marginBottom: 0,
   },
   modalContainer: {
-    width: 220,
-    height: 100,
+    width: 230,
+    height: 160,
     borderRadius: 5,
     borderWidth: 1,
     borderColor: 'green',
@@ -151,3 +153,15 @@ const styles = {
 //flex: 1,
 //flexDirection: 'column',
 export default GpsModalView;
+//const mapStateToProps = state => {
+  //console.log("GpsMapView");
+  //console.log (state.employees.truck);
+  //return {
+     //clients: state.clients.clients,
+     //employeeName: state.employees.employeeName,
+     //truck: state.employees.truck,
+     //usertag: state.auth.userTag,
+  //};
+//};
+
+//export default connect(mapStateToProps, {})(GpsModalView);
