@@ -47,7 +47,7 @@ class ClientList extends Component {
             const clients = _.map(employee.assigned, (val, uid) => {
               return { ...val};
             });
-            //console.log(clients);
+            console.log(clients);
             this.setState({assignedClients: clients});
             this.props.setClients(clients);
             this.props.setEmployeeName(employee.name);

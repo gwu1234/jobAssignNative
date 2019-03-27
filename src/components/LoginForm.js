@@ -52,6 +52,7 @@ class LoginForm extends Component {
          this.props.setUserTag(tagName);
          const accessName = (nameString + '+' + emailString +"/accesses").toLowerCase();
          //console.log(accessName);
+         //console.log(access);
          let accessMatch = false;
 
          const accessRef = firebase.database().ref("users").child(accessName);
@@ -59,15 +60,20 @@ class LoginForm extends Component {
          accessRef.once('value')
            .then((snapshot) => {
              const accesses = snapshot.val();
+             //console.log("accesses objects = ")
              //console.log(accesses);
              const accessArray = _.map(accesses, (val, uid) => {
+               //console.log("val and uid = ");
+               //console.log(val);
+               //console.log(uid);
                return { ...val, uid };
              });
 
              //console.log(accessArray);
              const length = accessArray.length;
+             //console.log(length);
              for (i = 0; i < length; i++) {
-                  //console.log(accessArray[i].access);
+                  //console.log(accessArray[i]);
                   //console.log(accessArray[i].employeeKey);
                   if (accessArray[i].access === access) {
                     console.log("access matched");

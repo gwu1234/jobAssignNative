@@ -1,7 +1,6 @@
 {
   "expo": {
-    "name": "jonAssignNative",
-    "icon": "./assets/icons/app-icon.png",
+    "name": "Job Assign",
     "slug": "jobAssignNative",
     "privacy": "public",
     "sdkVersion": "32.0.0",
@@ -11,7 +10,7 @@
     ],
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./assets/icon2.png",
+    "icon": "./assets/icon4.png",
     "splash": {
       "image": "./assets/splash.png",
       "resizeMode": "contain",

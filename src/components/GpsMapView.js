@@ -254,7 +254,7 @@ export class GpsMapView extends React.Component {
       });
 
       const deliveryPath = `/repos/${usertag}/clients/data/${clients[index].clientTag}/deliverys`;
-      console.log(deliveryPath);
+      //console.log(deliveryPath);
       var options = { year: 'numeric', month: 'long', day: 'numeric' };
       const day = new Date();
       const date = day.toLocaleDateString("en-US", options);
@@ -267,8 +267,8 @@ export class GpsMapView extends React.Component {
          clientKey: clients[index].clientKey,
          clientTag: clients[index].clientTag,
          employee: employeeName,
-         orderId: clients[index].orderId,
-         orderKey:clients[index].orderKey,
+         orderId: client[index]&&client[index].orderId?clients[index].orderId:'',
+         orderKey:client[index]&&client[index].orderId?clients[index].orderKey:'',
          date: date,
          deliveryKey: deliveryKey,
          status: "Done",
