@@ -29,7 +29,8 @@ class ClientList extends Component {
     employeeRef.on('value', snapshot => {
         const employee = snapshot.val();
         if (employee) {
-            console.log("truck assigned =" + employee.truckAssigned);
+            //console.log(employee);
+            //console.log("truck assigned =" + employee.truckAssigned);
             let truck = null;
             if (employee.truckAssigned) {
                  truck = {
@@ -44,10 +45,23 @@ class ClientList extends Component {
                  this.props.setTruck (truck);
             }
 
-            const clients = _.map(employee.assigned, (val, uid) => {
-              return { ...val};
-            });
-            console.log(clients);
+            const assignedClients = employee.assigned;
+            //console.log(assignedClients);
+
+            let clients = [];
+            for (var key in assignedClients) {
+                //console.log("key = " + key);
+                //console.log(assignedClients[key]);
+                clients.push ({
+                  ...assignedClients[key], uid : key, clientKey: key,
+                  clientTag: key
+                }) ;
+            }
+
+            //const clients = _.map(employee.assigned, (val, uid) => {
+            //  return { ...val};
+            //});
+            //console.log(clients);
             this.setState({assignedClients: clients});
             this.props.setClients(clients);
             this.props.setEmployeeName(employee.name);

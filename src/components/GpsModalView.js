@@ -34,10 +34,10 @@ class GpsModalView extends React.Component {
         //console.log("atGpsCalloutView");
         //console.log(this.props.id);
         const {id, modalOpen, title, description, selectedIndex, status, orderWork, orderId} = this.props;
-        console.log("id = " + id);
-        console.log("title =" + title);
-        console.log("status =" + status);
-        console.log(selectedIndex);
+        //console.log("id = " + id);
+        //console.log("title =" + title);
+        //console.log("status =" + status);
+        //console.log(selectedIndex);
 
         let open = true;
 

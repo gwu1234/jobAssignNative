@@ -335,7 +335,28 @@ export class GpsMapView extends React.Component {
         lng = this.state.longitude;
     }
 
-    const {clients, selectedIndex, modalOpen} = this.state;
+    let {clients, selectedIndex, modalOpen} = this.state;
+
+    // convert lat and lng string to float
+    clients = clients.map((client, index) => {
+      if (/^(\-)?[0-9]+(\.)?[0-9]+$/.test(client.clientLat) &&
+          /^(\-)?[0-9]+(\.)?[0-9]+$/.test(client.clientLng)) {
+        const lat = parseFloat(client.clientLat) ;
+        const lng = parseFloat(client.clientLng) ;
+
+        //if (/^(\-)?[0-9]+(\.)?[0-9]+$/.test(lat) &&
+        //    /^(\-)?[0-9]+(\.)?[0-9]+$/.test(lng)) {
+
+            return {...client, clientLat: lat, clientLng: lng};
+        }
+
+        //console.log("index = " + index);
+        //console.log("client lat = ", client.clientLat);
+        //console.log("client lng = ", client.clientLng);
+        //console.log("client clientKey = ", client.clientKey);
+        //console.log("client clientTag = ", client.clientTag);
+    });
+
     //console.log(clients);
     const {employeeName} = this.props;
     //const {markerColor} = this.state;
@@ -365,7 +386,7 @@ export class GpsMapView extends React.Component {
        >
        {clients.map((client, index) => (
             <MapView.Marker
-                coordinate={{latitude:client.clientLat, longitude:client.clientLng}}
+                coordinate={{latitude:client.clientLat, longitude: client.clientLng}}
                 key={client.clientKey}
                 ref={_marker => {
                          this.marker = _marker;

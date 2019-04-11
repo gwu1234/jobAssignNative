@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { Text } from 'react-native';
 import firebase from 'firebase';
 import { connect } from 'react-redux';
-import _ from 'lodash';
+//import _ from 'lodash';
 import { loginUserSuccess, setUserTag, setEmployeeKey } from '../actions';
 import { Card, CardSection, Input, Button, Spinner } from './common';
 
@@ -59,17 +59,23 @@ class LoginForm extends Component {
 
          accessRef.once('value')
            .then((snapshot) => {
+             let accessArray = [];
              const accesses = snapshot.val();
              //console.log("accesses objects = ")
              //console.log(accesses);
-             const accessArray = _.map(accesses, (val, uid) => {
+             for (var key in accesses) {
+                console.log(key) ;
+                console.log(accesses[key]);
+                accessArray.push ({...accesses[key], uid: key, key: key}) ;
+             }
+             //const accessArray = _.map(accesses, (val, uid) => {
                //console.log("val and uid = ");
                //console.log(val);
                //console.log(uid);
-               return { ...val, uid };
-             });
+               //return { ...val, uid };
+             //});
 
-             //console.log(accessArray);
+             console.log(accessArray);
              const length = accessArray.length;
              //console.log(length);
              for (i = 0; i < length; i++) {
