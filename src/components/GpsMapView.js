@@ -13,6 +13,11 @@ import GpsModalView from './GpsModalView';
 //import React, { Component } from 'react';
 //import { Platform, Text, View, StyleSheet } from 'react-native';
 //import { Constants, Location, Permissions } from 'expo';
+const JOB_NOT_ACTIVE = 0;
+const JOB_NEW = 1;
+const JOB_ASSIGNED = 2;
+const JOB_PROGRESS = 3;
+const JOB_DONE = 4;
 
 
 export class GpsMapView extends React.Component {
@@ -287,6 +292,60 @@ export class GpsMapView extends React.Component {
       });
   }
 
+  status4ThisClient(workorders) {
+    let statusArray = [];
+    let activeOrders = 0;
+    let deliveryTimes = 0;
+    let status = 0;
+    for (var orderKey in workorders) {
+       let {isActive,isRepeat,repeatTimes, previousDelivery, deliverys} = workorders[orderKey];
+
+       isActive = (isActive && isActive === "true")? true:false;
+       isRepeat = (isRepeat && isRepeat === "true")? true:false;
+       repeatTimes = repeatTimes? parseInt(repeatTimes, 10) : 0;
+       previousDelivery = previousDelivery? parseInt(previousDelivery, 10) : 0;
+
+       for (var deliveryKey in deliverys) {
+          let {linkedOrderKey} = deliverys[deliveryKey];
+
+          if (linkedOrderKey === orderKey) {
+              //console.log("delivery found");
+              deliveryTimes ++;
+          }
+       }
+
+       //console.log(deliveryTimes);
+       deliveryTimes = deliveryTimes + previousDelivery ;
+
+       if (isActive) {
+           if (!isRepeat && deliveryTimes > 0) {
+              //status = JOB_DONE;
+              statusArray.push(JOB_DONE);
+           } else if (isRepeat && repeatTimes === 0) {
+              statusArray.push(JOB_PROGRESS);
+           } else if (isRepeat && repeatTimes !== 0 && repeatTimes <= deliveryTimes) {
+              statusArray.push(JOB_DONE);
+           } else if (isRepeat && repeatTimes !== 0 && repeatTimes > deliveryTimes) {
+              statusArray.push(JOB_PROGRESS);
+           }
+           else {
+             statusArray.push(JOB_NEW);
+           }
+           activeOrders ++;
+       }
+
+       if (statusArray.length > 0) {
+          status = statusArray[0];
+       }
+       for (var i=0; i++; i < statusArray.length) {
+           status = status < statusArray[i]? status: statusArray[i];
+       }
+       return {status: status, activeOrder: activeOrders};
+     }
+     return {};
+  }
+
+
   render() {
     /*var markers = [
       {
@@ -339,15 +398,21 @@ export class GpsMapView extends React.Component {
 
     // convert lat and lng string to float
     clients = clients.map((client, index) => {
-      if (/^(\-)?[0-9]+(\.)?[0-9]+$/.test(client.clientLat) &&
-          /^(\-)?[0-9]+(\.)?[0-9]+$/.test(client.clientLng)) {
-        const lat = parseFloat(client.clientLat) ;
-        const lng = parseFloat(client.clientLng) ;
+       if (/^(\-)?[0-9]+(\.)?[0-9]+$/.test(client.clientLat) &&
+           /^(\-)?[0-9]+(\.)?[0-9]+$/.test(client.clientLng)) {
+            const lat = parseFloat(client.clientLat) ;
+            const lng = parseFloat(client.clientLng) ;
 
-        //if (/^(\-)?[0-9]+(\.)?[0-9]+$/.test(lat) &&
-        //    /^(\-)?[0-9]+(\.)?[0-9]+$/.test(lng)) {
+            const {workorders} = client;
+            const orderStatus = this.status4ThisClient(workorders);
+            //console.log(orderStatus);
 
-            return {...client, clientLat: lat, clientLng: lng};
+            return {  ...client,
+                      clientLat: lat,
+                      clientLng: lng,
+                      status: orderStatus.status,
+                      activeOrder: orderStatus.activeOrder,
+                   };
         }
 
         //console.log("index = " + index);
@@ -356,6 +421,8 @@ export class GpsMapView extends React.Component {
         //console.log("client clientKey = ", client.clientKey);
         //console.log("client clientTag = ", client.clientTag);
     });
+
+
 
     //console.log(clients);
     const {employeeName} = this.props;
@@ -400,14 +467,11 @@ export class GpsMapView extends React.Component {
 
             >
 
-
-            <View style = {(!client.status) ? styles.redcircle :
-                (client.status ==="repeat"? styles.bluecircle : styles.greencircle ) } />
-
-
-
-
-                { modalOpen === true && selectedIndex !==null &&selectedIndex === index &&
+            <View style = {(client.status===JOB_NEW) ? styles.redcircle :
+                (client.status ===JOB_PROGRESS? styles.bluecircle : styles.greencircle ) } >
+                <Text style={styles.pin}> {client.activeOrder}</Text>
+                </View>
+              { modalOpen === true && selectedIndex !==null &&selectedIndex === index &&
                     <GpsModalView
                           title={client.clientName}
                           description={client.clientStreet}
@@ -486,7 +550,14 @@ const styles = {
     color: 'white',
     fontWeight: 'bold',
     textAlign: 'center',
-    fontSize: 12,
+    fontSize: 10,
+    marginBottom: 0,
+  },
+  pin: {
+    color: 'white',
+    fontWeight: 'bold',
+    textAlign: 'center',
+    fontSize: 10,
     marginBottom: 0,
   },
   calloutText: {
