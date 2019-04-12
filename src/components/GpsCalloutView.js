@@ -24,7 +24,8 @@ class GpsCalloutView extends React.Component {
     render() {
         //console.log("atGpsCalloutView");
         //console.log(this.props.id);
-        const {id} = this.props;
+        const {id, workorders, activeOrder} = this.props;
+        console.log(workorders);
         return (
             <View style={styles.calloutContainer}>
                 <Text style={styles.titleText}>
@@ -33,6 +34,14 @@ class GpsCalloutView extends React.Component {
 
                 <Text style={styles.calloutText}>
                     {this.props.description}
+                </Text>
+
+                <Text style={styles.calloutText}>
+                    this client has {activeOrder} active orders
+                </Text>
+
+                <Text style={styles.calloutText}>
+                    select one to submit a delivery
                 </Text>
 
                  <View style={styles.buttonContainer}>

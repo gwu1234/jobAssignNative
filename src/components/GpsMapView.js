@@ -223,7 +223,7 @@ export class GpsMapView extends React.Component {
       }
   }
 
-  onRepeatPress (index) {
+  /*onRepeatPress (index) {
       let {clients} = this.state;
       //this.setState({selectedMarkerIndex: index});
       console.log("GpsMapView onRepeatPress");
@@ -238,28 +238,32 @@ export class GpsMapView extends React.Component {
          modalOpen: false,
          selectedIndex: null,
       });
-  }
+  }*/
 
-  onDonePress (index) {
+  onDonePress (index, selectedOrder) {
       let {clients} = this.state;
-      const {usertag, employeeName} = this.props;
+      const {usertag, employeeName, employeeKey} = this.props;
       //this.setState({selectedMarkerIndex: index});
       //console.log("GpsMapView onDonePress");
       //console.log(index);
       let client = clients[index];
       //console.log(client);
-      client = {...client, status:"done"}
-      clients[index] = client;
+      //client = {...client, status:"done"}
+      //clients[index] = client;
 
       //console.log(index);
       this.setState({
-         clients: clients,
+         //clients: clients,
          modalOpen: false,
          selectedIndex: null,
       });
 
-      const deliveryPath = `/repos/${usertag}/clients/data/${clients[index].clientTag}/deliverys`;
-      //console.log(deliveryPath);
+      //console.log(selectedOrder);
+      console.log(client.orderKey);
+      //console.log(employeeKey);
+
+      const deliveryPath = `/repos/${usertag}/clients/data/${client.clientTag}/deliverys`;
+      console.log(deliveryPath);
       var options = { year: 'numeric', month: 'long', day: 'numeric' };
       const day = new Date();
       const date = day.toLocaleDateString("en-US", options);
@@ -272,15 +276,24 @@ export class GpsMapView extends React.Component {
          clientKey: clients[index].clientKey,
          clientTag: clients[index].clientTag,
          employee: employeeName,
-         orderId: client[index]&&client[index].orderId?clients[index].orderId:'',
-         orderKey:client[index]&&client[index].orderId?clients[index].orderKey:'',
+         employeeKey: employeeKey,
+         orderId: client.orderId,
+         orderKey:client.orderKey,
          date: date,
          deliveryKey: deliveryKey,
-         status: "Done",
          deliveryId: deliveryKey,
       }
       //console.log(delivery);
       deliveryRef.child(deliveryKey).set(delivery);
+
+      let {presentDelivery} = selectedOrder;
+      presentDelivery = presentDelivery? parseInt(presentDelivery): 0;
+      presentDelivery++;
+      const employeeOrderPath =
+         `/repos/${usertag}/employees/${employeeKey}/assigned/${client.clientTag}/workorders/${selectedOrder.orderKey}`;
+      console.log(employeeOrderPath);
+      const employeeOrderRef = firebase.database().ref(employeeOrderPath);
+      employeeOrderRef.update ({presentDelivery: String(presentDelivery)});
   }
 
   onCancelPress (index) {
@@ -298,24 +311,17 @@ export class GpsMapView extends React.Component {
     let deliveryTimes = 0;
     let status = 0;
     for (var orderKey in workorders) {
-       let {isActive,isRepeat,repeatTimes, previousDelivery, deliverys} = workorders[orderKey];
+       let {isActive,isRepeat,repeatTimes,previousDelivery,deliverys,presentDelivery}
+             = workorders[orderKey];
 
        isActive = (isActive && isActive === "true")? true:false;
        isRepeat = (isRepeat && isRepeat === "true")? true:false;
        repeatTimes = repeatTimes? parseInt(repeatTimes, 10) : 0;
        previousDelivery = previousDelivery? parseInt(previousDelivery, 10) : 0;
-
-       for (var deliveryKey in deliverys) {
-          let {linkedOrderKey} = deliverys[deliveryKey];
-
-          if (linkedOrderKey === orderKey) {
-              //console.log("delivery found");
-              deliveryTimes ++;
-          }
-       }
+       presentDelivery = presentDelivery? parseInt(presentDelivery, 10) : 0;
 
        //console.log(deliveryTimes);
-       deliveryTimes = deliveryTimes + previousDelivery ;
+       deliveryTimes = presentDelivery + previousDelivery ;
 
        if (isActive) {
            if (!isRepeat && deliveryTimes > 0) {
@@ -474,17 +480,17 @@ export class GpsMapView extends React.Component {
               { modalOpen === true && selectedIndex !==null &&selectedIndex === index &&
                     <GpsModalView
                           title={client.clientName}
-                          description={client.clientStreet}
-                          orderId = {client.orderId}
-                          orderKey = {client.orderKey}
-                          orderWork = {client.orderWork}
+                          street={client.clientStreet}
+                          city={client.clientCity}
                           id={index}
                           onRepeatPress ={(index)=> this.onRepeatPress(index)}
-                          onDonePress ={(index)=> this.onDonePress(index)}
+                          onDonePress ={(index, activeOrder)=> this.onDonePress(index, activeOrder)}
                           onCancelPress ={(index)=> this.onCancelPress(index)}
                           modalOpen = {this.state.modalOpen}
                           selectedIndex = {this.state.selectedIndex}
                           status={client.status}
+                          activeOrder = {client.activeOrder}
+                          workorders = {client.workorders}
                       />}
 
             </MapView.Marker>
@@ -584,6 +590,7 @@ const mapStateToProps = state => {
      employeeName: state.employees.employeeName,
      truck: state.employees.truck,
      usertag: state.auth.userTag,
+     employeeKey: state.auth.employeeKey,
   };
 };
 

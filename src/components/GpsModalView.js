@@ -1,9 +1,12 @@
 import React, {Component} from 'react';
-import {Modal, Text, TouchableHighlight, View, Alert} from 'react-native';
+import {Modal, Text, TouchableHighlight, View, Alert, FlatList, StyleSheet, TouchableWithoutFeedback} from 'react-native';
 
 class GpsModalView extends React.Component {
     state = {
         modalVisible: false,
+        activeOrderSelected: null,
+        isActiveOrderSelected: null,
+        doneWithoutOrder: false,
     };
 
     setModalVisible(visible) {
@@ -14,30 +17,58 @@ class GpsModalView extends React.Component {
        console.log("onButtonPress");
     }
 
-    onRepeatPress(index) {
+    /*onRepeatPress(index) {
        console.log("GpsModalView onRepeatPress");
        this.props.onRepeatPress(index);
-    }
+    }*/
 
     onDonePress(index) {
-      console.log("GpsModalView onDonePress");
-      this.props.onDonePress(index);
+      //console.log("GpsModalView onDonePress");
+      const {isActiveOrderSelected, ActiveOrderSelected} = this.state;
+      if (!isActiveOrderSelected) {
+         this.setState ({doneWithoutOrder: true});
+         return;
+      }
+      this.setState ({doneWithoutOrder: false});
+      //console.log(ActiveOrderSelected);
+      this.props.onDonePress(index, ActiveOrderSelected);
     }
 
     onCancelPress(index) {
-        console.log("GpsModalView onCancelPress");
-        console.log(index);
+        //console.log("GpsModalView onCancelPress");
+        //console.log(index);
+        this.setState ({doneWithoutOrder: false});
         this.props.onCancelPress(index);
+      }
+
+    onRowPress(rowItem) {
+        //Actions.employeeEdit({ employee: this.props.employee });
+        //console.log("this row is ");
+        //console.log(rowItem);
+        this.setState ({
+           isActiveOrderSelected: true,
+           ActiveOrderSelected: rowItem,
+           doneWithoutOrder: false,
+        }) ;
       }
 
     render() {
         //console.log("atGpsCalloutView");
         //console.log(this.props.id);
-        const {id, modalOpen, title, description, selectedIndex, status, orderWork, orderId} = this.props;
+        const {id, modalOpen, title, description, selectedIndex, status,
+               street, city, activeOrder, workorders} = this.props;
+        const {isActiveOrderSelected, ActiveOrderSelected, doneWithoutOrder} = this.state;
         //console.log("id = " + id);
         //console.log("title =" + title);
         //console.log("status =" + status);
         //console.log(selectedIndex);
+        //console.log(workorders);
+
+        const orderArray =[];
+        for (var key in workorders) {
+           const newOrder = {...workorders[key]}
+           orderArray.push(newOrder);
+        }
 
         let open = true;
 
@@ -58,10 +89,33 @@ class GpsModalView extends React.Component {
              <View style={styles.modalContainer}>
 
                     <Text style={styles.titleText}>{title}</Text>
-                    <Text style={styles.modalText}>{description}</Text>
-                    <Text style={styles.modalText}>{orderWork}</Text>
-                    <Text style={styles.modalText}>{orderId}</Text>
+                    <Text style={styles.modalText}>{street}</Text>
+                    <Text style={styles.modalText}>
+                        {activeOrder} orders active
+                    </Text>
+                    <Text style={styles.modalText}>
+                        select one to deliver
+                    </Text>
 
+                    <FlatList
+                        data={orderArray}
+                        showsVerticalScrollIndicator={true}
+                        renderItem={({item}) =>
+                           <TouchableWithoutFeedback onPress={ () => this.onRowPress(item)}>
+                               <View style={styles.flatview}>
+                                  <Text style={styles.name}>{item.orderId} {item.work}</Text>
+                              </View>
+                           </TouchableWithoutFeedback>
+                        }
+                        keyExtractor={item => item.orderKey}
+                    />
+
+                    {isActiveOrderSelected && <Text style={styles.email}>
+                          deliver to {ActiveOrderSelected.orderId} click Done to confirm
+                          </Text> }
+                    {doneWithoutOrder && <Text style={styles.email}>
+                          select an order first
+                          </Text> }
                     <View style={styles.buttonContainer}>
                     <TouchableHighlight
                         style={styles.leftButton}
@@ -69,11 +123,6 @@ class GpsModalView extends React.Component {
                         <Text style={styles.buttonText}>Done</Text>
                     </TouchableHighlight>
 
-                    <TouchableHighlight
-                        style={styles.leftButton}
-                        onPress={() => this.onRepeatPress(id)}>
-                        <Text style={styles.buttonText}>Repeat</Text>
-                    </TouchableHighlight>
 
                     <TouchableHighlight
                         style={styles.leftButton}
@@ -96,6 +145,13 @@ const styles = {
     fontSize: 17,
     marginBottom: 0,
   },
+  orderText: {
+    color: 'black',
+    fontWeight: 'bold',
+    textAlign: 'center',
+    fontSize: 16,
+    marginBottom: 0,
+  },
   modalText: {
     fontWeight: 'normal',
     textAlign: 'center',
@@ -104,25 +160,26 @@ const styles = {
     marginBottom: 0,
   },
   modalContainer: {
-    width: 230,
-    height: 160,
+    width: 250,
+    height: 260,
     borderRadius: 5,
     borderWidth: 1,
     borderColor: 'green',
+    backgroundColor: '#fff'
   },
   leftButton: {
     backgroundColor: '#fff',
     borderRadius: 5,
     borderWidth: 1,
     borderColor: '#007aff',
-    width: '31%',
+    width: '45%',
     height: 40,
   },
   buttonContainer: {
     flex: 1,
     flexDirection: 'row',
-    marginTop: 10,
-    margin: 3,
+    marginTop: 5,
+    margin: 5,
     justifyContent: 'space-between'
   },
   middleButton: {
@@ -138,7 +195,7 @@ const styles = {
     borderRadius: 5,
     borderWidth: 1,
     borderColor: '#007aff',
-    width: '31%',
+    width: '40%',
     height: 40,
   },
   buttonText: {
@@ -148,6 +205,17 @@ const styles = {
     color:'black',
     padding:5
   },
+  flatview: {
+    justifyContent: 'center',
+    paddingTop: 10,
+    borderRadius: 2,
+  },
+  name: {
+    fontSize: 18
+  },
+  email: {
+    color: 'red'
+  }
 };
 
 //flex: 1,
