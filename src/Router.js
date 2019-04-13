@@ -3,8 +3,6 @@ import firebase from 'firebase';
 import { Scene, Router, Actions } from 'react-native-router-flux';
 import LoginForm from './components/LoginForm';
 import ClientList from './components/ClientList';
-import EmployeeCreate from './components/EmployeeCreate';
-import EmployeeEdit from './components/EmployeeEdit';
 import ClientDetail from './components/ClientDetail';
 import GpsMapView from './components/GpsMapView';
 
@@ -35,8 +33,6 @@ const RouterComponent = () => {
           titleStyle={{ flex:1, alignSelf: 'center', textAlign: 'center' }}
           initial
         />
-        <Scene key="employeeCreate" component={EmployeeCreate} title="Create Employee" />
-        <Scene key="employeeEdit" component={EmployeeEdit} title="Edit Employee" />
         <Scene key="clientDetail" component={ClientDetail} title="Client Detail" />
         <Scene key="gpsMap" component={GpsMapView} title="GPS Map" />
       </Scene>
