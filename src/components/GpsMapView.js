@@ -8,11 +8,7 @@ import redDot from './images/mRed.png';
 import greenDot from './images/mGreen.png';
 import blueDot from './images/mBlue.png';
 import GpsModalView from './GpsModalView';
-//import { Marker } from 'react-native-maps';
 
-//import React, { Component } from 'react';
-//import { Platform, Text, View, StyleSheet } from 'react-native';
-//import { Constants, Location, Permissions } from 'expo';
 const JOB_NOT_ACTIVE = 0;
 const JOB_NEW = 1;
 const JOB_ASSIGNED = 2;
@@ -369,7 +365,6 @@ export class GpsMapView extends React.Component {
                           street={client.clientStreet}
                           city={client.clientCity}
                           id={index}
-                          onRepeatPress ={(index)=> this.onRepeatPress(index)}
                           onDonePress ={(index, activeOrder)=> this.onDonePress(index, activeOrder)}
                           onCancelPress ={(index)=> this.onCancelPress(index)}
                           modalOpen = {this.state.modalOpen}

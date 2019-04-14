@@ -17,10 +17,6 @@ class GpsModalView extends React.Component {
        console.log("onButtonPress");
     }
 
-    /*onRepeatPress(index) {
-       console.log("GpsModalView onRepeatPress");
-       this.props.onRepeatPress(index);
-    }*/
 
     onDonePress(index) {
       //console.log("GpsModalView onDonePress");
@@ -58,11 +54,6 @@ class GpsModalView extends React.Component {
         const {id, modalOpen, title, description, selectedIndex, status,
                street, city, activeOrder, workorders} = this.props;
         const {isActiveOrderSelected, ActiveOrderSelected, doneWithoutOrder} = this.state;
-        //console.log("id = " + id);
-        //console.log("title =" + title);
-        //console.log("status =" + status);
-        //console.log(selectedIndex);
-        //console.log(workorders);
 
         const orderArray =[];
         for (var key in workorders) {
@@ -72,9 +63,6 @@ class GpsModalView extends React.Component {
 
         let open = true;
 
-        //if (selectedIndex && selectedIndex === id && modalOpen) {
-        //   open = true;
-        //}
         return (
 
           <Modal
@@ -90,32 +78,39 @@ class GpsModalView extends React.Component {
 
                     <Text style={styles.titleText}>{title}</Text>
                     <Text style={styles.modalText}>{street}</Text>
-                    <Text style={styles.modalText}>
+                    <Text style={styles.orderText}>
                         {activeOrder} orders active
                     </Text>
-                    <Text style={styles.modalText}>
-                        select one to deliver
-                    </Text>
 
+                    <View style={styles.FlatViewContainer} >
                     <FlatList
                         data={orderArray}
                         showsVerticalScrollIndicator={true}
                         renderItem={({item}) =>
                            <TouchableWithoutFeedback onPress={ () => this.onRowPress(item)}>
                                <View style={styles.flatview}>
-                                  <Text style={styles.name}>{item.orderId} {item.work}</Text>
+                                  <Text style={styles.orderName}>{item.orderId} </Text>
+                                  <Text style={styles.orderName}>{item.work}</Text>
                               </View>
                            </TouchableWithoutFeedback>
                         }
                         keyExtractor={item => item.orderKey}
                     />
+                    </View>
 
-                    {isActiveOrderSelected && <Text style={styles.email}>
-                          deliver to {ActiveOrderSelected.orderId} click Done to confirm
-                          </Text> }
-                    {doneWithoutOrder && <Text style={styles.email}>
+                    <View style ={{width: 250, height: 50,}}>
+                    {isActiveOrderSelected && <View style={{marginTop:1, marginBotton:1}}>
+                         <Text style={styles.orderSelected}>
+                          Deliver to {ActiveOrderSelected.orderId}
+                          </Text>
+                          <Text style={styles.orderSelected}>
+                          click Done to confirm
+                          </Text>
+                    </View>}
+                    {doneWithoutOrder && <Text style={styles.orderSelected}>
                           select an order first
                           </Text> }
+                    </View>
                     <View style={styles.buttonContainer}>
                     <TouchableHighlight
                         style={styles.leftButton}
@@ -150,7 +145,24 @@ const styles = {
     fontWeight: 'bold',
     textAlign: 'center',
     fontSize: 16,
-    marginBottom: 0,
+    marginBottom: 2,
+    marginTop: 2,
+  },
+  orderName: {
+    color: 'blue',
+    fontWeight: 'normal',
+    textAlign: 'center',
+    fontSize: 16,
+    paddingBottom: 0,
+    paddingTop: 0,
+  },
+  orderSelected: {
+    color: 'red',
+    fontWeight: 'bold',
+    textAlign: 'center',
+    fontSize: 15,
+    paddingBottom: 0,
+    paddingTop: 0,
   },
   modalText: {
     fontWeight: 'normal',
@@ -159,9 +171,13 @@ const styles = {
     color:'black',
     marginBottom: 0,
   },
+  FlatViewContainer: {
+    width: 250,
+    height: 100,
+  },
   modalContainer: {
     width: 250,
-    height: 260,
+    height: 280,
     borderRadius: 5,
     borderWidth: 1,
     borderColor: 'green',
@@ -178,7 +194,7 @@ const styles = {
   buttonContainer: {
     flex: 1,
     flexDirection: 'row',
-    marginTop: 5,
+    marginTop: 10,
     margin: 5,
     justifyContent: 'space-between'
   },
@@ -207,8 +223,11 @@ const styles = {
   },
   flatview: {
     justifyContent: 'center',
-    paddingTop: 10,
+    paddingTop: 1,
     borderRadius: 2,
+    borderWidth: 2,
+    borderColor: 'blue',
+    borderStyle: 'dotted',
   },
   name: {
     fontSize: 18
