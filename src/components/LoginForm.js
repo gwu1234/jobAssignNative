@@ -64,8 +64,8 @@ class LoginForm extends Component {
              //console.log("accesses objects = ")
              //console.log(accesses);
              for (var key in accesses) {
-                console.log(key) ;
-                console.log(accesses[key]);
+                //console.log(key) ;
+                //console.log(accesses[key]);
                 accessArray.push ({...accesses[key], uid: key, key: key}) ;
              }
              //const accessArray = _.map(accesses, (val, uid) => {
@@ -75,14 +75,14 @@ class LoginForm extends Component {
                //return { ...val, uid };
              //});
 
-             console.log(accessArray);
+             //console.log(accessArray);
              const length = accessArray.length;
              //console.log(length);
              for (i = 0; i < length; i++) {
                   //console.log(accessArray[i]);
                   //console.log(accessArray[i].employeeKey);
                   if (accessArray[i].access === access) {
-                    console.log("access matched");
+                    //console.log("access matched");
                     //console.log(accessArray[i].access);
                     //console.log(accessArray[i].employeeKey);
                     this.props.setEmployeeKey(accessArray[i].employeeKey);

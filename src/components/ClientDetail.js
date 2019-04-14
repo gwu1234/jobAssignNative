@@ -40,8 +40,8 @@ class ClientDetail extends Component {
 
   render() {
     const {client} = this.props;
-    console.log("ClientDetails");
-    console.log(client);
+    //console.log("ClientDetails");
+    //console.log(client);
     return (
       <Card>
         <ClientForm client={client}/>

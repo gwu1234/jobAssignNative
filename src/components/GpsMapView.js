@@ -28,12 +28,6 @@ export class GpsMapView extends React.Component {
 
          // data from employee/assigned of firebase
          clients: [],
-
-         // initial location
-         //location.coords.latitude;
-         //location.coords.longitude;
-         //location.timestamp;
-         //location: null,
          error: null,
 
          // moving position
@@ -45,16 +39,6 @@ export class GpsMapView extends React.Component {
          truckPath: null,
      };
   }
-
-   /*state = {
-      //markerColor: 'red',
-      selectedMarkerIndex: '',
-      //calloutVisible: false,
-      //cancelPressed: false,
-      clients: this.props.clients,
-      location: null,
-      errorMessage: null,
-  };*/
 
   /*componentWillMount() {
     if (Platform.OS === 'android' && !Constants.isDevice) {
@@ -123,25 +107,6 @@ export class GpsMapView extends React.Component {
        truckKey: this.props.truck.key,
        truckPath: truckPath,
     });
-    //console.log ("truckKey = " + this.props.truck.key);
-    //console.log ("truckKey = " + this.state.truckKey);
-    /*navigator.geolocation.getCurrentPosition(
-      position => {
-         this.setState({
-             latitude: position.coords.latitude,
-             longitude: position.coords.longitude,
-             //latitudeDelta: LATITUDE_DELTA,
-             //longitudeDelta: LONGITUDE_DELTA,
-             timestamp: position.timestamp,
-             error: null,
-         });
-         console.log(position.coords.latitude);
-      },
-      error => this.setState({ error: error.message }),
-      { enableHighAccuracy: true, timeout: 20000, maximumAge: 2000, distanceFilter: 5 },
-      //error => console.log(error),
-     //{ enableHighAccuracy: true, timeout: 20000, maximumAge: 1000 }
-   );*/
 
     this._getLocationPermisions();
 
@@ -223,22 +188,6 @@ export class GpsMapView extends React.Component {
       }
   }
 
-  /*onRepeatPress (index) {
-      let {clients} = this.state;
-      //this.setState({selectedMarkerIndex: index});
-      console.log("GpsMapView onRepeatPress");
-      console.log(index);
-      let client = clients[index];
-      client = {...client, status:"repeat"}
-      clients[index] = client;
-
-      //console.log(index);
-      this.setState({
-         clients: clients,
-         modalOpen: false,
-         selectedIndex: null,
-      });
-  }*/
 
   onDonePress (index, selectedOrder) {
       let {clients} = this.state;
@@ -310,8 +259,9 @@ export class GpsMapView extends React.Component {
     let activeOrders = 0;
     let deliveryTimes = 0;
     let status = 0;
+
     for (var orderKey in workorders) {
-       let {isActive,isRepeat,repeatTimes,previousDelivery,deliverys,presentDelivery}
+       let {isActive,isRepeat,repeatTimes,previousDelivery,presentDelivery}
              = workorders[orderKey];
 
        isActive = (isActive && isActive === "true")? true:false;
@@ -320,12 +270,10 @@ export class GpsMapView extends React.Component {
        previousDelivery = previousDelivery? parseInt(previousDelivery, 10) : 0;
        presentDelivery = presentDelivery? parseInt(presentDelivery, 10) : 0;
 
-       //console.log(deliveryTimes);
        deliveryTimes = presentDelivery + previousDelivery ;
 
        if (isActive) {
            if (!isRepeat && deliveryTimes > 0) {
-              //status = JOB_DONE;
               statusArray.push(JOB_DONE);
            } else if (isRepeat && repeatTimes === 0) {
               statusArray.push(JOB_PROGRESS);
@@ -337,63 +285,24 @@ export class GpsMapView extends React.Component {
            else {
              statusArray.push(JOB_NEW);
            }
-           activeOrders ++;
        }
 
+       activeOrders = statusArray.length;
        if (statusArray.length > 0) {
           status = statusArray[0];
        }
        for (var i=0; i++; i < statusArray.length) {
            status = status < statusArray[i]? status: statusArray[i];
        }
-       return {status: status, activeOrder: activeOrders};
      }
-     return {};
+      return {status: status, activeOrder: activeOrders};
   }
 
 
   render() {
-    /*var markers = [
-      {
-        latlng: {
-            latitude: 45.449485,
-            longitude: -73.841047,
-        },
-        title: 'my place',
-        subtitle: '450 Bruce',
-        description: '450 Bruce Street',
-      }
-    ];*/
-
-    /*let text = 'Waiting..';
-    if (this.state.errorMessage) {
-          text = this.state.errorMessage;
-        } else if (this.state.location) {
-          text = JSON.stringify(this.state.location);
-    }*/
 
     let lat = null;
     let lng = null;
-    /*if (this.state.location) {
-        //console.log(text);
-        //console.log(this.state.location.coords.latitude);
-        //console.log(this.state.location.coords.longitude);
-
-        //console.log(this.state.location.timestamp);
-        //console.log(this.state.location);
-        lat = this.state.location.coords.latitude;
-        lng = this.state.location.coords.longitude;
-    }*/
-    /*coords": Object {
-    "accuracy": 65,
-    "altitude": 52.230979919433594,
-    "altitudeAccuracy": 10,
-    "heading": -1,
-    "latitude": 45.44958298968795,
-    "longitude": -73.8410947429255,
-    "speed": -1,
-    },
-    "timestamp": 1552656499270.3618,*/
 
     if (this.state.latitude && this.state.longitude) {
         lat = this.state.latitude;
@@ -402,7 +311,6 @@ export class GpsMapView extends React.Component {
 
     let {clients, selectedIndex, modalOpen} = this.state;
 
-    // convert lat and lng string to float
     clients = clients.map((client, index) => {
        if (/^(\-)?[0-9]+(\.)?[0-9]+$/.test(client.clientLat) &&
            /^(\-)?[0-9]+(\.)?[0-9]+$/.test(client.clientLng)) {
@@ -411,7 +319,6 @@ export class GpsMapView extends React.Component {
 
             const {workorders} = client;
             const orderStatus = this.status4ThisClient(workorders);
-            //console.log(orderStatus);
 
             return {  ...client,
                       clientLat: lat,
@@ -420,28 +327,9 @@ export class GpsMapView extends React.Component {
                       activeOrder: orderStatus.activeOrder,
                    };
         }
-
-        //console.log("index = " + index);
-        //console.log("client lat = ", client.clientLat);
-        //console.log("client lng = ", client.clientLng);
-        //console.log("client clientKey = ", client.clientKey);
-        //console.log("client clientTag = ", client.clientTag);
     });
 
-
-
-    //console.log(clients);
     const {employeeName} = this.props;
-    //const {markerColor} = this.state;
-    //console.log("at GpsMapView");
-    //console.log(clients);
-    //const red = false;
-    //const blue = true;
-    //fairview
-    //45.465318, -73.833466
-    //if (clients) {
-    //   console.log(clients[selectedIndex].status);
-    //}
     const clat = lat === null ? 45.465318 : lat  ;
     const clng = lng === null ? -73.833466 : lng  ;
 
@@ -469,9 +357,7 @@ export class GpsMapView extends React.Component {
                 onPress={(e) => this.onPressMarker(e, index)}
                 //onPress={() => {}}
                 onCalloutPress={(index) => {}}
-
-
-            >
+          >
 
             <View style = {(client.status===JOB_NEW) ? styles.redcircle :
                 (client.status ===JOB_PROGRESS? styles.bluecircle : styles.greencircle ) } >
