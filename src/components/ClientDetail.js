@@ -4,6 +4,7 @@ import { connect } from 'react-redux';
 import Communications from 'react-native-communications';
 //import EmployeeForm from './EmployeeForm';
 import ClientForm from './ClientForm';
+import WorkOrders from './WorkOrders';
 //import { employeeUpdate, employeeSave, employeeDelete } from '../actions';
 import { Card, CardSection, Button, Confirm } from './common';
 
@@ -40,11 +41,12 @@ class ClientDetail extends Component {
 
   render() {
     const {client} = this.props;
-    //console.log("ClientDetails");
     //console.log(client);
+    //console.log(client.workorders);
     return (
       <Card>
         <ClientForm client={client}/>
+        <WorkOrders workorders ={client.workorders}/>
       </Card>
     );
   }

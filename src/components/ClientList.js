@@ -52,9 +52,15 @@ class ClientList extends Component {
             for (var key in assignedClients) {
                 //console.log("key = " + key);
                 //console.log(assignedClients[key]);
+                const {workorders} = assignedClients[key];
+                let activeOrders = 0;
+                for (var orderkey in workorders) {
+                   activeOrders ++;
+                }
+
                 clients.push ({
                   ...assignedClients[key], uid : key, clientKey: key,
-                  clientTag: key
+                  clientTag: key, activeOrders: activeOrders
                 }) ;
             }
 
@@ -115,6 +121,7 @@ class ClientList extends Component {
                         <Text style={styles.name}>{item.clientName}</Text>
                         <Text style={styles.email}>{item.clientStreet}</Text>
                         <Text style={styles.email}>{item.clientCity}</Text>
+                        <Text style={styles.order}>Active Work Orders: {item.activeOrders}</Text>
                     </View>
                  </TouchableWithoutFeedback>
               }
@@ -147,9 +154,12 @@ const styles = StyleSheet.create({
     fontSize: 18
   },
   email: {
-    color: 'red'
+    color: 'blue'
+  },
+  order: {
+    fontSize: 16,
+    color: 'green'
   }
-
 });
 
 const mapStateToProps = state => {
