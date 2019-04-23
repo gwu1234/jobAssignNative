@@ -1,5 +1,6 @@
 import _ from 'lodash';
 import React, { Component } from 'react';
+import { View } from 'react-native';
 import { connect } from 'react-redux';
 import Communications from 'react-native-communications';
 //import EmployeeForm from './EmployeeForm';
@@ -44,10 +45,10 @@ class ClientDetail extends Component {
     //console.log(client);
     //console.log(client.workorders);
     return (
-      <Card>
+      <View style={{flex:1}}>
         <ClientForm client={client}/>
         <WorkOrders workorders ={client.workorders}/>
-      </Card>
+      </View>
     );
   }
 }

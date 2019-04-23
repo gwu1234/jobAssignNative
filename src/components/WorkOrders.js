@@ -28,6 +28,7 @@ class WorkOrders extends Component {
   }
 
   onRowPress(rowItem) {
+    console.log("submit photo");
     //Actions.clientDetail({ client: rowItem });
   }
 
@@ -64,7 +65,7 @@ class WorkOrders extends Component {
               }
 
               return (
-                 <TouchableWithoutFeedback onPress={ () => this.onRowPress(item)}>
+
                  <View style={styles.flatitem}>
 
                    <Text style={styles.order}>
@@ -90,9 +91,13 @@ class WorkOrders extends Component {
                    <Text style={styles.text}>
                       Status: {status}
                    </Text>
-
+                   <TouchableWithoutFeedback onPress={ () => this.onRowPress(item)}>
+                   <Text style={styles.photo}>
+                      Submit Photos
+                   </Text>
+                   </TouchableWithoutFeedback>
                  </View>
-                 </TouchableWithoutFeedback>
+
                )
               }
               }
@@ -105,6 +110,7 @@ class WorkOrders extends Component {
 
 const styles = StyleSheet.create({
   container: {
+    flex:4,
     marginTop: 15,
   },
 
@@ -113,12 +119,20 @@ const styles = StyleSheet.create({
   },
   flatitem: {
     marginBottom: 10,
+    fontWeight: "bold",
+    color: "green",
   },
-  name: {
-    fontSize: 18
-  },
-  email: {
-    color: 'blue'
+  photo: {
+    backgroundColor: 'green',
+    borderRadius: 5,
+    borderWidth: 2,
+    borderColor: '#007aff',
+    marginLeft: 20,
+    height: 30,
+    width: 140,
+    color: 'white',
+    fontWeight: "bold",
+    fontSize: 18,
   },
   order: {
     fontSize: 16,

@@ -35,6 +35,7 @@ class ClientForm extends Component {
 
 const styles = {
   container: {
+    flex: 1,
     marginTop: 20,
   },
   text: {
