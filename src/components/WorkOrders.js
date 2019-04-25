@@ -3,14 +3,16 @@ import React, { Component } from 'react';
 import firebase from 'firebase';
 import { connect } from 'react-redux';
 import { Actions } from 'react-native-router-flux';
-import { FlatList, StyleSheet, View, Text, TouchableWithoutFeedback} from 'react-native';
+import { CameraRoll, FlatList, StyleSheet, View, Text, TouchableWithoutFeedback} from 'react-native';
 import { setClients, setEmployeeName, setTruck} from '../actions';
 import ListItem from './ListItem';
+import PhotoDisplay from './PhotoDisplay';
 import { CardSection, Input } from './common';
 
 class WorkOrders extends Component {
    state = {
      workorders: null,
+     photos: null,
   };
 
   componentWillMount() {
@@ -28,8 +30,22 @@ class WorkOrders extends Component {
   }
 
   onRowPress(rowItem) {
-    console.log("submit photo");
+    //console.log("submit photo");
     //Actions.clientDetail({ client: rowItem });
+
+    /*CameraRoll.getPhotos({
+       first: 20,
+       assetType: 'Photos',
+     })
+     .then(r => {
+       this.setState({ photos: r.edges });
+     })
+     .catch((err) => {
+        //Error Loading Images
+     });*/
+
+     //console.log(this.state.photos);
+     Actions.photos({ workorder: rowItem });
   }
 
   render() {
@@ -93,7 +109,7 @@ class WorkOrders extends Component {
                    </Text>
                    <TouchableWithoutFeedback onPress={ () => this.onRowPress(item)}>
                    <Text style={styles.photo}>
-                      Submit Photos
+                      Select Photos
                    </Text>
                    </TouchableWithoutFeedback>
                  </View>

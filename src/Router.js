@@ -5,6 +5,7 @@ import LoginForm from './components/LoginForm';
 import ClientList from './components/ClientList';
 import ClientDetail from './components/ClientDetail';
 import GpsMapView from './components/GpsMapView';
+import PhotoDisplay from './components/PhotoDisplay';
 
 const RouterComponent = () => {
 
@@ -35,6 +36,7 @@ const RouterComponent = () => {
         />
         <Scene key="clientDetail" component={ClientDetail} title="Client Detail" />
         <Scene key="gpsMap" component={GpsMapView} title="GPS Map" />
+        <Scene key="photos" component={PhotoDisplay} title="Select Photo" />
       </Scene>
       </Scene>
     </Router>
