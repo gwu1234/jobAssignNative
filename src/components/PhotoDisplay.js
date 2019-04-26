@@ -3,7 +3,7 @@ import React, { Component } from 'react';
 import firebase from 'firebase';
 import { connect } from 'react-redux';
 import { Actions } from 'react-native-router-flux';
-import { Platform, CameraRoll, FlatList, StyleSheet, View, Text, TouchableWithoutFeedback, ScrollView, Image, Button} from 'react-native';
+import { Platform, StyleSheet, View, Text, TouchableWithoutFeedback,Image, Button, ActivityIndicator} from 'react-native';
 //import ImageResizer from 'react-native-image-resizer';
 import { ImagePicker, ImageManipulator, Permissions} from 'expo';
 //import ImagePicker from 'react-native-image-picker';
@@ -28,7 +28,8 @@ class PhotoDisplay extends Component {
      //filePath: null,
      photo: null,
      thumb: null,
-
+     isLoading: false,
+     isSubmitted: false,
   };
 
   //getPhotos.bind(this);
@@ -59,6 +60,10 @@ class PhotoDisplay extends Component {
        } else {
             console.log("Camera_roll granted");
        }
+  }
+
+  close = () =>{
+
   }
 
   /*_handleButtonPress = () => {
@@ -232,6 +237,9 @@ class PhotoDisplay extends Component {
 
   submitImage = () => {
      const { photo, thumb, photoPath } = this.state;
+
+     this.setState({isLoading: true, isSubmitted: false});
+
      //const {photoPath} = this.state;
      const storage = firebase.storage();
      const sessionId = String(new Date().getTime());
@@ -241,13 +249,13 @@ class PhotoDisplay extends Component {
      //this.uploadImage(imageRef, uri, mime = 'application/octet-stream');
      //this.uploadImage(image, imageRef)
      this.uploadImageAsync(photo, photoRef);
-     this.uploadImageAsync(thumb, thumbRef);
+     this.uploadImageAsync(thumb, thumbRef, true);
      //.catch(err =>{
       //   console.log(err)
      //});
   };
 
-  uploadImageAsync = async (uri, ref) => {
+  uploadImageAsync = async (uri, ref, isSubmitted=false) => {
   //async function uploadImageAsync(uri, ref) {
   // Why are we using XMLHttpRequest? See:
   // https://github.com/expo/expo/issues/2402#issuecomment-443726662
@@ -276,6 +284,9 @@ class PhotoDisplay extends Component {
          console.log(snapshot.metadata.fullPath);
          //console.log('Uploaded a blob!');
          //console.log(snapshot.ref.getDownloadURL());
+         if (isSubmitted) {
+           this.setState({isLoading: false, isSubmitted: true});
+         }
      })
     .catch((err) =>{
          console.log("error = " + err);
@@ -289,20 +300,24 @@ class PhotoDisplay extends Component {
 
   render() {
    //const { workorder} = this.props;
-   const { photo } = this.state;
+   const { photo, isLoading, isSubmitted } = this.state;
    //console.log(photos);
    return (
         <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }} >
-            <TouchableWithoutFeedback onPress={() =>this._pickImage()} style={styles.button}>
+            {!photo && <TouchableWithoutFeedback onPress={() =>this._pickImage()} style={styles.button}>
                 <Text style={styles.buttonText}>
                      Select Photo from Camera Roll
                 </Text>
-            </TouchableWithoutFeedback>
+            </TouchableWithoutFeedback>}
 
             {photo && <Image source={{ uri: photo }} style={{ width: 300, height: 300 }} />}
-            {photo && <TouchableWithoutFeedback onPress={ () => this.submitImage ()}>
-                      <Text style={styles.imageButton}> Submit Photo </Text>
+
+            {photo && !isLoading && !isSubmitted && <TouchableWithoutFeedback onPress={ () => this.submitImage ()} style={styles.button}>
+                      <Text style={styles.buttonText}> Submit Photo </Text>
                </TouchableWithoutFeedback>}
+
+            {photo && isLoading && !isSubmitted && <ActivityIndicator size="large" color="#0000ff" style={styles.button}/>}
+
         </View>
       );
   }
