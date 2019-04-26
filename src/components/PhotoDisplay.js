@@ -3,7 +3,13 @@ import React, { Component } from 'react';
 import firebase from 'firebase';
 import { connect } from 'react-redux';
 import { Actions } from 'react-native-router-flux';
-import { CameraRoll, FlatList, StyleSheet, View, Text, TouchableWithoutFeedback, ScrollView, Image, Button} from 'react-native';
+import { Platform, CameraRoll, FlatList, StyleSheet, View, Text, TouchableWithoutFeedback, ScrollView, Image, Button} from 'react-native';
+//import ImageResizer from 'react-native-image-resizer';
+import { ImagePicker, ImageManipulator, Permissions} from 'expo';
+//import ImagePicker from 'react-native-image-picker';
+//import ImagePicker from 'react-native-image-picker';
+//import { ImagePicker } from 'expo';
+
 //import { setClients, setEmployeeName, setTruck} from '../actions';
 //import ListItem from './ListItem';
 //import { CardSection, Input } from './common';
@@ -17,10 +23,14 @@ import { CameraRoll, FlatList, StyleSheet, View, Text, TouchableWithoutFeedback,
 class PhotoDisplay extends Component {
    state = {
      //workorder: null,
-     photos: null,
+     //photos: [],
      photoPath: '',
+     //filePath: null,
+     image: null,
 
   };
+
+  //getPhotos.bind(this);
 
   componentWillMount() {
     const { workorder, usertag} = this.props;
@@ -31,9 +41,26 @@ class PhotoDisplay extends Component {
     const photoPath = usertag + "/" + clientTag + "/" + orderKey;
     //console.log(photoPath);
     this.setState ({photoPath: photoPath});
+    //this.getPhotos.bind(this);
+     //this.getPhotos();
   }
 
-  _handleButtonPress = () => {
+  componentDidMount() {
+     //this.getPhotos();
+      const permission = Permissions.getAsync(Permissions.CAMERA_ROLL);
+      if (permission.status !== 'granted') {
+            const newPermission = Permissions.askAsync(Permissions.CAMERA_ROLL);
+            if (newPermission.status === 'granted') {
+                console.log("Camera_roll granted");
+             } else {
+               console.log("Camera_roll not granted");
+             }
+       } else {
+            console.log("Camera_roll granted");
+       }
+  }
+
+  /*_handleButtonPress = () => {
    CameraRoll.getPhotos({
        first: 20,
        assetType: 'Photos',
@@ -44,25 +71,88 @@ class PhotoDisplay extends Component {
      .catch((err) => {
         //Error Loading Images
      });
-   };
+   }; */
 
-   onRowPress(item) {
-      console.log(item);
+   _resizeImage = async (uri) => {
+    const manipResult = await ImageManipulator.manipulateAsync(
+      uri,
+      [ {resize: { width :80}}], { format: 'jpg' }
+    );
+    //console.log(manipResult);
+    const {photos} = this.state;
+    photos.push(manipResult);
+    this.setState({ photos: photos });
+    //return manipResult;
+  }
+
+   /*async getPhotos() {
+       await CameraRoll.getPhotos({
+           first: 10 ,
+           assetType: 'Photos'
+       })
+       .then(r => {
+           //console.log(r);
+           //this.setState({ photos:r.edges, endCursorPhotos:r.page_info.end_cursor })
+           let resizePromiseArray = []
+           for(let i=0; i<r.edges.length; i++){
+               //resizePromiseArray.push(
+                this._resizeImage (r.edges[i].node.image.uri)
+               //)
+           }
+           //this.setState({ photos:resizePromiseArray})
+           //return Promise.all(resizePromiseArray)
+       })
+       //.then(newUris=>{
+           // console.log(JSON.stringify(this.state.photos,null,4))
+        //   let newPhotos = this.state.photos.map((photo,i) => {
+        //       photo.node.image['optiUri'] = newUris[i]
+        //       return photo
+        //   })
+        //   this.setState({ photos:newPhotos })
+        //   console.log(newPhotos);
+       //})
+       .catch(err =>{
+           console.log(err)
+       })
+   }*/
+
+   /*onRowPress(item) {
+      //console.log(item);
       const {photoPath} = this.state;
       const storage = firebase.storage();
-      const sessionId = String(new Date().getTime());
+      const sessionId = String(new Date().getTime())+ ".HEIC";
       const imageRef = storage.ref(photoPath).child("photo").child(sessionId);
       //return imageRef.put(item.node.image.uri);
       //this.uploadImage(imageRef, uri, mime = 'application/octet-stream');
-      this.uploadImage(item.node.image.uri, imageRef);
-   }
+      this.uploadImage(item.node.image.uri, imageRef)
+      .catch(err =>{
+          console.log(err)
+      });
+   }*/
 
-  uploadImage = async(uri, ref) => {
+  /*uploadImage = async(uri, ref) => {
       const response = await fetch(uri);
-      const blob = await response.blob();
+      //console.log(response);
+      let blob = await response.blob();
+      //blob._data = {...blob._data, type: "image/HEIC"};
+      //blob._data = {...blob._data, type: "image/jpeg"};
+      console.log(blob);
+
+      var metadata = {
+           contentType: 'image/jpeg',
+      };
+
       //var ref = firebase.storage().ref().child("my-image");
-      return ref.put(blob);
-  }
+      return ref.put(blob, metadata)
+          .then((snapshot) => {
+               console.log('Uploaded a blob to the following path: ');
+               console.log(snapshot.metadata.fullPath);
+               //console.log('Uploaded a blob!');
+           })
+          .catch((err) =>{
+               console.log("error = " + err);
+          });
+  }*/
 
    /*uploadImage(imageRef, uri, mime = 'application/octet-stream') {
     return new Promise((resolve, reject) => {
@@ -92,47 +182,125 @@ class PhotoDisplay extends Component {
     })
   }*/
 
+  /*chooseFile = () => {
+      var options = {
+        title: 'Select Image',
+        customButtons: [
+          { name: 'customOptionKey', title: 'Choose Photo from Custom Option' },
+        ],
+        storageOptions: {
+          skipBackup: true,
+          path: 'images',
+        },
+      };
+      ImagePicker.showImagePicker(options, response => {
+        console.log('Response = ', response);
+
+        if (response.didCancel) {
+          console.log('User cancelled image picker');
+        } else if (response.error) {
+          console.log('ImagePicker Error: ', response.error);
+        } else if (response.customButton) {
+          console.log('User tapped custom button: ', response.customButton);
+          alert(response.customButton);
+        } else {
+          let source = response;
+          // You can also display the image using data:
+          // let source = { uri: 'data:image/jpeg;base64,' + response.data };
+          this.setState({
+            filePath: source,
+          });
+        }
+      });
+    };*/
+
+    _pickImage = async () => {
+    console.log("picking image");
+    let result = await ImagePicker.launchImageLibraryAsync({
+      allowsEditing: true,
+      aspect: [4, 3],
+    });
+
+    console.log(result);
+
+    if (!result.cancelled) {
+      this.setState({ image: result.uri });
+    }
+  };
+
+  submitImage = () => {
+     const { image, photoPath } = this.state;
+     //const {photoPath} = this.state;
+     const storage = firebase.storage();
+     const sessionId = String(new Date().getTime());
+     const imageRef = storage.ref(photoPath).child("photo").child(sessionId).child("big.jpg");
+     //return imageRef.put(item.node.image.uri);
+     //this.uploadImage(imageRef, uri, mime = 'application/octet-stream');
+     //this.uploadImage(image, imageRef)
+     this.uploadImageAsync(image, imageRef);
+     //.catch(err =>{
+      //   console.log(err)
+     //});
+  };
+
+  uploadImageAsync = async (uri, ref) => {
+  //async function uploadImageAsync(uri, ref) {
+  // Why are we using XMLHttpRequest? See:
+  // https://github.com/expo/expo/issues/2402#issuecomment-443726662
+    const blob = await new Promise((resolve, reject) => {
+       const xhr = new XMLHttpRequest();
+       xhr.onload = function() {
+           resolve(xhr.response);
+       };
+       xhr.onerror = function(e) {
+          console.log(e);
+          reject(new TypeError('Network request failed'));
+       };
+       xhr.responseType = 'blob';
+       xhr.open('GET', uri, true);
+       xhr.send(null);
+    });
+
+     /*const ref = firebase
+     .storage()
+     .ref()
+     .child(uuid.v4());*/
+    //const snapshot = await ref.put(blob)
+    await ref.put(blob)
+    .then((snapshot) => {
+         console.log('Uploaded a blob to the following path: ');
+         console.log(snapshot.metadata.fullPath);
+         //console.log('Uploaded a blob!');
+         //console.log(snapshot.ref.getDownloadURL());
+     })
+    .catch((err) =>{
+         console.log("error = " + err);
+    });;
+
+     // We're done with the blob, close and release it
+     blob.close();
+
+     //return await snapshot.ref.getDownloadURL();
+}
+
   render() {
    //const { workorder} = this.props;
-   const { photos } = this.state;
-   //console.log(workorder);
-
-
-
+   const { image } = this.state;
+   //console.log(photos);
    return (
-      <View style={styles.container} >
-          <TouchableWithoutFeedback onPress={this._handleButtonPress} style={styles.button}>
-              <Text style={styles.buttonText}>
-                   Display Photos
-              </Text>
-          </TouchableWithoutFeedback>
+        <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }} >
+            <TouchableWithoutFeedback onPress={() =>this._pickImage()} style={styles.button}>
+                <Text style={styles.buttonText}>
+                     Select Photo from Camera Roll
+                </Text>
+            </TouchableWithoutFeedback>
 
-         <FlatList
-             data={photos}
-             showsVerticalScrollIndicator={true}
-             style={styles.scroll}
-             renderItem={({item}) => {
-                 //console.log (item);
-                 return (
-                   <View>
-                      <Image
-                        key={String(item.node.timestamp)}
-                        style={styles.image}
-                        source={{ uri: item.node.image.uri }}
-                      />
-                      <TouchableWithoutFeedback onPress={ () => this.onRowPress(item)}>
-                             <Text style={styles.imageButton}> Submit Photo </Text>
-                      </TouchableWithoutFeedback>
-                   </View>
-                 )
-               }
-             }
-             keyExtractor={item => String(item.node.timestamp)}
-         />
-     </View>
-   );
-
-
+            {image && <Image source={{ uri: image }} style={{ width: 300, height: 300 }} />}
+            {image && <TouchableWithoutFeedback onPress={ () => this.submitImage ()}>
+                      <Text style={styles.imageButton}> Submit Photo </Text>
+               </TouchableWithoutFeedback>}
+        </View>
+      );
   }
 }
 
@@ -158,7 +326,7 @@ const styles = StyleSheet.create({
     backgroundColor: 'green',
     color: 'white',
     fontWeight: "bold",
-    fontSize: 20,
+    fontSize: 16,
     alignSelf: 'center',
     marginTop: 10,
     marginBottom: 10,
@@ -175,8 +343,8 @@ const styles = StyleSheet.create({
     padding: 2,
   },
   image: {
-    width: 200,
-    height: 200,
+    width: 100,
+    height: 100,
     marginBottom: 0,
   },
   text: {
@@ -218,3 +386,44 @@ export default connect(mapStateToProps)(PhotoDisplay);
   })}
   </ScrollView>}
 </View>*/
+
+/*<TouchableWithoutFeedback onPress={() => this._handleButtonPress()} style={styles.button}>
+    <Text style={styles.buttonText}>
+         Photo List
+    </Text>
+</TouchableWithoutFeedback> */
+
+/*<View style={styles.container} >
+    <TouchableWithoutFeedback onPress={() =>this._pickImage()} style={styles.button}>
+        <Text style={styles.buttonText}>
+             Photo List
+        </Text>
+    </TouchableWithoutFeedback>
+
+   <FlatList
+       data={photos}
+       showsVerticalScrollIndicator={true}
+       style={styles.scroll}
+       renderItem={({item}) => {
+           //console.log (item);
+           //let uri = Platform.OS === 'ios' ? item.uri.replace('file://', ''):item.uri;
+           //console.log(uri);
+           //console.log(item.width);
+           return (
+             <View>
+                <Image
+                  key={String(item.node.timestamp)}
+                  style={styles.image}
+                  source={{ uri: item.node.image.uri }}
+                />
+                <TouchableWithoutFeedback onPress={ () => this.onRowPress(item)}>
+                       <Text style={styles.imageButton}> Submit Photo </Text>
+                </TouchableWithoutFeedback>
+             </View>
+           )
+         }
+       }
+       keyExtractor={item => String(item.node.timestamp)}
+   />
+</View>
+);*/
