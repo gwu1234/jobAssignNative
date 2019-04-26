@@ -26,7 +26,8 @@ class PhotoDisplay extends Component {
      //photos: [],
      photoPath: '',
      //filePath: null,
-     image: null,
+     photo: null,
+     thumb: null,
 
   };
 
@@ -76,12 +77,12 @@ class PhotoDisplay extends Component {
    _resizeImage = async (uri) => {
     const manipResult = await ImageManipulator.manipulateAsync(
       uri,
-      [ {resize: { width :80}}], { format: 'jpg' }
+      [ {resize: { width :60}}], { format: 'jpg' }
     );
-    //console.log(manipResult);
-    const {photos} = this.state;
-    photos.push(manipResult);
-    this.setState({ photos: photos });
+    console.log(manipResult);
+    //const {photos} = this.state;
+    //photos.push(manipResult);
+    this.setState({ thumb: manipResult.uri });
     //return manipResult;
   }
 
@@ -224,20 +225,23 @@ class PhotoDisplay extends Component {
     console.log(result);
 
     if (!result.cancelled) {
-      this.setState({ image: result.uri });
+      this.setState({ photo: result.uri });
     }
+    this._resizeImage(result.uri);
   };
 
   submitImage = () => {
-     const { image, photoPath } = this.state;
+     const { photo, thumb, photoPath } = this.state;
      //const {photoPath} = this.state;
      const storage = firebase.storage();
      const sessionId = String(new Date().getTime());
-     const imageRef = storage.ref(photoPath).child("photo").child(sessionId).child("big.jpg");
+     const photoRef = storage.ref(photoPath).child("photo").child(sessionId).child("photo.jpg");
+     const thumbRef = storage.ref(photoPath).child("thumb").child(sessionId).child("thumb.jpg");
      //return imageRef.put(item.node.image.uri);
      //this.uploadImage(imageRef, uri, mime = 'application/octet-stream');
      //this.uploadImage(image, imageRef)
-     this.uploadImageAsync(image, imageRef);
+     this.uploadImageAsync(photo, photoRef);
+     this.uploadImageAsync(thumb, thumbRef);
      //.catch(err =>{
       //   console.log(err)
      //});
@@ -285,7 +289,7 @@ class PhotoDisplay extends Component {
 
   render() {
    //const { workorder} = this.props;
-   const { image } = this.state;
+   const { photo } = this.state;
    //console.log(photos);
    return (
         <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }} >
@@ -295,8 +299,8 @@ class PhotoDisplay extends Component {
                 </Text>
             </TouchableWithoutFeedback>
 
-            {image && <Image source={{ uri: image }} style={{ width: 300, height: 300 }} />}
-            {image && <TouchableWithoutFeedback onPress={ () => this.submitImage ()}>
+            {photo && <Image source={{ uri: photo }} style={{ width: 300, height: 300 }} />}
+            {photo && <TouchableWithoutFeedback onPress={ () => this.submitImage ()}>
                       <Text style={styles.imageButton}> Submit Photo </Text>
                </TouchableWithoutFeedback>}
         </View>
