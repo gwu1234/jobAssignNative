@@ -81,10 +81,10 @@ class PhotoDisplay extends Component {
 
     const orderRef = firebase.database().ref(orderPath);
     const employeeRef = firebase.database().ref(employeePath);
-    console.log("componentWillUnmount");
-    console.log(orderPath);
-    console.log(employeePath);
-    console.log("sessionId = " + sessionId);
+    //console.log("componentWillUnmount");
+    //console.log(orderPath);
+    //console.log(employeePath);
+    //console.log("sessionId = " + sessionId);
     orderRef.child(sessionId).set({"photo": "true", "thumb": "true", "photoTag": sessionId});
     employeeRef.child(sessionId).set({"photo": "true", "thumb": "true", "photoTag": sessionId});
   }
@@ -111,7 +111,7 @@ class PhotoDisplay extends Component {
       uri,
       [ {resize: { width :40}}], { format: 'jpg' }
     );
-    console.log(manipResult);
+    //console.log(manipResult);
     //const {photos} = this.state;
     //photos.push(manipResult);
     this.setState({ thumb: manipResult.uri });
@@ -254,7 +254,7 @@ class PhotoDisplay extends Component {
       aspect: [4, 3],
     });
 
-    console.log(result);
+    //console.log(result);
 
     if (!result.cancelled) {
       this.setState({ photo: result.uri });
@@ -316,7 +316,7 @@ class PhotoDisplay extends Component {
     await ref.put(blob)
     .then((snapshot) => {
          console.log('Uploaded a blob to the following path: ');
-         console.log(snapshot.metadata.fullPath);
+         //console.log(snapshot.metadata.fullPath);
          //console.log('Uploaded a blob!');
          //console.log(snapshot.ref.getDownloadURL());
          if (isSubmitted) {
