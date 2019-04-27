@@ -3,11 +3,12 @@ import React, { Component } from 'react';
 import firebase from 'firebase';
 import { connect } from 'react-redux';
 import { Actions } from 'react-native-router-flux';
-import { CameraRoll, FlatList, StyleSheet, View, Text, TouchableWithoutFeedback} from 'react-native';
-import { setClients, setEmployeeName, setTruck} from '../actions';
-import ListItem from './ListItem';
+import { FlatList, StyleSheet, View, Text, TouchableWithoutFeedback} from 'react-native';
+//import { setClients, setEmployeeName, setTruck} from '../actions';
+//import ListItem from './ListItem';
 import PhotoDisplay from './PhotoDisplay';
-import { CardSection, Input } from './common';
+//import { CardSection, Input } from './common';
+import WorkOrder from './WorkOrder';
 
 class WorkOrders extends Component {
    state = {
@@ -62,60 +63,11 @@ class WorkOrders extends Component {
               style={styles.flatview}
               data={workorders}
               showsVerticalScrollIndicator={true}
-              renderItem={({item}) =>{
-              const isRepeat = item.isRepeat?(item.isRepeat==="true"?true:false):false;
-              const previousDelivery = item.previousDelivery?parseInt (item.previousDelivery):0 ;
-              const presentDelivery = item.presentDelivery? parseInt (item.presentDelivery):0 ;
-              const deliverys = previousDelivery + presentDelivery;
-              const repeatTimes = item.repeatTimes?parseInt (item.repeatTimes):0;
-
-              let status = "NEW";
-              if (isRepeat){
-                if (deliverys >= repeatTimes) {
-                  status = "DONE";
-                } else if (deliverys > 0) {
-                  status = "PROGRESS";
-                }
-              } else if (deliverys >=1) {
-                 status = "DONE";
-              }
-
-              return (
-
+              renderItem={({item}) =>(
                  <View style={styles.flatitem}>
-
-                   <Text style={styles.order}>
-                       Order Id: {item.orderId}
-                   </Text>
-                   <Text style={styles.text}>
-                      Work: {item.work}
-                   </Text>
-
-
-                   <Text style={styles.text}>
-                      Is Repeat: {String(isRepeat)}
-                   </Text>
-
-                   {isRepeat && <Text style={styles.text}>
-                      Expected Repeat Times: {repeatTimes}
-                   </Text>}
-
-                   <Text style={styles.text}>
-                      Actual Delivery Times: {deliverys}
-                   </Text>
-
-                   <Text style={styles.text}>
-                      Status: {status}
-                   </Text>
-                   <TouchableWithoutFeedback onPress={ () => this.onRowPress(item)}>
-                   <Text style={styles.photo}>
-                      Select Photos
-                   </Text>
-                   </TouchableWithoutFeedback>
+                   <WorkOrder order={item}/>
                  </View>
-
                )
-              }
               }
               keyExtractor={item => item.orderKey}
           />
@@ -165,7 +117,17 @@ const styles = StyleSheet.create({
     fontSize: 18,
     paddingLeft: 20,
     fontWeight: "bold",
-  }
+  },
+  thumbContainer: {
+    flex: 1,
+    flexDirection: 'row',
+    justifyContent: 'center',
+    height: 90,
+    marginTop: 20,
+    marginBottom: 20,
+    marginLeft: 20,
+    marginRight: 20,
+  },
 });
 
 
