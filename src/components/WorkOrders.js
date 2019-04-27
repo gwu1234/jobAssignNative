@@ -30,7 +30,7 @@ class WorkOrders extends Component {
      this.setState ({workorders: orders}) ;
   }
 
-  onRowPress(rowItem) {
+  //onRowPress(rowItem) {
     //console.log("submit photo");
     //Actions.clientDetail({ client: rowItem });
 
@@ -46,8 +46,8 @@ class WorkOrders extends Component {
      });*/
 
      //console.log(this.state.photos);
-     Actions.photos({ workorder: rowItem });
-  }
+  //   Actions.photos({ workorder: rowItem });
+  //}
 
   render() {
     const {workorders} = this.state;

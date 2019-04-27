@@ -16,6 +16,8 @@ class WorkOrder extends Component {
      isRepeat: null,
      repeatTimes: null,
      deliverys: null,
+     thumbPath: null,
+     photoPath: null,
   };
 
   componentWillMount() {
@@ -46,6 +48,16 @@ class WorkOrder extends Component {
           deliverys: deliverys,
           status: status,
       });
+  }
+
+  componentDidMount() {
+    const { usertag, order} = this.props;
+    const {clientTag, orderKey} = order;
+    const thumbPath = usertag + "/" + clientTag + "/" + orderKey + "/thumb";
+    const photoPath = usertag + "/" + clientTag + "/" + orderKey + "/photo";
+    this.setState ({thumbPath: thumbPath, photoPath: photoPath});
+    //console.log(thumbPath);
+    //console.log(photoPath);
   }
 
   onRowPress(order) {
@@ -140,5 +152,12 @@ const styles = StyleSheet.create({
   },
 });
 
+const mapStateToProps = state => {
+  return {
+     usertag: state.auth.userTag,
+  };
+};
 
-export default WorkOrder;
+//export default connect(mapStateToProps, {})(PhotoDisplay);
+export default connect(mapStateToProps)(WorkOrder);
+//export default WorkOrder;

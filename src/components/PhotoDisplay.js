@@ -25,24 +25,38 @@ class PhotoDisplay extends Component {
      //workorder: null,
      //photos: [],
      photoPath: '',
+     employeePath: '',
+     orderPath: '',
      //filePath: null,
      photo: null,
      thumb: null,
      isLoading: false,
      isSubmitted: false,
+     sessionId: '',
+     //storage: [],
   };
 
   //getPhotos.bind(this);
 
   componentWillMount() {
-    const { workorder, usertag} = this.props;
+    const { workorder, usertag, employeeKey} = this.props;
     const {clientTag, orderKey} = workorder;
     //console.log(usertag);
     //console.log(clientTag);
-    //console.log(orderKey);
+    //console.log(employeeKey);
+
     const photoPath = usertag + "/" + clientTag + "/" + orderKey;
+    const orderPath = "/repos/" + usertag + "/clients/data/" + clientTag + "/workorders/" + orderKey + "/photo";
+    const employeePath = "/repos/" + usertag + "/employees/" + employeeKey + "/assigned/" + clientTag + "/workorders/"+ orderKey + "/photo";
     //console.log(photoPath);
-    this.setState ({photoPath: photoPath});
+    //console.log(orderPath);
+    //console.log(employeePath);
+    this.setState ({
+        photoPath: photoPath,
+        orderPath: orderPath,
+        employeePath: employeePath,
+    });
+
     //this.getPhotos.bind(this);
      //this.getPhotos();
   }
@@ -62,9 +76,22 @@ class PhotoDisplay extends Component {
        }
   }
 
-  close = () =>{
+  componentWillUnmount() {
+    const { photoPath, orderPath, employeePath, sessionId } = this.state;
 
+    const orderRef = firebase.database().ref(orderPath);
+    const employeeRef = firebase.database().ref(employeePath);
+    console.log("componentWillUnmount");
+    console.log(orderPath);
+    console.log(employeePath);
+    console.log("sessionId = " + sessionId);
+    orderRef.child(sessionId).set({"photo": "true", "thumb": "true", "photoTag": sessionId});
+    employeeRef.child(sessionId).set({"photo": "true", "thumb": "true", "photoTag": sessionId});
   }
+
+  //close = () =>{
+//
+//  }
 
   /*_handleButtonPress = () => {
    CameraRoll.getPhotos({
@@ -82,7 +109,7 @@ class PhotoDisplay extends Component {
    _resizeImage = async (uri) => {
     const manipResult = await ImageManipulator.manipulateAsync(
       uri,
-      [ {resize: { width :60}}], { format: 'jpg' }
+      [ {resize: { width :40}}], { format: 'jpg' }
     );
     console.log(manipResult);
     //const {photos} = this.state;
@@ -236,13 +263,15 @@ class PhotoDisplay extends Component {
   };
 
   submitImage = () => {
-     const { photo, thumb, photoPath } = this.state;
+     const { photo, thumb, photoPath} = this.state;
+     const sessionId = String(new Date().getTime());
+     //storage.push (sessionId);
 
-     this.setState({isLoading: true, isSubmitted: false});
+     this.setState({isLoading: true, isSubmitted: false, sessionId: sessionId});
 
      //const {photoPath} = this.state;
      const storage = firebase.storage();
-     const sessionId = String(new Date().getTime());
+     //const sessionId = String(new Date().getTime());
      const photoRef = storage.ref(photoPath).child("photo").child(sessionId).child("photo.jpg");
      const thumbRef = storage.ref(photoPath).child("thumb").child(sessionId).child("thumb.jpg");
      //return imageRef.put(item.node.image.uri);
@@ -253,9 +282,15 @@ class PhotoDisplay extends Component {
      //.catch(err =>{
       //   console.log(err)
      //});
+
+     /*const orderRef = firebase.database().ref(orderPath);
+     const employeeRef = firebase.database().ref(employeePath);
+     orderRef.child(sessionId).set({"photo": "true", "thumb": "true", "photoTag": sessionId});
+     employeeRef.child(sessionId).set({"photo": "true", "thumb": "true", "photoTag": sessionId});*/
   };
 
   uploadImageAsync = async (uri, ref, isSubmitted=false) => {
+    //const { photoPath, orderPath, employeePath, sessionId } = this.state;
   //async function uploadImageAsync(uri, ref) {
   // Why are we using XMLHttpRequest? See:
   // https://github.com/expo/expo/issues/2402#issuecomment-443726662
@@ -285,6 +320,17 @@ class PhotoDisplay extends Component {
          //console.log('Uploaded a blob!');
          //console.log(snapshot.ref.getDownloadURL());
          if (isSubmitted) {
+           //const { photoPath, orderPath, employeePath, sessionId } = this.state;
+           //this.setState({isLoading: false, isSubmitted: true});
+
+           /*const orderRef = firebase.database().ref(orderPath);
+           const employeeRef = firebase.database().ref(employeePath);*/
+           console.log("photo submitted");
+           /*console.log(orderPath);
+           console.log(employeePath);
+           console.log("sessionId = " + sessionId);
+           orderRef.child(sessionId).set({"photo": "true", "thumb": "true", "photoTag": sessionId});
+           employeeRef.child(sessionId).set({"photo": "true", "thumb": "true", "photoTag": sessionId});*/
            this.setState({isLoading: false, isSubmitted: true});
          }
      })
@@ -318,6 +364,8 @@ class PhotoDisplay extends Component {
 
             {photo && isLoading && !isSubmitted && <ActivityIndicator size="large" color="#0000ff" style={styles.button}/>}
 
+            {photo && !isLoading && isSubmitted &&
+                      <Text style={styles.buttonText}> Photo Submitted to Google Cloud </Text>}
         </View>
       );
   }
@@ -380,6 +428,7 @@ const styles = StyleSheet.create({
 const mapStateToProps = state => {
   return {
      usertag: state.auth.userTag,
+     employeeKey: state.auth.employeeKey,
   };
 };
 
