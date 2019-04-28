@@ -63,25 +63,32 @@ class WorkOrder extends Component {
        const photoPath = usertag + "/" + clientTag + "/" + orderKey + "/photo";
        //this.setState ({thumbPath: thumbPath, photoPath: photoPath});
        //const {photoPath} = this.state;
-
-       for (var key in photo) {
-          //console.log(key);
-          //console.log(photo[key])
+       //console.log(photo);
+       for (var photokey in photo) {
+          //console.log("photokey = " + photokey);
+          //console.log("photoTag =" + photo[photokey].photoTag);
+          const photoName = photokey + ".jpg"
 
           const storage = firebase.storage();
           const thumbRef = storage.ref(thumbPath);
           //const sessionId = String(new Date().getTime());
           //const photoRef = storage.ref(photoPath).child("photo").child(sessionId).child("photo.jpg");
           //const thumbRef = storage.ref(photoPath).child("thumb").child(sessionId).child("thumb.jpg");
-          thumbRef.child(photo[key].photoTag).child('thumb.jpg').getDownloadURL().then((url) =>{
+          thumbRef.child(photo[photokey].photoTag).child(photoName).getDownloadURL().then((url) =>{
           // `url` is the download URL for 'images/stars.jpg'
+          //console.log("key = " + key);
+          //console.log("photoTag =" + photo[key].photoTag);
+          const jpg = url.lastIndexOf(".jpg", url.length);
+          const p2f = url.lastIndexOf("%2F", url.length) + 3;
+          const subUrl = url.slice(p2f, jpg);
+          //console.log("suburl = " + subUrl);
           //console.log(url);
-          //console.log(thumb);
-          thumbs.push ({photoTag: key, url: url});
+
+          thumbs.push ({photoTag: subUrl, url: url});
           //this.props.setThumbs(thumbs);
           //this.props.setClients(clients);
           //setThumbs
-          //console.log(thumb);
+          //console.log(thumbs);
           this.setState({...this.state, thumbs: thumbs});
           // This can be downloaded directly:
           /*var xhr = new XMLHttpRequest();
@@ -120,7 +127,7 @@ class WorkOrder extends Component {
   render() {
     const {orderId, work, isRepeat, repeatTimes, deliverys, status, thumbs} = this.state;
     const {order} = this.props;
-    console.log(thumbs);
+    //console.log(thumbs);
     //if (thumbs.length>0) {console.log(thumbs)};
     return (
       <View style={styles.container}>
@@ -256,13 +263,13 @@ const styles = StyleSheet.create({
 
 const mapStateToProps = state => {
   //this.setState({thumbs: state.employees.thumbs});
-  console.log(state.employees.thumbs);
+  //console.log(state.employees.thumbs);
   return {
      usertag: state.auth.userTag,
      //thumbs: state.employees.thumbs,
   };
 };
 
-export default connect(mapStateToProps, {setThumbs})(WorkOrder);
+export default connect(mapStateToProps)(WorkOrder);
 //export default connect(mapStateToProps)(WorkOrder);
 //export default WorkOrder;

@@ -109,7 +109,7 @@ class PhotoDisplay extends Component {
    _resizeImage = async (uri) => {
     const manipResult = await ImageManipulator.manipulateAsync(
       uri,
-      [ {resize: { width :40}}], { format: 'jpg' }
+      [ {resize: { width :120}}], { format: 'jpg' }
     );
     //console.log(manipResult);
     //const {photos} = this.state;
@@ -265,6 +265,7 @@ class PhotoDisplay extends Component {
   submitImage = () => {
      const { photo, thumb, photoPath} = this.state;
      const sessionId = String(new Date().getTime());
+     const photoName = sessionId + ".jpg"
      //storage.push (sessionId);
 
      this.setState({isLoading: true, isSubmitted: false, sessionId: sessionId});
@@ -272,8 +273,8 @@ class PhotoDisplay extends Component {
      //const {photoPath} = this.state;
      const storage = firebase.storage();
      //const sessionId = String(new Date().getTime());
-     const photoRef = storage.ref(photoPath).child("photo").child(sessionId).child("photo.jpg");
-     const thumbRef = storage.ref(photoPath).child("thumb").child(sessionId).child("thumb.jpg");
+     const photoRef = storage.ref(photoPath).child("photo").child(sessionId).child(photoName);
+     const thumbRef = storage.ref(photoPath).child("thumb").child(sessionId).child(photoName);
      //return imageRef.put(item.node.image.uri);
      //this.uploadImage(imageRef, uri, mime = 'application/octet-stream');
      //this.uploadImage(image, imageRef)
