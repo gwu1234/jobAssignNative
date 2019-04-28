@@ -7,6 +7,7 @@ import {
   EMPLOYEE_SAVE_SUCCESS,
   SET_EMPLOYEE_NAME,
   SET_TRUCK,
+  SET_THUMBS,
 } from './types';
 
 export const setEmployeeName = name => {
@@ -31,6 +32,16 @@ export const setTruck = truck => {
   };
 };
 
+export const setThumbs = thumbs => {
+  //console.log("employee action setTruck truck = ");
+  //console.log(truck);
+  return {
+    type: SET_THUMBS,
+    payload: {
+      thumbs: thumbs
+    }
+  };
+};
 
 export const employeeUpdate = ({ prop, value }) => {
   return {
