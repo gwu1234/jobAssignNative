@@ -315,7 +315,7 @@ class PhotoDisplay extends Component {
     //const snapshot = await ref.put(blob)
     await ref.put(blob)
     .then((snapshot) => {
-         console.log('Uploaded a blob to the following path: ');
+         console.log('Uploaded a blob to firebase ');
          //console.log(snapshot.metadata.fullPath);
          //console.log('Uploaded a blob!');
          //console.log(snapshot.ref.getDownloadURL());
