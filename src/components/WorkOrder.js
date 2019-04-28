@@ -3,11 +3,12 @@ import React, { Component } from 'react';
 import firebase from 'firebase';
 import { connect } from 'react-redux';
 import { Actions } from 'react-native-router-flux';
-import { FlatList, StyleSheet, View, Text, TouchableWithoutFeedback, Image} from 'react-native';
+import { FlatList, StyleSheet, View, Text, TouchableWithoutFeedback, Image, Dimensions, PixelRatio} from 'react-native';
 import {setThumbs} from '../actions';
 //import ListItem from './ListItem';
 import PhotoDisplay from './PhotoDisplay';
 //import { CardSection, Input } from './common';
+const { width, height } = Dimensions.get('window');
 
 class WorkOrder extends Component {
    state = {
@@ -150,13 +151,16 @@ class WorkOrder extends Component {
              Status: {status}
           </Text>
           <Text style={styles.text}>
-             Thumbnails: {thumbs.length}
+             photos: {thumbs.length}
           </Text>
 
           {thumbs.length > 0 && <View style={styles.thumbContainer}>
             <FlatList
               data={thumbs}
               style={styles.flatview}
+              scrollEnabled={true}
+              horizontal={true}
+              showsHorizontalScrollIndicator={true}
               renderItem={({item}) =>(
                 <Image
                   key={item.photoTag}
@@ -168,7 +172,7 @@ class WorkOrder extends Component {
               keyExtractor={item => item.photoTag}
           />
 
-          <TouchableWithoutFeedback onPress={ () => this.onRowPress(order)}>
+          <TouchableWithoutFeedback onPress={ () => this.onRowPress(order)} style={styles.button1}>
           <Text style={styles.buttonText}>
              add photo
           </Text>
@@ -191,10 +195,13 @@ const styles = StyleSheet.create({
   container: {
     flex:1,
     marginTop: 15,
+    marginRight: 10,
   },
 
   flatview: {
+    flex:3,
     flexDirection: 'row',
+    height: 70,
   },
   flatitem: {
     marginBottom: 10,
@@ -210,10 +217,12 @@ const styles = StyleSheet.create({
     marginTop: 15,
     marginLeft: 5,
     height: 35,
-    width: 100,
     color: 'white',
     fontWeight: "bold",
     fontSize: 15,
+  },
+  button1: {
+    flex: 1
   },
   button: {
     backgroundColor: 'grey',
