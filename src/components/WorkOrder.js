@@ -125,6 +125,19 @@ class WorkOrder extends Component {
      Actions.photos({ workorder: order });
   }
 
+  onImagePress(clientTag, orderKey, photoTag) {
+     const {usertag} = this.props;
+     //console.log("onImagePress");
+     //console.log("clientTag = " + clientTag);
+     //console.log("orderKey = " + orderKey);
+     //console.log("photoTag = " + photoTag);
+     const photoName = photoTag + ".jpg";
+     const photoPath = usertag + "/" + clientTag + "/" + orderKey + "/photo/" + photoTag + "/" + photoName;
+     console.log("photoPath = ");
+     console.log(photoPath);
+     Actions.photoView({ photoPath: photoPath });
+  }
+
   render() {
     const {orderId, work, isRepeat, repeatTimes, deliverys, status, thumbs} = this.state;
     const {order} = this.props;
@@ -162,11 +175,13 @@ class WorkOrder extends Component {
               horizontal={true}
               showsHorizontalScrollIndicator={true}
               renderItem={({item}) =>(
+              <TouchableWithoutFeedback onPress={ () => this.onImagePress(order.clientTag, order.orderKey, item.photoTag)} style={styles.button1}>
                 <Image
                   key={item.photoTag}
                   style={styles.image}
                   source={{ uri: item.url }}
                 />
+              </TouchableWithoutFeedback>
                )
               }
               keyExtractor={item => item.photoTag}
