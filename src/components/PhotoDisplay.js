@@ -79,6 +79,7 @@ class PhotoDisplay extends Component {
   componentWillUnmount() {
     const { photoPath, orderPath, employeePath, sessionId } = this.state;
 
+    if (sessionId && sessionId !== "") {
     const orderRef = firebase.database().ref(orderPath);
     const employeeRef = firebase.database().ref(employeePath);
     //console.log("componentWillUnmount");
@@ -87,6 +88,7 @@ class PhotoDisplay extends Component {
     //console.log("sessionId = " + sessionId);
     orderRef.child(sessionId).set({"photo": "true", "thumb": "true", "photoTag": sessionId});
     employeeRef.child(sessionId).set({"photo": "true", "thumb": "true", "photoTag": sessionId});
+   }
   }
 
   //close = () =>{
@@ -366,20 +368,21 @@ class PhotoDisplay extends Component {
    const { photo, isLoading, isSubmitted } = this.state;
    //console.log(photos);
    return (
-        <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }} >
-            {!photo && <TouchableWithoutFeedback onPress={() =>this._pickImage()} style={styles.button}>
+        <View style={{ flex: 1}} >
+        <View style={{ flex: 1, flexDirection: 'row',alignItems: 'center', justifyContent: 'space-around' }} >
+            {!photo && <TouchableWithoutFeedback onPress={() =>this._pickImage()} >
                 <Text style={styles.buttonText}>
-                     Select Photo from Camera Roll
+                     Select Photo
                 </Text>
             </TouchableWithoutFeedback>}
 
-            {!photo && <TouchableWithoutFeedback onPress={() =>this._takePhoto()} style={styles.button}>
+            {!photo && <TouchableWithoutFeedback onPress={() =>this._takePhoto()} >
                 <Text style={styles.buttonText}>
-                     Take Photo from Camera
+                     Camera
                 </Text>
             </TouchableWithoutFeedback>}
-
-
+       </View>
+       <View style={{ flex: 4, alignItems: 'center', justifyContent: 'center' }} >
             {photo && <Image source={{ uri: photo }} style={{ width: 300, height: 300 }} />}
 
             {photo && !isLoading && !isSubmitted && <TouchableWithoutFeedback onPress={ () => this.submitImage ()} style={styles.button}>
@@ -390,6 +393,7 @@ class PhotoDisplay extends Component {
 
             {photo && !isLoading && isSubmitted &&
                       <Text style={styles.buttonText}> Photo Submitted to Google Cloud </Text>}
+        </View>
         </View>
       );
   }
@@ -519,3 +523,9 @@ export default connect(mapStateToProps)(PhotoDisplay);
    />
 </View>
 );*/
+
+/*{!photo && <TouchableWithoutFeedback onPress={() =>this._takePhoto()} style={styles.button}>
+    <Text style={styles.buttonText}>
+         Take Photo from Camera
+    </Text>
+</TouchableWithoutFeedback>}*/
