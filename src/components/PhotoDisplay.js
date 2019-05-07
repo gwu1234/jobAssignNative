@@ -63,9 +63,9 @@ class PhotoDisplay extends Component {
 
   componentDidMount() {
      //this.getPhotos();
-      const permission = Permissions.getAsync(Permissions.CAMERA_ROLL);
+      const permission = Permissions.getAsync(Permissions.CAMERA_ROLL,Permissions.CAMERA);
       if (permission.status !== 'granted') {
-            const newPermission = Permissions.askAsync(Permissions.CAMERA_ROLL);
+            const newPermission = Permissions.askAsync(Permissions.CAMERA_ROLL,Permissions.CAMERA);
             if (newPermission.status === 'granted') {
                 console.log("Camera_roll granted");
              } else {
@@ -262,6 +262,22 @@ class PhotoDisplay extends Component {
     this._resizeImage(result.uri);
   };
 
+  _takePhoto = async () => {
+  console.log("picking image");
+  let result = await ImagePicker.launchCameraAsync({
+    allowsEditing: true,
+    aspect: [4, 3],
+    quality: 1,
+  });
+
+  //console.log(result);
+
+  if (!result.cancelled) {
+    this.setState({ photo: result.uri });
+  }
+  this._resizeImage(result.uri);
+};
+
   submitImage = () => {
      const { photo, thumb, photoPath} = this.state;
      const sessionId = String(new Date().getTime());
@@ -356,6 +372,13 @@ class PhotoDisplay extends Component {
                      Select Photo from Camera Roll
                 </Text>
             </TouchableWithoutFeedback>}
+
+            {!photo && <TouchableWithoutFeedback onPress={() =>this._takePhoto()} style={styles.button}>
+                <Text style={styles.buttonText}>
+                     Take Photo from Camera
+                </Text>
+            </TouchableWithoutFeedback>}
+
 
             {photo && <Image source={{ uri: photo }} style={{ width: 300, height: 300 }} />}
 
