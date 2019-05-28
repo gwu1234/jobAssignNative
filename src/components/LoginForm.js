@@ -43,8 +43,6 @@ class LoginForm extends Component {
 
     firebase.auth().signInWithEmailAndPassword(email, password)
       .then((user) => {
-         //console.log(user);
-
          const emailString = user.user.email.replace(/[.,#$\[\]@ ]/g,'');
          const nameString = user.user.displayName.replace(/[.,#$\[\]@ ]/g,'');
          const tagName = (nameString + '+' + emailString).toLowerCase();
@@ -61,31 +59,15 @@ class LoginForm extends Component {
            .then((snapshot) => {
              let accessArray = [];
              const accesses = snapshot.val();
-             //console.log("accesses objects = ")
-             //console.log(accesses);
              for (var key in accesses) {
-                //console.log(key) ;
-                //console.log(accesses[key]);
                 accessArray.push ({...accesses[key], uid: key, key: key}) ;
              }
-             //const accessArray = _.map(accesses, (val, uid) => {
-               //console.log("val and uid = ");
-               //console.log(val);
-               //console.log(uid);
-               //return { ...val, uid };
-             //});
 
-             //console.log(accessArray);
              const length = accessArray.length;
              //console.log(length);
              for (i = 0; i < length; i++) {
-                  //console.log(accessArray[i]);
-                  //console.log(accessArray[i].employeeKey);
                   if (accessArray[i].access === access) {
-                    //console.log("access matched");
-                    //console.log(accessArray[i].access);
-                    //console.log(accessArray[i].employeeKey);
-                    this.props.setEmployeeKey(accessArray[i].employeeKey);
+                    this.props.setEmployeeKey({employeeKey: accessArray[i].employeeKey, userTag:tagName});
                     accessMatch = true;
                   }
              }
@@ -114,24 +96,9 @@ class LoginForm extends Component {
              }
           });
 
-          /*const employeeTag = "repos/" + tagName +"/employees";
-          console.log(employeeTag);
-          var employeeRef = firebase.database().ref(employeeTag)
-
-          employeeRef.on('value', snapshot => {
-              const employees = snapshot.val();
-              if (employees) {
-                  console.log(employees);
-              } else {
-                  //this.props.setEmployeeList(null);
-              }
-          });*/
        })
       .catch((error) => {
-          //console.log("login failed");
-          //console.log(firebase.app().options);
           console.log(error);
-          //loginUserFail(dispatch);
           this.setState({
              error: "Wrong Email or Password",
              email: "",
@@ -155,7 +122,6 @@ class LoginForm extends Component {
   }
 
   render() {
-    //const {error} = this.state;
 
     return (
       <Card>
@@ -207,12 +173,6 @@ const styles = {
     color: 'red'
   }
 };
-
-/*const mapStateToProps = ({ auth }) => {
-  const { email, password, access, error, loading } = auth;
-
-  return { email, password, access, error, loading };
-};*/
 
 export default connect(null, {
   loginUserSuccess, setUserTag, setEmployeeKey

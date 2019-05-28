@@ -467,9 +467,9 @@ const mapStateToProps = state => {
   //console.log("GpsMapView");
   //console.log (state.employees.truck);
   return {
-     clients: state.clients.clients,
+     clients: state.auth.clients,
      employeeName: state.employees.employeeName,
-     truck: state.employees.truck,
+     truck: state.auth.truck,
      usertag: state.auth.userTag,
      employeeKey: state.auth.employeeKey,
   };

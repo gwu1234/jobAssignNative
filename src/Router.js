@@ -7,6 +7,7 @@ import ClientDetail from './components/ClientDetail';
 import GpsMapView from './components/GpsMapView';
 import PhotoDisplay from './components/PhotoDisplay';
 import PhotoView from './components/PhotoView';
+import {Text} from 'react-native';
 
 const RouterComponent = () => {
 
@@ -31,9 +32,18 @@ const RouterComponent = () => {
           leftTitle="Logout"
           key="clientList"
           component={ClientList}
-          title="Assigned Tasks"
-          titleStyle={{ flex:1, alignSelf: 'center', textAlign: 'center' }}
+          renderTitle= { ()=> { return (
+                                  <Text
+                                      style={{fontWeight:"normal", fontSize:18}}
+                                      onPress={()=>{console.log("title pressed")}}
+                                   >
+                                      Tasks
+                                  </Text>)
+                              }
+                       }
+          titleStyle={{ flex:1, alignSelf: 'center', textAlign: 'center'}}
           initial
+
         />
         <Scene key="clientDetail" component={ClientDetail} title="Client Detail" />
         <Scene key="gpsMap" component={GpsMapView} title="GPS Map" />

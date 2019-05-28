@@ -18,11 +18,7 @@ export default (state = INITIAL_STATE, action) => {
     case SET_EMPLOYEE_NAME:
       return { ...state, employeeName: action.payload.name};
     case SET_TRUCK:
-      //console.log ("truck reducer")
-      //console.log (action.payload.truck) ;
       return { ...state, truck: action.payload.truck};
-    //case SET_THUMBS:
-    //    return { ...state, thumbs: action.payload.thumbs};
     default:
       return state;
   }
