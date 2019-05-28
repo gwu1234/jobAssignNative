@@ -7,7 +7,7 @@ import pinkSnowplow from './images/pinkSnowplow.png';
 import redDot from './images/mRed.png';
 import greenDot from './images/mGreen.png';
 import blueDot from './images/mBlue.png';
-import GpsModalView from './GpsModalView';
+import GpsLeadModal from './GpsLeadModal';
 
 
 export class GpsLeadView extends React.Component {
@@ -151,10 +151,15 @@ export class GpsLeadView extends React.Component {
           </View>
 
               { modalOpen === true && selectedIndex !==null &&selectedIndex === index &&
-                    <GpsModalView
+                    <GpsLeadModal
                           title={lead.name}
                           street={lead.street}
                           city={lead.city}
+                          postcode={lead.postcode}
+                          provinnce={lead.province}
+                          emails ={lead.emails}
+                          phones ={lead.phones}
+                          cells ={lead.cells}
                           id={index}
                           onCancelPress ={(index)=> this.onCancelPress(index)}
                           modalOpen = {this.state.modalOpen}

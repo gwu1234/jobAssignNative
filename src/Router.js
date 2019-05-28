@@ -23,7 +23,7 @@ const RouterComponent = () => {
       <Scene key="main">
         <Scene
           onRight={() => Actions.gpsMap()}
-          rightTitle="MapView"
+          rightTitle="ClientsOnMap"
           onLeft={() => {
                 firebase.auth().signOut()
                  .then(() => {
@@ -49,7 +49,7 @@ const RouterComponent = () => {
         />
         <Scene
           onRight={() => Actions.leadMap()}
-          rightTitle="MapView"
+          rightTitle="LeadsOnMap"
           onLeft={() => {
                 firebase.auth().signOut()
                  .then(() => {
