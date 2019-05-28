@@ -38,6 +38,7 @@ export const setEmployeeKey = ({employeeKey: employeeKey, userTag: userTag}) => 
           const employee = snapshot.val();
           let truck = null;
           let clients = [];
+          let leads = [];
           if (employee) {
               if (employee.truckAssigned) {
                  truck = {
@@ -62,6 +63,11 @@ export const setEmployeeKey = ({employeeKey: employeeKey, userTag: userTag}) => 
                     clientTag: key, activeOrders: activeOrders
                  }) ;
              }
+
+             const assignedLeads = employee.leads;
+             for (var key in assignedLeads) {
+                leads.push ({...assignedLeads[key]});
+            }
           }
 
           dispatch({
@@ -71,6 +77,7 @@ export const setEmployeeKey = ({employeeKey: employeeKey, userTag: userTag}) => 
               userTag: userTag,
               clients: clients,
               truck: truck,
+              leads: leads
             },
           });
      });

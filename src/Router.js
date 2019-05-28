@@ -3,6 +3,7 @@ import firebase from 'firebase';
 import { Scene, Router, Actions } from 'react-native-router-flux';
 import LoginForm from './components/LoginForm';
 import ClientList from './components/ClientList';
+import LeadList from './components/LeadList';
 import ClientDetail from './components/ClientDetail';
 import GpsMapView from './components/GpsMapView';
 import PhotoDisplay from './components/PhotoDisplay';
@@ -35,7 +36,7 @@ const RouterComponent = () => {
           renderTitle= { ()=> { return (
                                   <Text
                                       style={{fontWeight:"normal", fontSize:18}}
-                                      onPress={()=>{console.log("title pressed")}}
+                                      onPress={()=>Actions.leadList()}
                                    >
                                       Tasks
                                   </Text>)
@@ -44,6 +45,30 @@ const RouterComponent = () => {
           titleStyle={{ flex:1, alignSelf: 'center', textAlign: 'center'}}
           initial
 
+        />
+        <Scene
+          onRight={() => Actions.gpsMap()}
+          rightTitle="MapView"
+          onLeft={() => {
+                firebase.auth().signOut()
+                 .then(() => {
+                    console.log("logout");
+                    Actions.auth();
+                });
+          }}
+          leftTitle="Logout"
+          key="leadList"
+          component={LeadList}
+          renderTitle= { ()=> { return (
+                                  <Text
+                                      style={{fontWeight:"normal", fontSize:18}}
+                                      onPress={()=>Actions.clientList()}
+                                   >
+                                      Leads
+                                  </Text>)
+                              }
+                       }
+          titleStyle={{ flex:1, alignSelf: 'center', textAlign: 'center'}}
         />
         <Scene key="clientDetail" component={ClientDetail} title="Client Detail" />
         <Scene key="gpsMap" component={GpsMapView} title="GPS Map" />

@@ -10,7 +10,8 @@ const INITIAL_STATE = {
   user: null,
   userTag: '',
   employeeKey: '',
-  clients:[],
+  clients: [],
+  leads: [],
 };
 
 export default (state = INITIAL_STATE, action) => {
@@ -26,6 +27,7 @@ export default (state = INITIAL_STATE, action) => {
         userTag: action.payload.userTag,
         clients: action.payload.clients,
         truck: action.payload.truck,
+        leads: action.payload.leads,
       };
     default:
       return state;
