@@ -8,6 +8,7 @@ import ClientDetail from './components/ClientDetail';
 import GpsMapView from './components/GpsMapView';
 import PhotoDisplay from './components/PhotoDisplay';
 import PhotoView from './components/PhotoView';
+import GpsLeadView from './components/GpsLeadView';
 import {Text} from 'react-native';
 
 const RouterComponent = () => {
@@ -47,7 +48,7 @@ const RouterComponent = () => {
 
         />
         <Scene
-          onRight={() => Actions.gpsMap()}
+          onRight={() => Actions.leadMap()}
           rightTitle="MapView"
           onLeft={() => {
                 firebase.auth().signOut()
@@ -74,6 +75,7 @@ const RouterComponent = () => {
         <Scene key="gpsMap" component={GpsMapView} title="GPS Map" />
         <Scene key="photos" component={PhotoDisplay} title="Select Photo" />
         <Scene key="photoView" component={PhotoView} title="View Photo" />
+        <Scene key="leadMap" component={GpsLeadView} title="Lead Map" />
       </Scene>
       </Scene>
     </Router>
