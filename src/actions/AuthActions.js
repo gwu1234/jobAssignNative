@@ -39,6 +39,7 @@ export const setEmployeeKey = ({employeeKey: employeeKey, userTag: userTag}) => 
           let truck = null;
           let clients = [];
           let leads = [];
+          let employeeName  = "";
           if (employee) {
               if (employee.truckAssigned) {
                  truck = {
@@ -67,7 +68,9 @@ export const setEmployeeKey = ({employeeKey: employeeKey, userTag: userTag}) => 
              const assignedLeads = employee.leads;
              for (var key in assignedLeads) {
                 leads.push ({...assignedLeads[key]});
-            }
+              }
+
+             employeeName  = employee.name;
           }
 
           dispatch({
@@ -77,7 +80,8 @@ export const setEmployeeKey = ({employeeKey: employeeKey, userTag: userTag}) => 
               userTag: userTag,
               clients: clients,
               truck: truck,
-              leads: leads
+              leads: leads,
+              employeeName: employeeName,
             },
           });
      });
