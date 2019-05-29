@@ -9,6 +9,7 @@ import GpsMapView from './components/GpsMapView';
 import PhotoDisplay from './components/PhotoDisplay';
 import PhotoView from './components/PhotoView';
 import GpsLeadView from './components/GpsLeadView';
+import LeadDetail from './components/LeadDetail';
 import {Text} from 'react-native';
 
 const RouterComponent = () => {
@@ -76,6 +77,7 @@ const RouterComponent = () => {
         <Scene key="photos" component={PhotoDisplay} title="Select Photo" />
         <Scene key="photoView" component={PhotoView} title="View Photo" />
         <Scene key="leadMap" component={GpsLeadView} title="Lead Map" />
+        <Scene key="leadDetail" component={LeadDetail} title="Lead Detail" />
       </Scene>
       </Scene>
     </Router>

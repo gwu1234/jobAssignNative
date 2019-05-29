@@ -14,8 +14,8 @@ class LeadList extends Component {
 
 
   onRowPress(rowItem) {
-    console.log(rowItem);
-    //Actions.clientDetail({ client: rowItem });
+    //console.log(rowItem);
+    Actions.leadDetail({ lead: rowItem });
   }
 
   render() {
