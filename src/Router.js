@@ -37,7 +37,7 @@ const RouterComponent = () => {
           component={ClientList}
           renderTitle= { ()=> { return (
                                   <Text
-                                      style={{fontWeight:"normal", fontSize:18}}
+                                      style={{fontWeight:"normal", fontSize:18, flex:1, alignSelf: 'center', textAlign: 'center'}}
                                       onPress={()=>Actions.leadList()}
                                    >
                                       Tasks
@@ -63,7 +63,7 @@ const RouterComponent = () => {
           component={LeadList}
           renderTitle= { ()=> { return (
                                   <Text
-                                      style={{fontWeight:"normal", fontSize:18}}
+                                      style={{fontWeight:"normal", fontSize:18, flex:1, alignSelf: 'center', textAlign: 'center'}}
                                       onPress={()=>Actions.clientList()}
                                    >
                                       Leads

@@ -1,7 +1,7 @@
 import _ from 'lodash';
 import React, { Component } from 'react';
 import firebase from 'firebase';
-import { View, Text, TextInput} from 'react-native';
+import { View, Text, TextInput, KeyboardAvoidingView} from 'react-native';
 import { connect } from 'react-redux';
 import Communications from 'react-native-communications';
 import { Actions } from 'react-native-router-flux';
@@ -171,7 +171,7 @@ clearState () {
     const {lead} = this.props;
     //console.log(lead);
     return (
-      <View style={styles.containerStyle}>
+      <KeyboardAvoidingView style={styles.containerStyle} contentContainerStyle ={{...styles.containerStyle, height: 250}} behavior="position" enabled>
         <View style={styles.horizontalStyle}>
            <Text style={styles.labelStyle}>name: </Text>
            <TextInput
@@ -183,7 +183,7 @@ clearState () {
           />
         </View>
         <View style={styles.horizontalStyle}>
-           <Text style={styles.labelStyle}>street: </Text>
+           <Text style={styles.labelStyle}>address: </Text>
            <TextInput
               placeholder= "street"
               autoCorrect= {false}
@@ -193,17 +193,13 @@ clearState () {
           />
         </View>
         <View style={styles.horizontalStyle}>
-           <Text style={styles.labelStyle}>city: </Text>
            <TextInput
               placeholder= "city"
               autoCorrect= {false}
-              style={styles.inputStyle}
+              style={styles.labelStyle}
               value= {this.state.city}
               onChangeText={(city) => this.setState({city: city,  fieldChange: true})}
           />
-        </View>
-        <View style={styles.horizontalStyle}>
-          <Text style={styles.labelStyle}>postcode: </Text>
           <TextInput
              placeholder= "postcode"
              autoCorrect= {false}
@@ -213,27 +209,13 @@ clearState () {
          />
         </View>
         <View style={styles.horizontalStyle}>
-          <Text style={styles.labelStyle}>province: </Text>
-          <TextInput
-             placeholder= "province"
-             autoCorrect= {false}
-             style={styles.inputStyle}
-             value= {this.state.province}
-             onChangeText={(province) => this.setState({province: province,  fieldChange: true})}
-         />
-        </View>
-        <View style={styles.horizontalStyle}>
-          <Text style={styles.labelStyle}>phone: </Text>
           <TextInput
              placeholder= "phone"
              autoCorrect= {false}
-             style={styles.inputStyle}
+             style={styles.labelStyle}
              value= {this.state.phone}
              onChangeText={(phone) => this.setState({phone: phone,  fieldChange: true})}
          />
-        </View>
-        <View style={styles.horizontalStyle}>
-          <Text style={styles.labelStyle}>cell: </Text>
           <TextInput
              placeholder= "cell"
              autoCorrect= {false}
@@ -242,7 +224,7 @@ clearState () {
              onChangeText={(cell) => this.setState({cell: cell,  fieldChange: true})}
          />
         </View>
-        <View style={styles.horizontalStyle}>
+        <View style={styles.horizontalStyle} >
           <Text style={styles.labelStyle}>email: </Text>
           <TextInput
              placeholder= "email"
@@ -252,7 +234,7 @@ clearState () {
              onChangeText={(email) => this.setState({email: email,  fieldChange: true})}
          />
         </View>
-        <View style={styles.verticalStyle}>
+        <View style={styles.verticalStyle} >
           <TextInput
              placeholder= "activity log"
              autoCorrect= {false}
@@ -270,7 +252,7 @@ clearState () {
                  Submit
              </Button>
         </View>
-      </View>
+      </KeyboardAvoidingView>
     );
   }
 }
@@ -279,19 +261,19 @@ const styles = {
   inputStyle: {
     paddingLeft: 5,
     fontSize: 18,
-    paddingTop: 3,
+    paddingTop: 1,
     flex: 2
   },
   labelStyle: {
     fontSize: 18,
     paddingLeft: 20,
-    paddingTop: 3,
+    paddingTop: 1,
     flex: 1
   },
   horizontalStyle: {
     flexDirection: 'row',
     alignItems: 'center',
-    height: 37,
+    height: 33,
     backgroundColor: "#e8ebef",
     borderRadius: 1,
     borderWidth: 1,
@@ -299,22 +281,22 @@ const styles = {
   },
   verticalStyle: {
     flexDirection: 'column',
-    height: 60,
-    marginTop: 10,
+    height: 50,
+    marginTop: 5,
     backgroundColor: "#e8ebef",
     borderRadius: 2,
     borderWidth: 2,
     borderColor: '#b8cef2',
   },
   containerStyle: {
-    height: 400,
+    height: 350,
     flexDirection: 'column',
   },
   buttonContainer: {
     flexDirection: 'row',
     alignItems: 'center',
-    height: 60,
-    marginTop: 10,
+    height: 50,
+    marginTop: 5,
     backgroundColor: "#e8ebef",
     borderRadius: 2,
     borderWidth: 2,
