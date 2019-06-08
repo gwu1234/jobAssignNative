@@ -12,7 +12,7 @@ const  options = {
     maximumAge: 0,
 };
 
-const GPS_TIMER_CONST = 3*6*1000;
+const GPS_TIMER_CONST = 3*60*1000;
 
 
 class LoginForm extends Component {
