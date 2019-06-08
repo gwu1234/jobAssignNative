@@ -3,7 +3,7 @@ import { Text } from 'react-native';
 import firebase from 'firebase';
 import { connect } from 'react-redux';
 import { PROVIDER_GOOGLE, Constants, Location, Permissions} from 'expo';
-import { loginUserSuccess, setUserTag, setEmployeeKey, updatePosition} from '../actions';
+import { loginUserSuccess, setUserTag, setEmployeeKey, updatePosition, setFrench} from '../actions';
 import { Card, CardSection, Input, Button, Spinner } from './common';
 
 const  options = {
@@ -315,9 +315,20 @@ class LoginForm extends Component {
   }
 
   render() {
+    const {isFrench} = this.props;
+    console.log("isFrench = " + isFrench);
+    const buttonString = isFrench? "English": "Francais";
+    const passwordString = isFrench? "mot passe" : "password";
+
 
     return (
       <Card>
+        <CardSection>
+           <Button onPress={()=>{const {isFrench} = this.props; this.props.setFrench(isFrench)}}>
+               {buttonString}
+           </Button>
+        </CardSection>
+
         <CardSection>
           <Input
             label="Email"
@@ -330,8 +341,8 @@ class LoginForm extends Component {
         <CardSection>
           <Input
             secureTextEntry
-            label="Password"
-            placeholder="password"
+            label = {passwordString}
+            placeholder = {passwordString}
             onChangeText={this.onPasswordChange.bind(this)}
             value={this.state.password}
           />
@@ -376,9 +387,10 @@ const mapStateToProps = state => {
      usertag: state.auth.userTag,
      isLogin: state.auth.isLogin,
      employeeKey: state.auth.employeeKey,
+     isFrench:  state.auth.isFrench,
   };
 };
 
 export default connect(mapStateToProps, {
-  loginUserSuccess, setUserTag, setEmployeeKey, updatePosition
+  loginUserSuccess, setUserTag, setEmployeeKey, updatePosition, setFrench
 })(LoginForm);

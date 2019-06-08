@@ -6,3 +6,4 @@ export const SET_CLIENTS = 'set_clients';
 export const SET_TRUCK = 'set_truck';
 export const UPDATE_GPS_POSITION = 'update_gps_position';
 export const SET_EMPLOYEE_NAME = 'set_employee_name';
+export const SET_FRENCH = "set_french";

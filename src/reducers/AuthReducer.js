@@ -6,6 +6,7 @@ import {
   SET_USER_TAG,
   SET_EMPLOYEE_KEY,
   UPDATE_GPS_POSITION,
+  SET_FRENCH,
 } from '../actions/types';
 
 const INITIAL_STATE = {
@@ -17,6 +18,7 @@ const INITIAL_STATE = {
   employeeName: "",
   isLogin: false,
   position: null,
+  isFrench: false,
 };
 
 export default (state = INITIAL_STATE, action) => {
@@ -28,6 +30,10 @@ export default (state = INITIAL_STATE, action) => {
       return { ...state, user: null, isLogin: false};
     case SET_USER_TAG:
       return { ...state, userTag: action.payload.usertag};
+    case SET_FRENCH:
+      let isFrench = action.payload.isFrench;
+      isFrench = !isFrench;
+      return { ...state, isFrench: isFrench};
     case SET_EMPLOYEE_KEY:
       return { ...state,
         employeeKey: action.payload.employeeKey,
@@ -39,7 +45,8 @@ export default (state = INITIAL_STATE, action) => {
       };
     case UPDATE_GPS_POSITION:
       //console.log("reducer: UPDATE_GPS_POSITION")
-      //console.log(action.payload.position)
+      //
+      console.log(action.payload.position)
       return { ...state,
          position: action.payload.position,
      };

@@ -7,6 +7,7 @@ import {
   SET_USER_TAG,
   SET_EMPLOYEE_KEY,
   UPDATE_GPS_POSITION,
+  SET_FRENCH,
 } from './types';
 
 export const loginUserSuccess = (user) => {
@@ -24,6 +25,15 @@ export const updatePosition = (position) => {
     type: UPDATE_GPS_POSITION,
     payload: {
       position: position
+    }
+  };
+};
+
+export const setFrench = (isFrench) => {
+  return {
+    type: SET_FRENCH,
+    payload: {
+      isFrench: isFrench
     }
   };
 };
