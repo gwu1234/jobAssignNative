@@ -330,7 +330,7 @@ export class GpsMapView extends React.Component {
     }*/
 
     const {position} = this.props;
-    console.log(position);
+    //console.log(position);
     if (position) {
         lat = position.latitude;
         lng = position.longitude;
@@ -495,8 +495,8 @@ const styles = {
 };
 
 const mapStateToProps = state => {
-  console.log("GpsMapView props state.auth.position = ");
-  console.log (state.auth.position);
+  //console.log("GpsMapView props state.auth.position = ");
+  //console.log (state.auth.position);
   return {
      clients: state.auth.clients,
      employeeName: state.employees.employeeName,

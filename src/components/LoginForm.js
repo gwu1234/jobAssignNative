@@ -12,7 +12,7 @@ const  options = {
     maximumAge: 0,
 };
 
-const GPS_TIMER_CONST = 1*6*1000;
+const GPS_TIMER_CONST = 3*6*1000;
 
 
 class LoginForm extends Component {
@@ -77,7 +77,7 @@ class LoginForm extends Component {
           //   truckKey:  truck.key,
           //   truckPath: truckPath,
           //});
-         console.log("componentDidUpdate(): getting Location");
+         //console.log("componentDidUpdate(): getting Location");
          this._getLocationPermisions();
          this.getCurrentLocation ();
       }
@@ -96,12 +96,12 @@ class LoginForm extends Component {
 
   success = (pos) => {
      var crd = pos.coords;
-     console.log("success()");
-     console.log('Your current position is:');
-     console.log(`Latitude : ${crd.latitude}`);
-     console.log(`Longitude: ${crd.longitude}`);
-     console.log(`timestamp: ${pos.timestamp}`);
-     console.log(`More or less ${crd.accuracy} meters.`);
+     //console.log("success()");
+     //console.log('Your current position is:');
+     //console.log(`Latitude : ${crd.latitude}`);
+     //console.log(`Longitude: ${crd.longitude}`);
+     //console.log(`timestamp: ${pos.timestamp}`);
+     //console.log(`More or less ${crd.accuracy} meters.`);
      let  {timestamp} = this.state;
      if (!timestamp) {
         timestamp = 0;
@@ -110,7 +110,7 @@ class LoginForm extends Component {
      const  currenTimestamp = date.getTime();
 
      if ((currenTimestamp-timestamp) > GPS_TIMER_CONST  ) {
-         console.log(`state timestamp: ${timestamp}`);
+         //console.log(`state timestamp: ${timestamp}`);
          //console.log(`More or less ${crd.accuracy} meters.`);
          if (this._ismounted) {
              this.setState({
@@ -151,11 +151,11 @@ class LoginForm extends Component {
 
          if (truck) {
               const truckPath = "repos/" + usertag +"/trucks/" + truck.key;
-              console.log("updatelocation()");
+              //console.log("updatelocation()");
               //console.log(usertag);
               //console.log(truck);
               //console.log(position);
-              console.log("truckPath = " + truckPath);
+              //console.log("truckPath = " + truckPath);
 
               const pos = {
                   latitude: position.coords.latitude,
@@ -166,11 +166,11 @@ class LoginForm extends Component {
               //if (truckPath !== "" && truck !== "") {
               const truckRef = firebase.database().ref(truckPath)
               truckRef.update (pos) ;
-              console.log("at LoginForm.js, executing this.props.updateLocation")
+              //console.log("at LoginForm.js, executing this.props.updateLocation")
               this.props.updatePosition(pos);
          } else if (employeeKey) {
               const employeePath = "repos/" + usertag +"/employees/" + employeeKey +"/currentLocation";
-              console.log("employeePath = " + employeePath);
+              //console.log("employeePath = " + employeePath);
 
               const currentLocation = {
                   lat: position.coords.latitude,
@@ -192,7 +192,7 @@ class LoginForm extends Component {
 
     _getLocationPermisions = async () => {
       let { status } = await Permissions.askAsync(Permissions.LOCATION);
-      console.log(status);
+      console.log("GPS permission = " + status);
       if (status !== 'granted') {
         this.setState({
           error: 'Permission to access location was denied',

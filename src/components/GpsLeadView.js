@@ -104,8 +104,8 @@ export class GpsLeadView extends React.Component {
     if (position) {
         lat = position.latitude;
         lng = position.longitude;
-        console.log("lat = " + lat) ;
-        console.log("lng = " + lng) ;
+        //console.log("lat = " + lat) ;
+        //console.log("lng = " + lng) ;
     }
 
     let {selectedIndex, modalOpen} = this.state;

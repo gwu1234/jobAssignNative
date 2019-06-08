@@ -38,8 +38,8 @@ export default (state = INITIAL_STATE, action) => {
         employeeName: action.payload.employeeName,
       };
     case UPDATE_GPS_POSITION:
-      console.log("reducer: UPDATE_GPS_POSITION")
-      console.log(action.payload.position)
+      //console.log("reducer: UPDATE_GPS_POSITION")
+      //console.log(action.payload.position)
       return { ...state,
          position: action.payload.position,
      };
