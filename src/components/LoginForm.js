@@ -44,7 +44,7 @@ class LoginForm extends Component {
     //   truckPath: truckPath,
     //});
 
-    //this._getLocationPermisions();
+    this._getLocationPermisions();
     //this.getCurrentLocation ();
     //this._ismounted = false;
     /*if (this._gpsTimer !== null) {
@@ -78,7 +78,7 @@ class LoginForm extends Component {
           //   truckPath: truckPath,
           //});
          //console.log("componentDidUpdate(): getting Location");
-         this._getLocationPermisions();
+         //this._getLocationPermisions();
          this.getCurrentLocation ();
       }
   }
@@ -96,7 +96,7 @@ class LoginForm extends Component {
 
   success = (pos) => {
      var crd = pos.coords;
-     //console.log("success()");
+     console.log("getCurrentLocation() Successfully");
      //console.log('Your current position is:');
      //console.log(`Latitude : ${crd.latitude}`);
      //console.log(`Longitude: ${crd.longitude}`);
