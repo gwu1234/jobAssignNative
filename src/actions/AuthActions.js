@@ -3,9 +3,10 @@ import firebase from 'firebase';
 
 import {
   LOGIN_USER_SUCCESS,
+  LOGOUT_USER_SUCCESS,
   SET_USER_TAG,
   SET_EMPLOYEE_KEY,
-  //LOGIN_USER
+  UPDATE_GPS_POSITION,
 } from './types';
 
 export const loginUserSuccess = (user) => {
@@ -16,6 +17,22 @@ export const loginUserSuccess = (user) => {
     }
   };
   Actions.main();
+};
+
+export const updatePosition = (position) => {
+  return {
+    type: UPDATE_GPS_POSITION,
+    payload: {
+      position: position
+    }
+  };
+};
+
+
+export const logoutUserSuccess = () => {
+  return {
+    type: LOGOUT_USER_SUCCESS,
+  }
 };
 
 export const setUserTag = userTag => {

@@ -2,20 +2,205 @@ import React, { Component } from 'react';
 import { Text } from 'react-native';
 import firebase from 'firebase';
 import { connect } from 'react-redux';
-//import _ from 'lodash';
-import { loginUserSuccess, setUserTag, setEmployeeKey } from '../actions';
+import { PROVIDER_GOOGLE, Constants, Location, Permissions} from 'expo';
+import { loginUserSuccess, setUserTag, setEmployeeKey, updatePosition} from '../actions';
 import { Card, CardSection, Input, Button, Spinner } from './common';
 
-class LoginForm extends Component {
+const  options = {
+    enableHighAccuracy: true,
+    timeout: 2000,
+    maximumAge: 0,
+};
 
-  state = {
-    email: "",
-    password: "",
-    error: '',
-    loading: false,
-    access: "",
-    //usersRef: firebase.database().ref("users"),
-  };
+const GPS_TIMER_CONST = 1*6*1000;
+
+
+class LoginForm extends Component {
+  constructor() {
+       super();
+       this._ismounted = false;
+       this._gpsTimer = null ;
+
+       this.state = {
+          email: "",
+          password: "",
+          error: '',
+          loading: false,
+          access: "",
+          //truckPath: "",
+          //truckKey: "",
+       };
+  }
+
+  componentDidMount() {
+    this._ismounted = true;
+    console.log("at componentDidMount");
+    //const {usertag, truck} = this.props;
+    //const {clients} = this.state;
+    //const truckPath = "repos/" + usertag +"/trucks/" + truck.key;
+
+    //this.setState({
+    //   truckKey: this.props.truck.key,
+    //   truckPath: truckPath,
+    //});
+
+    //this._getLocationPermisions();
+    //this.getCurrentLocation ();
+    //this._ismounted = false;
+    /*if (this._gpsTimer !== null) {
+        clearInterval(this._gpsTimer);
+        console.log("gpsTimer Cleared")
+        //console.log(this._gpsTimer);
+        this._gpsTimer = null ;
+    }*/
+  }
+
+  componentDidUpdate () {
+     this._ismounted = true;
+     const {usertag, truck, isLogin, employeeKey} = this.props;
+     //console.log("componentDidUpdate()");
+     //console.log(usertag);
+     //console.log(truck);
+     //const {clients} = this.state;
+     //const truckPath = "repos/" + usertag +"/trucks/" + truck.key;
+     if (!isLogin && this._gpsTimer !== null) {
+         clearInterval(this._gpsTimer);
+         console.log("gpsTimer Cleared")
+         //console.log(this._gpsTimer);
+         this._gpsTimer = null ;
+     }
+
+
+     if (this._ismounted && usertag !== null && isLogin && (truck || employeeKey)) {
+          //const truckPath = "repos/" + usertag +"/trucks/" + truck.key;
+          //this.setState({
+          //   truckKey:  truck.key,
+          //   truckPath: truckPath,
+          //});
+         console.log("componentDidUpdate(): getting Location");
+         this._getLocationPermisions();
+         this.getCurrentLocation ();
+      }
+  }
+
+  componentWillUnmount(){
+      console.log("at componentWillUnmount");
+      this._ismounted = false;
+      //if (this._gpsTimer !== null) {
+      //    clearInterval(this._gpsTimer);
+      //    console.log("gpsTimer Cleared")
+          //console.log(this._gpsTimer);
+      //    this._gpsTimer = null ;
+      //}
+  }
+
+  success = (pos) => {
+     var crd = pos.coords;
+     console.log("success()");
+     console.log('Your current position is:');
+     console.log(`Latitude : ${crd.latitude}`);
+     console.log(`Longitude: ${crd.longitude}`);
+     console.log(`timestamp: ${pos.timestamp}`);
+     console.log(`More or less ${crd.accuracy} meters.`);
+     let  {timestamp} = this.state;
+     if (!timestamp) {
+        timestamp = 0;
+     }
+     const date = new Date();
+     const  currenTimestamp = date.getTime();
+
+     if ((currenTimestamp-timestamp) > GPS_TIMER_CONST  ) {
+         console.log(`state timestamp: ${timestamp}`);
+         //console.log(`More or less ${crd.accuracy} meters.`);
+         if (this._ismounted) {
+             this.setState({
+                latitude: crd.latitude,
+                longitude: crd.longitude,
+                timestamp: pos.timestamp,
+             });
+         }
+
+         this.updateLocation(pos);
+
+         if (this._ismounted === true && this._gpsTimer === null) {
+             this._gpsTimer = setInterval(this.getCurrentLocation, GPS_TIMER_CONST );
+             console.log("gpsTimer up")
+             //console.log(this._gpsTimer);
+         }
+     }
+  }
+
+  error = (err) => {
+     console.log(err);
+
+     if (this._ismounted === true && this._gpsTimer === null) {
+         this._gpsTimer = setInterval(this.getCurrentLocation, GPS_TIMER_CONST );
+         console.log("gpsTimer up")
+         //console.log(this._gpsTimer);
+     }
+  }
+
+  getCurrentLocation = () => {
+     navigator.geolocation.getCurrentPosition(this.success, this.error, options);
+  }
+
+
+  updateLocation (position){
+         //const {truckPath, truckKey} = this.state;
+         const {usertag, truck, employeeKey} = this.props;
+
+         if (truck) {
+              const truckPath = "repos/" + usertag +"/trucks/" + truck.key;
+              console.log("updatelocation()");
+              //console.log(usertag);
+              //console.log(truck);
+              //console.log(position);
+              console.log("truckPath = " + truckPath);
+
+              const pos = {
+                  latitude: position.coords.latitude,
+                  longitude: position.coords.longitude,
+                  timestamp: position.timestamp,
+              }
+
+              //if (truckPath !== "" && truck !== "") {
+              const truckRef = firebase.database().ref(truckPath)
+              truckRef.update (pos) ;
+              console.log("at LoginForm.js, executing this.props.updateLocation")
+              this.props.updatePosition(pos);
+         } else if (employeeKey) {
+              const employeePath = "repos/" + usertag +"/employees/" + employeeKey +"/currentLocation";
+              console.log("employeePath = " + employeePath);
+
+              const currentLocation = {
+                  lat: position.coords.latitude,
+                  lng: position.coords.longitude,
+                  timestamp: position.timestamp,
+              }
+              const employeeRef = firebase.database().ref(employeePath)
+              employeeRef.update (currentLocation) ;
+
+              const pos = {
+                  latitude: position.coords.latitude,
+                  longitude: position.coords.longitude,
+                  timestamp: position.timestamp,
+              }
+              this.props.updatePosition(pos);
+         }
+    }
+
+
+    _getLocationPermisions = async () => {
+      let { status } = await Permissions.askAsync(Permissions.LOCATION);
+      console.log(status);
+      if (status !== 'granted') {
+        this.setState({
+          error: 'Permission to access location was denied',
+        });
+        console.log("GPS permission not granted");
+      }
+    };
+
 
   onEmailChange(text) {
     //this.props.emailChanged(text);
@@ -92,7 +277,15 @@ class LoginForm extends Component {
                  });
 
                  firebase.auth().signOut()
-                   .then(() => console.log("logout"));
+                   .then(() => {
+                        console.log("logout");
+                        if (this._gpsTimer !== null) {
+                           clearInterval(this._gpsTimer);
+                           console.log("gpsTimer Cleared")
+                           //console.log(this._gpsTimer);
+                           this._gpsTimer = null ;
+                       }
+                   });
              }
           });
 
@@ -174,6 +367,18 @@ const styles = {
   }
 };
 
-export default connect(null, {
-  loginUserSuccess, setUserTag, setEmployeeKey
+const mapStateToProps = state => {
+  //console.log("GpsMapView");
+  //console.log (state.employees.truck);
+  return {
+     employeeName: state.employees.employeeName,
+     truck: state.auth.truck,
+     usertag: state.auth.userTag,
+     isLogin: state.auth.isLogin,
+     employeeKey: state.auth.employeeKey,
+  };
+};
+
+export default connect(mapStateToProps, {
+  loginUserSuccess, setUserTag, setEmployeeKey, updatePosition
 })(LoginForm);

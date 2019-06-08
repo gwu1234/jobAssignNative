@@ -16,15 +16,15 @@ export class GpsLeadView extends React.Component {
      this.state = {
          selectedIndex: null,
          error: null,
-         latitude: null,
-         longitude: null,
-         timestamp: null,
+         //latitude: null,
+         //longitude: null,
+         //timestamp: null,
          modalOpen: false,
      };
   }
 
   componentDidMount() {
-    this._getLocationPermisions();
+    /*this._getLocationPermisions();
 
     this.watchID = navigator.geolocation.watchPosition(
       position => {
@@ -37,10 +37,10 @@ export class GpsLeadView extends React.Component {
       },
       error => {console.log(error);this.setState({ error: error.message })},
      { enableHighAccuracy: true, timeout: 20000, maximumAge: 1000, distanceFilter: 5}
-    );
+   );*/
   }
 
-  updateLocation (position){
+  /*updateLocation (position){
        const pos = {
            latitude: position.coords.latitude,
            longitude: position.coords.longitude,
@@ -61,7 +61,7 @@ export class GpsLeadView extends React.Component {
 
   componentWillUnmount() {
     navigator.geolocation.clearWatch(this.watchID);
-  }
+  }*/
 
   onPressMarker(e, index) {
       if (index < -1) {
@@ -94,9 +94,16 @@ export class GpsLeadView extends React.Component {
     let lat = null;
     let lng = null;
 
-    if (this.state.latitude && this.state.longitude) {
+    /*if (this.state.latitude && this.state.longitude) {
         lat = this.state.latitude;
         lng = this.state.longitude;
+        console.log("lat = " + lat) ;
+        console.log("lng = " + lng) ;
+    }*/
+    const {position} = this.props;
+    if (position) {
+        lat = position.latitude;
+        lng = position.longitude;
         console.log("lat = " + lat) ;
         console.log("lng = " + lng) ;
     }
@@ -262,6 +269,7 @@ const mapStateToProps = state => {
      truck: state.auth.truck,
      usertag: state.auth.userTag,
      employeeKey: state.auth.employeeKey,
+     position: state.auth.position,
   };
 };
 

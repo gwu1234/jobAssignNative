@@ -15,10 +15,18 @@ const JOB_ASSIGNED = 2;
 const JOB_PROGRESS = 3;
 const JOB_DONE = 4;
 
+const  options = {
+    enableHighAccuracy: true,
+    timeout: 2000,
+    maximumAge: 0,
+};
 
 export class GpsMapView extends React.Component {
   constructor() {
      super();
+//     this._ismounted = false;
+//     this._gpsTimer = null ;
+
      this.state = {
          selectedIndex: null,
 
@@ -27,12 +35,12 @@ export class GpsMapView extends React.Component {
          error: null,
 
          // moving position
-         latitude: null,
-         longitude: null,
-         timestamp: null,
+         //latitude: null,
+         //longitude: null,
+         //timestamp: null,
          modalOpen: false,
-         truckKey: null,
-         truckPath: null,
+         //truckKey: null,
+         //truckPath: null,
      };
   }
 
@@ -51,6 +59,75 @@ export class GpsMapView extends React.Component {
   componentWillMount() {
      this._updateClient();
   }
+
+  componentDidMount() {
+    /*this._ismounted = true;
+    const {usertag, truck} = this.props;
+    const {clients} = this.state;
+    const truckPath = "repos/" + usertag +"/trucks/" + truck.key;
+    //console.log(clients);
+
+    this.setState({
+       truckKey: this.props.truck.key,
+       truckPath: truckPath,
+    });*/
+
+    //this._getLocationPermisions();
+    //this.getCurrentLocation ();
+
+    /*this.watchID = navigator.geolocation.watchPosition(
+      position => {
+        this.setState({
+            latitude: position.coords.latitude,
+            longitude: position.coords.longitude,
+            timestamp: position.timestamp,
+            //latitudeDelta: LATITUDE_DELTA,
+            //longitudeDelta: LONGITUDE_DELTA,
+        });
+        //console.log(position.coords.latitude);
+        //console.log(position);
+        this.updateLocation(position);
+      },
+      error => {console.log(error);this.setState({ error: error.message })},
+     { enableHighAccuracy: true, timeout: 1000, maximumAge: 0, distanceFilter: 0}
+   );*/
+  }
+
+  /*success = (pos) => {
+     var crd = pos.coords;
+     console.log('Your current position is:');
+     console.log(`Latitude : ${crd.latitude}`);
+     console.log(`Longitude: ${crd.longitude}`);
+     console.log(`timestamp: ${pos.timestamp}`);
+     console.log(`More or less ${crd.accuracy} meters.`);
+     let  {timestamp} = this.state;
+     if (!timestamp) {
+        timestamp = 0;
+     }
+     const date = new Date();
+     const  currenTimestamp = date.getTime();
+
+     if ((currenTimestamp-timestamp) > 6*1000 ) {
+            console.log(`state timestamp: ${timestamp}`);
+            //console.log(`More or less ${crd.accuracy} meters.`);
+            //if (this._ismounted) {
+            this.setState({
+                latitude: crd.latitude,
+                longitude: crd.longitude,
+                timestamp: pos.timestamp,
+            });
+         }
+
+         this.updateLocation(pos);
+  }
+
+  error = (err) => {
+     console.log(err);
+  }
+
+  getCurrentLocation = () => {
+     navigator.geolocation.getCurrentPosition(this.success, this.error, options);
+  }*/
 
   _updateClient =  () => {
      const {usertag, clients} = this.props;
@@ -92,39 +169,8 @@ export class GpsMapView extends React.Component {
      //console.log(newclients);
   };
 
-  componentDidMount() {
-    const {usertag, truck} = this.props;
-    const {clients} = this.state;
-    const truckPath = "repos/" + usertag +"/trucks/" + truck.key;
-    //console.log(clients);
 
-    this.setState({
-       //clients: this.props.clients,
-       truckKey: this.props.truck.key,
-       truckPath: truckPath,
-    });
-
-    this._getLocationPermisions();
-
-    this.watchID = navigator.geolocation.watchPosition(
-      position => {
-        this.setState({
-            latitude: position.coords.latitude,
-            longitude: position.coords.longitude,
-            timestamp: position.timestamp,
-            //latitudeDelta: LATITUDE_DELTA,
-            //longitudeDelta: LONGITUDE_DELTA,
-        });
-        //console.log(position.coords.latitude);
-        //console.log(position);
-        this.updateLocation(position);
-      },
-      error => {console.log(error);this.setState({ error: error.message })},
-     { enableHighAccuracy: true, timeout: 20000, maximumAge: 1000, distanceFilter: 5}
-    );
-  }
-
-  updateLocation (position){
+  /*updateLocation (position){
        const {truckPath} = this.state;
        const pos = {
            latitude: position.coords.latitude,
@@ -136,24 +182,6 @@ export class GpsMapView extends React.Component {
        truckRef.update (pos) ;
   }
 
-  componentWillUnmount() {
-    navigator.geolocation.clearWatch(this.watchID);
-  }
-
-  /*_getLocationAsync = async () => {
-    let { status } = await Permissions.askAsync(Permissions.LOCATION);
-    console.log(status);
-    if (status !== 'granted') {
-      this.setState({
-        error: 'Permission to access location was denied',
-      });
-      console.log("GPS permission not granted");
-    }
-
-    let location = await Location.getCurrentPositionAsync({});
-    console.log(location);
-    this.setState({ location });
-  };*/
 
   _getLocationPermisions = async () => {
     let { status } = await Permissions.askAsync(Permissions.LOCATION);
@@ -164,11 +192,7 @@ export class GpsMapView extends React.Component {
       });
       console.log("GPS permission not granted");
     }
-
-    //let location = await Location.getCurrentPositionAsync({});
-    //console.log(location);
-    //this.setState({ location });
-  };
+  };*/
 
   onPressMarker(e, index) {
       if (index < -1) {
@@ -300,9 +324,16 @@ export class GpsMapView extends React.Component {
     let lat = null;
     let lng = null;
 
-    if (this.state.latitude && this.state.longitude) {
+    /*if (this.state.latitude && this.state.longitude) {
         lat = this.state.latitude;
         lng = this.state.longitude;
+    }*/
+
+    const {position} = this.props;
+    console.log(position);
+    if (position) {
+        lat = position.latitude;
+        lng = position.longitude;
     }
 
     let {clients, selectedIndex, modalOpen} = this.state;
@@ -464,14 +495,15 @@ const styles = {
 };
 
 const mapStateToProps = state => {
-  //console.log("GpsMapView");
-  //console.log (state.employees.truck);
+  console.log("GpsMapView props state.auth.position = ");
+  console.log (state.auth.position);
   return {
      clients: state.auth.clients,
      employeeName: state.employees.employeeName,
      truck: state.auth.truck,
      usertag: state.auth.userTag,
      employeeKey: state.auth.employeeKey,
+     position: state.auth.position,
   };
 };
 
