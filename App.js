@@ -23,12 +23,13 @@ class App extends Component {
 
   componentDidMount() {
     const config = {
-      apiKey: "AIzaSyCBxBrARUtxlMlCdWUDsMEIuqeWapU5mWE",
-          authDomain: "jobassign3.firebaseapp.com",
-          databaseURL: "https://jobassign3.firebaseio.com",
-          projectId: "jobassign3",
-          storageBucket: "jobassign3.appspot.com",
-          messagingSenderId: "1088029675584"
+       apiKey: "AIzaSyDuKonQxaHIwr3Luxfl0HEmAIYA0vKwDHg",
+       authDomain: "jobassign4.firebaseapp.com",
+       databaseURL: "https://jobassign4.firebaseio.com",
+       projectId: "jobassign4",
+       storageBucket: "jobassign4.appspot.com",
+       messagingSenderId: "63214700687",
+       appId: "1:63214700687:web:63f29bd2ab3e96d3"
     };
     firebase.initializeApp(config);
     //console.log("firebase configuration");

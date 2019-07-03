@@ -31,9 +31,9 @@ class ClientList extends Component {
               renderItem={({item}) =>
                  <TouchableWithoutFeedback onPress={ () => this.onRowPress(item)}>
                      <View style={styles.flatview}>
-                        <Text style={styles.name}>{item.clientName}</Text>
-                        <Text style={styles.email}>{item.clientStreet}</Text>
-                        <Text style={styles.email}>{item.clientCity}</Text>
+                        <Text style={styles.name}>{item.name}</Text>
+                        <Text style={styles.email}>{item.street}</Text>
+                        <Text style={styles.email}>{item.city}</Text>
                         <Text style={styles.order}>Active Work Orders: {item.activeOrders}</Text>
                     </View>
                  </TouchableWithoutFeedback>
@@ -76,13 +76,23 @@ const styles = StyleSheet.create({
 });
 
 const mapStateToProps = state => {
+  const orders = state.auth.assignedOrders;
+  //console.log(orders);
+  let clients = [];
+  for (var clientkey in orders) {
+      //console.log("client Key = " + orderkey);
+      //console.log("client name = " + orders[orderkey].name)
+      clients.push({...orders[clientkey]});
+  }
+  //console.log(clients);
 
   return {
      //employees: employees,
      usertag: state.auth.userTag,
      employeeKey: state.auth.employeeKey,
-     assignedClients: state.auth.clients,
+     assignedClients: clients,
      truck: state.auth.truck,
+     assignedOrders: state.auth.assignedOrders,
   };
 };
 

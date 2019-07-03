@@ -12,20 +12,20 @@ class ClientForm extends Component {
       <View style={styles.container}>
 
           <Text style={styles.textName}>
-             {client.clientName}
+             {client.name}
           </Text>
 
 
           <Text style={styles.text}>
-             {client.clientStreet}
+             {client.street}
           </Text>
 
           <Text style={styles.text}>
-             {client.clientCity}
+             {client.city}
           </Text>
 
            <Text style={styles.text}>
-               {client.clientPostcode}
+               {client.postcode}
            </Text>
 
       </View>

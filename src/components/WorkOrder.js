@@ -16,7 +16,7 @@ class WorkOrder extends Component {
      work: null,
      isRepeat: null,
      repeatTimes: null,
-     deliverys: null,
+     deliveryForOrder: 0,
      thumbPath: null,
      photoPath: null,
      thumbs: [],
@@ -24,27 +24,30 @@ class WorkOrder extends Component {
 
   componentDidMount() {
      const { usertag, order} = this.props;
-     const {clientTag, orderKey, photo} = order;
+     const {clientTag, orderKey, photo, deliverys} = order;
      let {thumbs} = this.state;
      //const {order} = this.props;
      //const {photo} = order;
+     let deliveryForOrder = 0;
+     for (var deliverykey in deliverys) {
+         deliveryForOrder ++;
+     }
 
-     //console.log(photo);
 
      const isRepeat = order.isRepeat?(order.isRepeat==="true"?true:false):false;
-     const previousDelivery = order.previousDelivery?parseInt (order.previousDelivery):0 ;
-     const presentDelivery = order.presentDelivery? parseInt (order.presentDelivery):0 ;
-     const deliverys = previousDelivery + presentDelivery;
+     //const previousDelivery = order.previousDelivery?parseInt (order.previousDelivery):0 ;
+     //const presentDelivery = order.presentDelivery? parseInt (order.presentDelivery):0 ;
+     //const deliverys = previousDelivery + presentDelivery;
      const repeatTimes = order.repeatTimes?parseInt (order.repeatTimes):0;
 
      let status = "NEW";
      if (isRepeat){
-       if (deliverys >= repeatTimes) {
+       if (deliveryForOrder >= repeatTimes) {
          status = "DONE";
-       } else if (deliverys > 0) {
+       } else if (deliveryForOrder > 0) {
          status = "PROGRESS";
        }
-     } else if (deliverys >=1) {
+     } else if (deliveryForOrder >=1) {
         status = "DONE";
      }
 
@@ -54,7 +57,7 @@ class WorkOrder extends Component {
           work: order.work,
           isRepeat: isRepeat,
           repeatTimes: repeatTimes,
-          deliverys: deliverys,
+          deliveryForOrder: deliveryForOrder,
           status: status,
       });
 
@@ -114,7 +117,7 @@ class WorkOrder extends Component {
           work: order.work,
           isRepeat: isRepeat,
           repeatTimes: repeatTimes,
-          deliverys: deliverys,
+          deliveryForOrder: deliveryForOrder,
           status: status,
           //thumbs: thumbs,
       });
@@ -139,7 +142,7 @@ class WorkOrder extends Component {
   }
 
   render() {
-    const {orderId, work, isRepeat, repeatTimes, deliverys, status, thumbs} = this.state;
+    const {orderId, work, isRepeat, repeatTimes, deliveryForOrder, status, thumbs} = this.state;
     const {order} = this.props;
     //console.log(thumbs);
     //if (thumbs.length>0) {console.log(thumbs)};
@@ -158,7 +161,7 @@ class WorkOrder extends Component {
              Expected Repeat Times: {repeatTimes}
           </Text>}
           <Text style={styles.text}>
-             Actual Delivery Times: {deliverys}
+             Actual Delivery Times: {deliveryForOrder}
           </Text>
           <Text style={styles.text}>
              Status: {status}

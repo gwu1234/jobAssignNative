@@ -1,5 +1,6 @@
 import { Actions } from 'react-native-router-flux';
 import firebase from 'firebase';
+import 'firebase/functions';
 
 import {
   LOGIN_USER_SUCCESS,
@@ -67,6 +68,7 @@ export const setEmployeeKey = ({employeeKey: employeeKey, userTag: userTag}) => 
           let clients = [];
           let leads = [];
           let employeeName  = "";
+          let assignedOrders = null;
           if (employee) {
               if (employee.truckAssigned) {
                  truck = {
@@ -79,7 +81,7 @@ export const setEmployeeKey = ({employeeKey: employeeKey, userTag: userTag}) => 
               }
 
               const assignedClients = employee.assigned;
-              for (var key in assignedClients) {
+               for (var key in assignedClients) {
                  const {workorders} = assignedClients[key];
                  let activeOrders = 0;
                  for (var orderkey in workorders) {
@@ -92,15 +94,40 @@ export const setEmployeeKey = ({employeeKey: employeeKey, userTag: userTag}) => 
                  }) ;
              }
 
+             //console.log("employee assignedOrders:");
+             //console.log(employee.assignedOrders);
+             //console.log("calling selectOrders");
+
              const assignedLeads = employee.leads;
              for (var key in assignedLeads) {
                 leads.push ({...assignedLeads[key]});
               }
 
              employeeName  = employee.name;
-          }
 
-          dispatch({
+             var selectOrders = firebase.functions().httpsCallable('selectOrders');
+             selectOrders({orders:employee.assignedOrders}).then(function(result) {
+                   //console.log("employee.assignedOrders return results");
+                   //console.log(result.data.assigned);
+                   assignedOrders = result.data.assigned;
+
+                   dispatch({
+                     type: SET_EMPLOYEE_KEY,
+                     payload: {
+                       employeeKey: employeeKey,
+                       userTag: userTag,
+                       clients: clients,
+                       truck: truck,
+                       leads: leads,
+                       employeeName: employeeName,
+                       assignedOrders: assignedOrders,
+                     },
+                   });
+             });
+
+          }
+          //console.log(assignedOrders);
+          /*dispatch({
             type: SET_EMPLOYEE_KEY,
             payload: {
               employeeKey: employeeKey,
@@ -109,8 +136,9 @@ export const setEmployeeKey = ({employeeKey: employeeKey, userTag: userTag}) => 
               truck: truck,
               leads: leads,
               employeeName: employeeName,
+              assignedOrders: assignedOrders,
             },
-          });
+          });*/
      });
    }
 }
