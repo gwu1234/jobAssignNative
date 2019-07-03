@@ -136,15 +136,32 @@ class WorkOrder extends Component {
      //console.log("photoTag = " + photoTag);
      const photoName = photoTag + ".jpg";
      const photoPath = usertag + "/" + clientKey + "/" + orderKey + "/photo/" + photoTag + "/" + photoName;
-     console.log("photoPath = ");
-     console.log(photoPath);
+     //console.log("photoPath = ");
+     //console.log(photoPath);
      Actions.photoView({ photoPath: photoPath });
+  }
+
+  displayCoworkers (coworkers) {
+    let workers = [];
+
+    for (var wkey in coworkers) {
+       if (coworkers[wkey]) {
+            workers.push (
+                <Text style={styles.text} key = {wkey} >
+                   {coworkers[wkey].employeeName}
+                </Text>
+            );
+       }
+    }
+
+    return workers;
   }
 
   render() {
     const {orderId, work, isRepeat, repeatTimes, deliveryForOrder, status, thumbs} = this.state;
     const {order} = this.props;
-    //console.log(thumbs);
+    const {coworkers} = order;
+    //console.log(coworkers);
     //if (thumbs.length>0) {console.log(thumbs)};
     return (
       <View style={styles.container}>
@@ -166,7 +183,13 @@ class WorkOrder extends Component {
           <Text style={styles.text}>
              Status: {status}
           </Text>
-          <Text style={styles.text}>
+
+          <Text style={{...styles.text, paddingTop: 4}}>
+             Coworkers :
+          </Text>
+          {coworkers && this.displayCoworkers(coworkers)}
+
+          <Text style={{...styles.text, paddingTop:4}}>
              photos: {thumbs.length}
           </Text>
 
