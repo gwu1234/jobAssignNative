@@ -104,27 +104,46 @@ export const setEmployeeKey = ({employeeKey: employeeKey, userTag: userTag}) => 
               }
 
              employeeName  = employee.name;
+             let lastDeliveryRead = employee.lastDeliveryRead;
+             let lastDeliveryUpdate = employee.lastDeliveryUpdate;
+             lastDeliveryRead = (lastDeliveryRead === null ||
+                                 lastDeliveryRead === undefined ||
+                                 lastDeliveryRead === "undefined") ?
+                                 0 : lastDeliveryRead;
+             lastDeliveryUpdate = (lastDeliveryUpdate === null ||
+                                   lastDeliveryUpdate === undefined ||
+                                   lastDeliveryUpdate === "undefined") ?
+                                   0 : lastDeliveryUpdate;
 
-             var selectOrders = firebase.functions().httpsCallable('selectOrders');
-             selectOrders({orders:employee.assignedOrders}).then(function(result) {
-                   //console.log("employee.assignedOrders return results");
-                   //console.log(result.data.assigned);
-                   assignedOrders = result.data.assigned;
+             var currentStamp = Date.now();
 
-                   dispatch({
-                     type: SET_EMPLOYEE_KEY,
-                     payload: {
-                       employeeKey: employeeKey,
-                       userTag: userTag,
-                       clients: clients,
-                       truck: truck,
-                       leads: leads,
-                       employeeName: employeeName,
-                       assignedOrders: assignedOrders,
-                     },
-                   });
-             });
+             const minute3 = 3 * 60 * 1000;
+             if (lastDeliveryRead === 0 || lastDeliveryUpdate === 0
+                 || lastDeliveryRead < lastDeliveryUpdate
+                 || (currentStamp - lastDeliveryRead > minute3)) {
+                  var selectOrders = firebase.functions().httpsCallable('selectOrders');
+                  selectOrders({orders:employee.assignedOrders}).then(function(result) {
+                       //console.log("employee.assignedOrders return results");
+                       //console.log(result.data.assigned);
+                       //var currentStamp = Date.now();
+                       employeeRef.child("lastDeliveryRead").set(currentStamp);
+                       employeeRef.child("lastDeliveryUpdate").set(currentStamp);
+                       assignedOrders = result.data.assigned;
 
+                       dispatch({
+                           type: SET_EMPLOYEE_KEY,
+                           payload: {
+                              employeeKey: employeeKey,
+                              userTag: userTag,
+                              clients: clients,
+                              truck: truck,
+                              leads: leads,
+                              employeeName: employeeName,
+                              assignedOrders: assignedOrders,
+                          },
+                       });
+                 });
+             }
           }
           //console.log(assignedOrders);
           /*dispatch({

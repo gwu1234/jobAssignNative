@@ -228,10 +228,10 @@ export class GpsMapView extends React.Component {
       });
 
       //console.log(selectedOrder);
-      console.log(client.orderKey);
+      //console.log(client.orderKey);
       //console.log(employeeKey);
 
-      const deliveryPath = `/repos/${usertag}/clients/data/${client.clientTag}/deliverys`;
+      const deliveryPath = `/repos/${usertag}/clients/data/${client.clientKey}/deliverys`;
       console.log(deliveryPath);
       var options = { year: 'numeric', month: 'long', day: 'numeric' };
       const day = new Date();
@@ -241,13 +241,13 @@ export class GpsMapView extends React.Component {
       const deliveryKey = deliveryRef.push().getKey();
       //const date = (new Date()).
       const delivery = {
-         work: clients[index].orderWork,
-         clientKey: clients[index].clientKey,
-         clientTag: clients[index].clientTag,
-         employee: employeeName,
+         work: selectedOrder.work,
+         clientKey: client.clientKey,
+         clientTag: client.clientKey,
+         employee: selectedOrder.employeeName,
          employeeKey: employeeKey,
-         linkedOrderId: client.orderId,
-         linkedOrderKey:client.orderKey,
+         linkedOrderId: selectedOrder.orderId,
+         linkedOrderKey:selectedOrder.orderKey,
          date: date,
          deliveryKey: deliveryKey,
          deliveryId: deliveryKey,
@@ -255,14 +255,27 @@ export class GpsMapView extends React.Component {
       //console.log(delivery);
       deliveryRef.child(deliveryKey).set(delivery);
 
-      let {presentDelivery} = selectedOrder;
-      presentDelivery = presentDelivery? parseInt(presentDelivery): 0;
-      presentDelivery++;
-      const employeeOrderPath =
-         `/repos/${usertag}/employees/${employeeKey}/assigned/${client.clientTag}/workorders/${selectedOrder.orderKey}`;
-      console.log(employeeOrderPath);
-      const employeeOrderRef = firebase.database().ref(employeeOrderPath);
-      employeeOrderRef.update ({presentDelivery: String(presentDelivery)});
+      //let {presentDelivery} = selectedOrder;
+      //presentDelivery = presentDelivery? parseInt(presentDelivery): 0;
+      //presentDelivery++;
+      var currentStamp = Date.now();
+      const employeePath = `/repos/${usertag}/employees/${employeeKey}`;
+      console.log(employeePath);
+      console.log(currentStamp);
+      const employeeRef = firebase.database().ref(employeePath);
+      //employeeRef.update ({presentDelivery: String(presentDelivery)});
+      employeeRef.child("lastDeliveryUpdate").set(currentStamp);
+
+      const {coworkers} = selectedOrder;
+      for (var coworkerkey in coworkers) {
+         if (employeeKey !== coworkerkey) {
+             const employeePath = `/repos/${usertag}/employees/${coworkerkey}`;
+             console.log(employeePath);
+             const employeeRef = firebase.database().ref(employeePath);
+             employeeRef.child("lastDeliveryUpdate").set(currentStamp);
+         }
+      }
+
   }
 
   onCancelPress (index) {
