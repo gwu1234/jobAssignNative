@@ -57,7 +57,7 @@ export class GpsMapView extends React.Component {
   }*/
 
   componentWillMount() {
-     this._updateClient();
+     //this._updateClient();
   }
 
   componentDidMount() {
@@ -129,7 +129,7 @@ export class GpsMapView extends React.Component {
      navigator.geolocation.getCurrentPosition(this.success, this.error, options);
   }*/
 
-  _updateClient =  () => {
+/*  _updateClient =  () => {
      const {usertag, clients} = this.props;
 
      clients.map((client, index) => {
@@ -167,7 +167,7 @@ export class GpsMapView extends React.Component {
          })
      });
      //console.log(newclients);
-  };
+  }; */
 
 
   /*updateLocation (position){
@@ -210,7 +210,7 @@ export class GpsMapView extends React.Component {
 
 
   onDonePress (index, selectedOrder) {
-      let {clients} = this.state;
+      let {clients} = this.props;
       const {usertag, employeeName, employeeKey} = this.props;
       //this.setState({selectedMarkerIndex: index});
       //console.log("GpsMapView onDonePress");
@@ -281,16 +281,19 @@ export class GpsMapView extends React.Component {
     let status = 0;
 
     for (var orderKey in workorders) {
-       let {isActive,isRepeat,repeatTimes,previousDelivery,presentDelivery}
+       let {isActive,isRepeat,repeatTimes,deliverys}
              = workorders[orderKey];
 
        isActive = (isActive && isActive === "true")? true:false;
        isRepeat = (isRepeat && isRepeat === "true")? true:false;
        repeatTimes = repeatTimes? parseInt(repeatTimes, 10) : 0;
-       previousDelivery = previousDelivery? parseInt(previousDelivery, 10) : 0;
-       presentDelivery = presentDelivery? parseInt(presentDelivery, 10) : 0;
+       //previousDelivery = previousDelivery? parseInt(previousDelivery, 10) : 0;
+       //presentDelivery = presentDelivery? parseInt(presentDelivery, 10) : 0;
 
-       deliveryTimes = presentDelivery + previousDelivery ;
+       //deliveryTimes = presentDelivery + previousDelivery ;
+       for (var deliverykey in deliverys) {
+           deliveryTimes ++;
+       }
 
        if (isActive) {
            if (!isRepeat && deliveryTimes > 0) {
@@ -336,13 +339,14 @@ export class GpsMapView extends React.Component {
         lng = position.longitude;
     }
 
-    let {clients, selectedIndex, modalOpen} = this.state;
+    let {selectedIndex, modalOpen} = this.state;
+    let {clients} = this.props;
 
     clients = clients.map((client, index) => {
-       if (/^(\-)?[0-9]+(\.)?[0-9]+$/.test(client.clientLat) &&
-           /^(\-)?[0-9]+(\.)?[0-9]+$/.test(client.clientLng)) {
-            const lat = parseFloat(client.clientLat) ;
-            const lng = parseFloat(client.clientLng) ;
+       if (/^(\-)?[0-9]+(\.)?[0-9]+$/.test(client.lat) &&
+           /^(\-)?[0-9]+(\.)?[0-9]+$/.test(client.lng)) {
+            const lat = parseFloat(client.lat) ;
+            const lng = parseFloat(client.lng) ;
 
             const {workorders} = client;
             const orderStatus = this.status4ThisClient(workorders);
@@ -392,9 +396,9 @@ export class GpsMapView extends React.Component {
                 </View>
               { modalOpen === true && selectedIndex !==null &&selectedIndex === index &&
                     <GpsModalView
-                          title={client.clientName}
-                          street={client.clientStreet}
-                          city={client.clientCity}
+                          title={client.name}
+                          street={client.street}
+                          city={client.city}
                           id={index}
                           onDonePress ={(index, activeOrder)=> this.onDonePress(index, activeOrder)}
                           onCancelPress ={(index)=> this.onCancelPress(index)}
@@ -495,16 +499,26 @@ const styles = {
 };
 
 const mapStateToProps = state => {
-  //console.log("GpsMapView props state.auth.position = ");
-  //console.log (state.auth.position);
-  return {
-     clients: state.auth.clients,
-     employeeName: state.employees.employeeName,
-     truck: state.auth.truck,
-     usertag: state.auth.userTag,
-     employeeKey: state.auth.employeeKey,
-     position: state.auth.position,
-  };
+   //console.log("GpsMapView props state.auth.position = ");
+   //console.log (state.auth.position);
+    const orders = state.auth.assignedOrders;
+    //console.log(orders);
+    let clients = [];
+    for (var clientkey in orders) {
+        //console.log("client Key = " + orderkey);
+        //console.log("client name = " + orders[orderkey].name)
+       clients.push({...orders[clientkey]});
+    }
+
+    return {
+        //clients: state.auth.clients,
+        clients: clients,
+        employeeName: state.employees.employeeName,
+        truck: state.auth.truck,
+        usertag: state.auth.userTag,
+        employeeKey: state.auth.employeeKey,
+        position: state.auth.position,
+   };
 };
 
 export default connect(mapStateToProps, {})(GpsMapView);

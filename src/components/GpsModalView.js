@@ -1,5 +1,10 @@
 import React, {Component} from 'react';
 import {Modal, Text, TouchableHighlight, View, Alert, FlatList, StyleSheet, TouchableWithoutFeedback} from 'react-native';
+const JOB_NOT_ACTIVE = 0;
+const JOB_NEW = 1;
+const JOB_ASSIGNED = 2;
+const JOB_PROGRESS = 3;
+const JOB_DONE = 4;
 
 class GpsModalView extends React.Component {
     state = {
@@ -57,7 +62,30 @@ class GpsModalView extends React.Component {
 
         const orderArray =[];
         for (var key in workorders) {
-           const newOrder = {...workorders[key]}
+           let {isActive,isRepeat,repeatTimes,deliverys} = workorders[key];
+           isActive = (isActive && isActive === "true")? true:false;
+           isRepeat = (isRepeat && isRepeat === "true")? true:false;
+           repeatTimes = repeatTimes? parseInt(repeatTimes, 10) : 0;
+           let deliveryTimes = 0;
+           for (var deliverykey in deliverys) {
+               deliveryTimes ++;
+           }
+           let status = JOB_NEW;
+           if (!isRepeat && deliveryTimes > 0) {
+              status = JOB_DONE;
+           } else if (isRepeat && repeatTimes === 0) {
+              status = JOB_PROGRESS;
+           } else if (isRepeat && repeatTimes !== 0 && repeatTimes <= deliveryTimes) {
+              status = JOB_DONE;
+           } else if (isRepeat && repeatTimes !== 0 && repeatTimes > deliveryTimes) {
+              status = JOB_PROGRESS;
+           }
+           else {
+             status = JOB_NEW;
+           }
+
+
+           const newOrder = {...workorders[key], status: status}
            orderArray.push(newOrder);
         }
 
@@ -89,8 +117,16 @@ class GpsModalView extends React.Component {
                         renderItem={({item}) =>
                            <TouchableWithoutFeedback onPress={ () => this.onRowPress(item)}>
                                <View style={styles.flatview}>
-                                  <Text style={styles.orderName}>{item.orderId} </Text>
-                                  <Text style={styles.orderName}>{item.work}</Text>
+                                  <Text style={styles.orderName}>Order Id : {item.orderId} </Text>
+                                  <Text style={styles.orderName}>Work Brief : {item.work}</Text>
+                                    <Text style={styles.orderName}>Order Status :
+                                      { item.status === JOB_NOT_ACTIVE ? "JOB_NOT_ACTIVE": (
+                                        item.status === JOB_NEW ? "JOB_NEW": (
+                                        item.status === JOB_ASSIGNED ? "JOB_ASSIGNED": (
+                                        item.status === JOB_PROGRESS ? "JOB_PROGRESS": (
+                                        item.status === JOB_DONE ? "JOB_DONE": "JOB_NEW") )))
+                                      }
+                                    </Text>
                               </View>
                            </TouchableWithoutFeedback>
                         }
@@ -173,11 +209,11 @@ const styles = {
   },
   FlatViewContainer: {
     width: 250,
-    height: 100,
+    height: 180,
   },
   modalContainer: {
-    width: 250,
-    height: 280,
+    width: 260,
+    height: 350,
     borderRadius: 5,
     borderWidth: 1,
     borderColor: 'green',
@@ -194,7 +230,7 @@ const styles = {
   buttonContainer: {
     flex: 1,
     flexDirection: 'row',
-    marginTop: 10,
+    marginTop: 4,
     margin: 5,
     justifyContent: 'space-between'
   },
@@ -223,7 +259,8 @@ const styles = {
   },
   flatview: {
     justifyContent: 'center',
-    paddingTop: 1,
+    paddingTop: 4,
+    paddingBottom: 4,
     borderRadius: 2,
     borderWidth: 2,
     borderColor: 'blue',

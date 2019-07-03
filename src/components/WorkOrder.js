@@ -24,7 +24,7 @@ class WorkOrder extends Component {
 
   componentDidMount() {
      const { usertag, order} = this.props;
-     const {clientTag, orderKey, photo, deliverys} = order;
+     const {clientKey, orderKey, photo, deliverys} = order;
      let {thumbs} = this.state;
      //const {order} = this.props;
      //const {photo} = order;
@@ -63,8 +63,8 @@ class WorkOrder extends Component {
 
        //const { usertag, order} = this.props;
        //const {clientTag, orderKey} = order;
-       const thumbPath = usertag + "/" + clientTag + "/" + orderKey + "/thumb";
-       const photoPath = usertag + "/" + clientTag + "/" + orderKey + "/photo";
+       const thumbPath = usertag + "/" + clientKey + "/" + orderKey + "/thumb";
+       const photoPath = usertag + "/" + clientKey + "/" + orderKey + "/photo";
        //this.setState ({thumbPath: thumbPath, photoPath: photoPath});
        //const {photoPath} = this.state;
        //console.log(photo);
@@ -128,14 +128,14 @@ class WorkOrder extends Component {
      Actions.photos({ workorder: order });
   }
 
-  onImagePress(clientTag, orderKey, photoTag) {
+  onImagePress(clientKey, orderKey, photoTag) {
      const {usertag} = this.props;
      //console.log("onImagePress");
      //console.log("clientTag = " + clientTag);
      //console.log("orderKey = " + orderKey);
      //console.log("photoTag = " + photoTag);
      const photoName = photoTag + ".jpg";
-     const photoPath = usertag + "/" + clientTag + "/" + orderKey + "/photo/" + photoTag + "/" + photoName;
+     const photoPath = usertag + "/" + clientKey + "/" + orderKey + "/photo/" + photoTag + "/" + photoName;
      console.log("photoPath = ");
      console.log(photoPath);
      Actions.photoView({ photoPath: photoPath });
@@ -178,7 +178,7 @@ class WorkOrder extends Component {
               horizontal={true}
               showsHorizontalScrollIndicator={true}
               renderItem={({item}) =>(
-              <TouchableWithoutFeedback onPress={ () => this.onImagePress(order.clientTag, order.orderKey, item.photoTag)} style={styles.button1}>
+              <TouchableWithoutFeedback onPress={ () => this.onImagePress(order.clientKey, order.orderKey, item.photoTag)} style={styles.button1}>
                 <Image
                   key={item.photoTag}
                   style={styles.image}

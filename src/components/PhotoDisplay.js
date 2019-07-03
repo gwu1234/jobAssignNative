@@ -40,14 +40,14 @@ class PhotoDisplay extends Component {
 
   componentWillMount() {
     const { workorder, usertag, employeeKey} = this.props;
-    const {clientTag, orderKey} = workorder;
+    const {clientKey, orderKey} = workorder;
     //console.log(usertag);
     //console.log(clientTag);
     //console.log(employeeKey);
 
-    const photoPath = usertag + "/" + clientTag + "/" + orderKey;
-    const orderPath = "/repos/" + usertag + "/clients/data/" + clientTag + "/workorders/" + orderKey + "/photo";
-    const employeePath = "/repos/" + usertag + "/employees/" + employeeKey + "/assigned/" + clientTag + "/workorders/"+ orderKey + "/photo";
+    const photoPath = usertag + "/" + clientKey + "/" + orderKey;
+    const orderPath = "/repos/" + usertag + "/clients/data/" + clientKey + "/workorders/" + orderKey + "/photo";
+    const employeePath = "/repos/" + usertag + "/employees/" + employeeKey + "/assigned/" + clientKey + "/workorders/"+ orderKey + "/photo";
     //console.log(photoPath);
     //console.log(orderPath);
     //console.log(employeePath);
