@@ -7,29 +7,16 @@ import reducers from './src/reducers';
 import Router from './src/Router';
 
 class App extends Component {
-  /*componentWillMount() {
-    const config = {
-      apiKey: "AIzaSyCBxBrARUtxlMlCdWUDsMEIuqeWapU5mWE",
-          authDomain: "jobassign3.firebaseapp.com",
-          databaseURL: "https://jobassign3.firebaseio.com",
-          projectId: "jobassign3",
-          storageBucket: "jobassign3.appspot.com",
-          messagingSenderId: "1088029675584"
-    };
-    firebase.initializeApp(config);
-    console.log("firebase configuration");
-    console.log(config);
-  }*/
 
   componentDidMount() {
     const config = {
-       apiKey: "AIzaSyDuKonQxaHIwr3Luxfl0HEmAIYA0vKwDHg",
-       authDomain: "jobassign4.firebaseapp.com",
-       databaseURL: "https://jobassign4.firebaseio.com",
-       projectId: "jobassign4",
-       storageBucket: "jobassign4.appspot.com",
-       messagingSenderId: "63214700687",
-       appId: "1:63214700687:web:63f29bd2ab3e96d3"
+       apiKey: "AIzaSyC6mtYTtwmmpyD9TvDsGEUfLnuCuoI97uk",
+       authDomain: "duty2go.firebaseapp.com",
+       databaseURL: "https://duty2go.firebaseio.com",
+       projectId: "duty2go",
+       storageBucket: "duty2go.appspot.com",
+       messagingSenderId: "926351987271",
+       appId: "1:926351987271:web:37d33429c5fa5495"
     };
     firebase.initializeApp(config);
     //console.log("firebase configuration");
