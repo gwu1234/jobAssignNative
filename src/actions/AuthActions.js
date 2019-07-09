@@ -117,10 +117,10 @@ export const setEmployeeKey = ({employeeKey: employeeKey, userTag: userTag}) => 
 
              var currentStamp = Date.now();
 
-             const minute3 = 3 * 60 * 1000;
+             const minute1 = 1 * 60 * 1000;
              if (lastDeliveryRead === 0 || lastDeliveryUpdate === 0
                  || lastDeliveryRead < lastDeliveryUpdate
-                 || (currentStamp - lastDeliveryRead > minute3)) {
+                 || (currentStamp - lastDeliveryRead > minute1)) {
                   var selectOrders = firebase.functions().httpsCallable('selectOrders');
                   selectOrders({orders:employee.assignedOrders}).then(function(result) {
                        //console.log("employee.assignedOrders return results");
