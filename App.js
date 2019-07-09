@@ -7,18 +7,20 @@ import reducers from './src/reducers';
 import Router from './src/Router';
 
 class App extends Component {
-  componentWillMount() {
+
+  componentDidMount() {
     const config = {
-       apiKey: "AIzaSyAUdrYEIfQWtrvkFluxpX2dNWc79tnyes0",
-       authDomain: "jobassign2.firebaseapp.com",
-       databaseURL: "https://jobassign2.firebaseio.com",
-       projectId: "jobassign2",
-       storageBucket: "jobassign2.appspot.com",
-       messagingSenderId: "224391770489"
+       apiKey: "AIzaSyC6mtYTtwmmpyD9TvDsGEUfLnuCuoI97uk",
+       authDomain: "duty2go.firebaseapp.com",
+       databaseURL: "https://duty2go.firebaseio.com",
+       projectId: "duty2go",
+       storageBucket: "duty2go.appspot.com",
+       messagingSenderId: "926351987271",
+       appId: "1:926351987271:web:37d33429c5fa5495"
     };
     firebase.initializeApp(config);
-    console.log("firebase configuration");
-    console.log(config);
+    //console.log("firebase configuration");
+    //console.log(config);
   }
 
   render() {

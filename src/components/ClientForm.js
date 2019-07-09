@@ -9,40 +9,42 @@ class ClientForm extends Component {
     const {client} = this.props;
 
     return (
-      <View>
-        <CardSection>
+      <View style={styles.container}>
+
           <Text style={styles.textName}>
-             {client.clientName}
+             {client.name}
           </Text>
-        </CardSection>
-        <CardSection>
+
+
           <Text style={styles.text}>
-             {client.clientStreet}
+             {client.street}
           </Text>
-        </CardSection>
-        <CardSection>
+
           <Text style={styles.text}>
-             {client.clientCity}
+             {client.city}
           </Text>
-        </CardSection>
-        <CardSection>
+
            <Text style={styles.text}>
-               {client.clientPostcode}
+               {client.postcode}
            </Text>
-        </CardSection>
+
       </View>
     );
   }
 }
 
 const styles = {
+  container: {
+    flex: 1,
+    marginTop: 20,
+  },
   text: {
-    fontSize: 18,
+    fontSize: 16,
     paddingLeft: 20,
     color: '#242D99',
   },
   textName: {
-    fontSize: 22,
+    fontSize: 18,
     paddingLeft: 20,
     fontWeight: "bold",
   }

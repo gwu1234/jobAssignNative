@@ -1,9 +1,11 @@
 import _ from 'lodash';
 import React, { Component } from 'react';
+import { View } from 'react-native';
 import { connect } from 'react-redux';
 import Communications from 'react-native-communications';
-import EmployeeForm from './EmployeeForm';
+//import EmployeeForm from './EmployeeForm';
 import ClientForm from './ClientForm';
+import WorkOrders from './WorkOrders';
 //import { employeeUpdate, employeeSave, employeeDelete } from '../actions';
 import { Card, CardSection, Button, Confirm } from './common';
 
@@ -40,12 +42,13 @@ class ClientDetail extends Component {
 
   render() {
     const {client} = this.props;
-    console.log("ClientDetails");
-    console.log(client);
+    //console.log(client);
+    //console.log(client.workorders);
     return (
-      <Card>
+      <View style={{flex:1}}>
         <ClientForm client={client}/>
-      </Card>
+        <WorkOrders workorders ={client.workorders}/>
+      </View>
     );
   }
 }

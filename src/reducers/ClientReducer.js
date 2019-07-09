@@ -11,8 +11,6 @@ const INITIAL_STATE = {
 export default (state = INITIAL_STATE, action) => {
   switch (action.type) {
     case SET_CLIENTS:
-      //console.log("set_clients");
-      //console.log(action.payload.clients);
       return { ...state, clients: action.payload.clients};
     default:
       return state;
