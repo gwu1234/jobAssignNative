@@ -26,7 +26,7 @@ class RouterComponent extends Component {
          <Router >
            <Scene key="root" hideNavBar >
            <Scene key="auth">
-               <Scene key="login" component={LoginForm} title="JobAssign Login" />
+               <Scene key="login" component={LoginForm} title="Duty2Go" />
            </Scene>
 
            <Scene key="main">

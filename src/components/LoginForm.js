@@ -316,7 +316,7 @@ class LoginForm extends Component {
 
   render() {
     const {isFrench} = this.props;
-    console.log("isFrench = " + isFrench);
+    //console.log("isFrench = " + isFrench);
     const buttonString = isFrench? "English": "Francais";
     const passwordString = isFrench? "mot passe" : "password";
 
