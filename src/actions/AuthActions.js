@@ -85,7 +85,11 @@ export const setEmployeeKey = ({employeeKey: employeeKey, userTag: userTag}) => 
                  const {workorders} = assignedClients[key];
                  let activeOrders = 0;
                  for (var orderkey in workorders) {
-                      activeOrders ++;
+                      if ( workorders[orderkey].isActive &&
+                           (workorders[orderkey].isActive === "true" ||
+                            workorders[orderkey].isActive === true )) {
+                            activeOrders ++;
+                      }
                  }
 
                  clients.push ({
