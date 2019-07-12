@@ -298,21 +298,31 @@ export class GpsMapView extends React.Component {
              = workorders[orderKey];
 
        isActive = (isActive && isActive === "true")? true:false;
-       isRepeat = (isRepeat && isRepeat === "true")? true:false;
-       repeatTimes = repeatTimes? parseInt(repeatTimes, 10) : 0;
+       //isRepeat = (isRepeat && isRepeat === "true")? true:false;
+       //repeatTimes = repeatTimes? parseInt(repeatTimes, 10) : 0;
+       isRepeat = isRepeat?(isRepeat==="true"?true:false):false;
+       //const previousDelivery = order.previousDelivery?parseInt (order.previousDelivery):0 ;
+       //const presentDelivery = order.presentDelivery? parseInt (order.presentDelivery):0 ;
+       //const deliverys = previousDelivery + presentDelivery;
+       repeatTimes = repeatTimes?parseInt (repeatTimes):0;
        //previousDelivery = previousDelivery? parseInt(previousDelivery, 10) : 0;
        //presentDelivery = presentDelivery? parseInt(presentDelivery, 10) : 0;
 
        //deliveryTimes = presentDelivery + previousDelivery ;
+       deliveryTimes = 0;
        for (var deliverykey in deliverys) {
            deliveryTimes ++;
        }
 
-       if (isActive) {
+       //if (isActive) {
            if (!isRepeat && deliveryTimes > 0) {
               statusArray.push(JOB_DONE);
-           } else if (isRepeat && repeatTimes === 0) {
+           } else if (isRepeat && repeatTimes === 0 && deliveryTimes === 0) {
+              statusArray.push(JOB_NEW);
+           } else if (isRepeat && repeatTimes === 0 && deliveryTimes > 0) {
               statusArray.push(JOB_PROGRESS);
+           } else if (isRepeat && repeatTimes !== 0 && deliveryTimes === 0) {
+              statusArray.push(JOB_NEW);
            } else if (isRepeat && repeatTimes !== 0 && repeatTimes <= deliveryTimes) {
               statusArray.push(JOB_DONE);
            } else if (isRepeat && repeatTimes !== 0 && repeatTimes > deliveryTimes) {
@@ -321,7 +331,7 @@ export class GpsMapView extends React.Component {
            else {
              statusArray.push(JOB_NEW);
            }
-       }
+       //}
 
        activeOrders = statusArray.length;
        if (statusArray.length > 0) {
@@ -523,6 +533,7 @@ const mapStateToProps = state => {
        clients.push({...orders[clientkey]});
     }
 
+    //console.log(clients);
     return {
         //clients: state.auth.clients,
         clients: clients,
