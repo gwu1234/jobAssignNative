@@ -84,7 +84,7 @@ const mapStateToProps = state => {
       //console.log("client name = " + orders[orderkey].name)
       clients.push({...orders[clientkey]});
   }
-  //console.log(clients);
+  console.log(clients);
 
   return {
      //employees: employees,
