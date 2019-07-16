@@ -1,5 +1,5 @@
 
-A) How to resolve the problem 
+A) How to resolve the problem
 Could not get status from Metro bundler.
 connect ECONNREFUSED 127.0.0.1:19001
 Connecting to Metro bundler failed.
@@ -17,3 +17,18 @@ These instructions are for macOS and Linux, but the general ideas apply to Windo
 9) Start XDE or exp
 With exp, run exp r -c for good measure
 And just to be sure, force quit the Expo client on your phone or simulator and re-open it.
+
+
+####################################
+#########    keystore ##############
+/Users/user/Documents/jobAssignNative
+users-MacBook-Pro:jobAssignNative user$ expo fetch:android:keystore
+
+Retreiving Android keystore for @guopingwu/Duty2Go
+Writing keystore to /Users/user/Documents/jobAssignNative/Duty2Go.jks...
+Done writing keystore to disk.
+Save these important values as well:
+
+  Keystore password: 02d330b788ec42dba82a7c5cfbf40d72
+  Key alias:         QGd1b3Bpbmd3dS9EdXR5Mkdv
+  Key password:      b398466a44bb4febb33dc231fa7a51f7

@@ -1,14 +1,14 @@
 {
   "expo": {
-    "name": "Job Assign",
-    "slug": "jobAssignNative",
+    "name": "Duty2Go",
+    "slug": "Duty2Go",
     "privacy": "public",
-    "sdkVersion": "32.0.0",
+    "sdkVersion": "33.0.0",
     "platforms": [
       "ios",
       "android"
     ],
-    "version": "1.0.0",
+    "version": "2.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon4.png",
     "splash": {
@@ -24,10 +24,11 @@
     ],
     "ios": {
       "supportsTablet": true,
-      "bundleIdentifier": "net.shop1234.jobassign"
+      "bundleIdentifier": "net.shop1234.duty2go"
     },
     "android": {
-        "package": "net.shop1234.jobassign",
+        "package": "net.shop1234.duty2go",
+        "versionCode": 2,
         "config": {
              "googleMaps": { "apiKey": "AIzaSyBieaKdJKdipZ6bsaiOUhqUCdCc9JU4OlE"}
          }
