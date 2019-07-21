@@ -32,3 +32,7 @@ Save these important values as well:
   Keystore password: 02d330b788ec42dba82a7c5cfbf40d72
   Key alias:         QGd1b3Bpbmd3dS9EdXR5Mkdv
   Key password:      b398466a44bb4febb33dc231fa7a51f7
+
+
+android: version 3
+ios: version 2
