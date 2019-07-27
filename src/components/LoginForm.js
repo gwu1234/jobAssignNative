@@ -2,7 +2,15 @@ import React, { Component } from 'react';
 import { Text } from 'react-native';
 import firebase from 'firebase';
 import { connect } from 'react-redux';
-import { PROVIDER_GOOGLE, Constants, Location, Permissions} from 'expo';
+import { PROVIDER_GOOGLE } from 'expo';
+import * as Permissions from 'expo-permissions';
+import * as Location from 'expo-location';
+import Constants from 'expo-constants';
+//import * as MapView from 'expo-file-system';
+//import * as PROVIDER_GOOGLE from 'expo-file-system';
+//import * as Constants from 'expo-file-system';
+//import * as Permissions from 'expo-file-system';
+
 import { loginUserSuccess, setUserTag, setEmployeeKey, updatePosition, setFrench} from '../actions';
 import { Card, CardSection, Input, Button, Spinner } from './common';
 

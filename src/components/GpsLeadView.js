@@ -1,6 +1,15 @@
 import React from 'react';
 import firebase from 'firebase';
-import { MapView , PROVIDER_GOOGLE, Constants, Location, Permissions} from 'expo';
+import { PROVIDER_GOOGLE } from 'expo';
+import * as Permissions from 'expo-permissions';
+import * as Location from 'expo-location';
+import Constants from 'expo-constants';
+import MapView from 'react-native-maps';
+//import * as MapView from 'expo-file-system';
+//import * as PROVIDER_GOOGLE from 'expo-file-system';
+//import * as Constants from 'expo-file-system';
+//import * as Permissions from 'expo-file-system';
+
 import { connect } from 'react-redux';
 import {Image, View, Text, Platform, StyleSheet } from 'react-native';
 import pinkSnowplow from './images/pinkSnowplow.png';
