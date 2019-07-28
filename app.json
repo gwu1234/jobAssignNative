@@ -8,7 +8,7 @@
       "ios",
       "android"
     ],
-    "version": "2.0.0",
+    "version": "4.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon4.png",
     "splash": {
@@ -28,7 +28,7 @@
     },
     "android": {
         "package": "net.shop1234.duty2go",
-        "versionCode": 2,
+        "versionCode": 4,
         "config": {
              "googleMaps": { "apiKey": "AIzaSyBieaKdJKdipZ6bsaiOUhqUCdCc9JU4OlE"}
          }

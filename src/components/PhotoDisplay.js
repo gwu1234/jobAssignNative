@@ -5,7 +5,9 @@ import { connect } from 'react-redux';
 import { Actions } from 'react-native-router-flux';
 import { Platform, StyleSheet, View, Text, TouchableWithoutFeedback,Image, Button, ActivityIndicator} from 'react-native';
 import * as Permissions from 'expo-permissions';
+//import * as ImageManipulator from 'expo-image-manipulator';
 import * as ImageManipulator from 'expo-image-manipulator';
+
 import * as ImagePicker from 'expo-image-picker';
 //import ImagePicker from 'react-native-image-picker';
 //import ImagePicker from 'react-native-image-picker';
@@ -112,8 +114,16 @@ class PhotoDisplay extends Component {
    _resizeImage = async (uri) => {
     const manipResult = await ImageManipulator.manipulateAsync(
       uri,
-      [ {resize: { width :120}}], { format: 'jpg' }
+      [ {resize: { width :120}}], { format: 'jpeg' }
     );
+
+    /*_resizeImage = async (uri) => {
+     const manipResult = await ImageManipulator.manipulateAsync(
+       uri,
+       [ {resize: { width :120}}], { format: 'JPEG' }
+     );*/
+
+
     //console.log(manipResult);
     //const {photos} = this.state;
     //photos.push(manipResult);
