@@ -3,7 +3,7 @@
     "name": "Duty2Go",
     "slug": "Duty2Go",
     "privacy": "public",
-    "sdkVersion": "33.0.0",
+    "sdkVersion": "34.0.0",
     "platforms": [
       "ios",
       "android"
@@ -27,11 +27,14 @@
       "bundleIdentifier": "net.shop1234.duty2go"
     },
     "android": {
-        "package": "net.shop1234.duty2go",
-        "versionCode": 4,
-        "config": {
-             "googleMaps": { "apiKey": "AIzaSyBieaKdJKdipZ6bsaiOUhqUCdCc9JU4OlE"}
-         }
-    }
+      "package": "net.shop1234.duty2go",
+      "versionCode": 4,
+      "config": {
+        "googleMaps": {
+          "apiKey": "AIzaSyBieaKdJKdipZ6bsaiOUhqUCdCc9JU4OlE"
+        }
+      }
+    },
+    "description": ""
   }
 }
